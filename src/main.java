@@ -1,6 +1,6 @@
 
 public class main {
 	public static void main(String[] args) {
-		System.out.println("Almost done, yes indeed.");
+		System.out.println("Almost done, ny demo.");
 	}
 }
