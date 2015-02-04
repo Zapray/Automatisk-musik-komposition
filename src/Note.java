@@ -3,9 +3,9 @@ public class Note {
 	private int pitch;
 	private int duration;
 	public static int PITCHMAX = 14;
-	public static int DURATIONMAX = 16;
+	public static int DURATIONMAX = 15;
 	
-	public Note(int pitch, int duration) {
+	public Note(int duration,int pitch) {
 		this.pitch = pitch;
 		this.duration = duration;
 	}
@@ -19,6 +19,6 @@ public class Note {
 		return pitch <= PITCHMAX && duration <= DURATIONMAX; 
 	} //magic numbers!
 	public int getmatrixPosition() {
-		return pitch-1 + (duration-1)*PITCHMAX;
+		return pitch+1 + (duration-1)*PITCHMAX;
 	}
 }
