@@ -9,10 +9,10 @@ public class Note {
 		this.pitch = pitch;
 		this.duration = duration;
 	}
-	public int getPitch() {
+	public float getPitch() {
 		return pitch;
 	}
-	public int getDuration() {
+	public float getDuration() {
 		return duration;
 	}
 	public boolean isNote() {
