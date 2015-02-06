@@ -18,7 +18,14 @@ public class Note {
 	public boolean isNote() {
 		return pitch <= PITCHMAX && duration <= DURATIONMAX; 
 	} //magic numbers!
-	public int getmatrixPosition() {
-		return pitch+1 + (duration-1)*PITCHMAX;
+	public int getNumberRepresentation() {
+		return pitch+1+(duration-1)*PITCHMAX;
+	}
+	/**
+	 * @param numberRepresentation of the note
+	 * @return note the note corresponding to the given number
+	 */
+	public static Note getNote(int matrixNumber) {
+		return new Note((matrixNumber+PITCHMAX)/DURATIONMAX, matrixNumber%DURATIONMAX-1);
 	}
 }

@@ -1,21 +1,24 @@
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import java.util.Random;
 
-import org.ejml.*;
 import org.ejml.simple.SimpleMatrix;
-public class BasicMarkov {
+
+
+public class NMarkov {
+
 	SimpleMatrix transitionMatrix;
+	private int n; //order n
+	
 	private static int matrixSize = Note.DURATIONMAX*Note.PITCHMAX;
 	
-	public BasicMarkov() {
-		transitionMatrix = new SimpleMatrix(matrixSize,matrixSize);
+	public NMarkov(int n) {
+		this.n = n;
+		transitionMatrix = new SimpleMatrix((int)Math.pow(matrixSize, n),matrixSize);
 		
 	}
 	public void train(List<List<Note>> data) {
-		int[] counter = new int[matrixSize];
+		int[] counter = new int[transitionMatrix.numRows()];
 		
 		int a = 0;
 		int b = 0;
@@ -38,9 +41,6 @@ public class BasicMarkov {
 			}
 		}
 	}
-	public Note getNote(int matrixNumber) {
-		return new Note((matrixNumber-1)*15+1, ((int)Math.floor((matrixNumber-1)/15))+1);
-	}
 	/**
 	 * 
 	 * @param length how many bars of melody is to be generated
@@ -52,7 +52,7 @@ public class BasicMarkov {
 		int first = (int)(rand.nextDouble()*matrixSize);
 		double tot = 0;
 		double accum = 0;
-		newSong.add(getNote(first));
+		newSong.add(Note.getNote(first));
 		while(tot < length) {
 			double roll = rand.nextDouble();
 			int i = 0;
@@ -60,7 +60,7 @@ public class BasicMarkov {
 				accum+=transitionMatrix.get(first, i);
 				i++;
 			}
-			Note newNote = getNote(i);
+			Note newNote = Note.getNote(i);
 			tot += 1/((double)newNote.getDuration());
 			newSong.add(newNote);
 			i = 0;
@@ -68,11 +68,6 @@ public class BasicMarkov {
 		}
 		
 		return newSong;
-	}
-	
-	
-	public static void main(String[] args) {
-		
 	}
 	
 }
