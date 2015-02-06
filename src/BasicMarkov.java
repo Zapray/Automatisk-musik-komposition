@@ -24,7 +24,7 @@ public class BasicMarkov {
 			for(int i = 1; i < song.size(); i++) {
 				a = prev.getmatrixPosition();
 				b = song.get(i).getmatrixPosition();
-				transitionMatrix.set(b, a, transitionMatrix.get(b, a));
+				transitionMatrix.set(b, a, transitionMatrix.get(b, a) + 1);
 				counter[a]++;
 				prev = song.get(i);
 			}
