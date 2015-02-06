@@ -1,24 +1,24 @@
 
 public class Note {
-	private int pitch;
-	private int duration;
+	private float pitch;
+	private float duration;
 	public static int PITCHMAX = 14;
 	public static int DURATIONMAX = 15;
 	
-	public Note(int duration,int pitch) {
+	public Note(float duration,float pitch) {
 		this.pitch = pitch;
 		this.duration = duration;
 	}
-	public int getPitch() {
+	public float getPitch() {
 		return pitch;
 	}
-	public int getDuration() {
+	public float getDuration() {
 		return duration;
 	}
 	public boolean isNote() {
 		return pitch <= PITCHMAX && duration <= DURATIONMAX; 
 	} //magic numbers!
-	public int getmatrixPosition() {
-		return pitch+1 + (duration-1)*PITCHMAX;
-	}
+	//public int getmatrixPosition() {
+		//return pitch+1 + (duration-1)*PITCHMAX;
+	//}
 }

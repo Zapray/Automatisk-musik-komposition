@@ -6,6 +6,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.sound.midi.*;
 
@@ -33,7 +34,7 @@ public class MidiAnalysator {
       boolean startOfSong = true;
       Sequencer sequencer = MidiSystem.getSequencer();//Creates a sequencer
       sequencer.open();// have to open the sequencer to be able to use sequences. Don't know why, it works without the first two lines.
-      InputStream is = new BufferedInputStream(new FileInputStream(new File("/Users/Albin/Desktop/Hooktheory-2015-02-04-01-25-10.mid")));
+      InputStream is = new BufferedInputStream(new FileInputStream(new File("D:\\MidiMusic\\Hooktheory-2015-02-04-01-25-10.mid")));
       Sequence sequence = MidiSystem.getSequence(is);//Creates a sequence which you can analyze.
       float res = sequence.getResolution();
       Track[] tracks = sequence.getTracks();//Creates an array to be able to separate tracks.
@@ -99,11 +100,11 @@ public class MidiAnalysator {
     
        String content = "";
        for (int i=0;i<counter1;i++){
-         content = content + note.get(i) + "," + notelength.get(i) + "\n";
+         content = content + note.get(i) + "," + notelength.get(i) + "\r\n";
        }
     
  
-			File file = new File("/Users/Albin/Desktop/filename.txt");
+			File file = new File("D:\\filename.txt");
  
 			// if file doesnt exists, then create it
 			if (!file.exists()) {
