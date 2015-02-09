@@ -6,11 +6,9 @@ import java.util.Random;
 
 import org.ejml.*;
 import org.ejml.simple.SimpleMatrix;
-public class BasicMarkov {
+public class BasicMarkov extends MelodyGenerator{
 	SimpleMatrix transitionMatrix;
 	private static int matrixSize;
-	private final int pMax;
-	private final int dMax;
 	
 	
 	/**
@@ -18,8 +16,8 @@ public class BasicMarkov {
 	 * @param dMax The number of durations represented in the notes
 	 */
 	public BasicMarkov(int pMax, int dMax) {
-		this.pMax = pMax;
-		this.dMax = dMax;
+		super(pMax,dMax);
+		
 		matrixSize = pMax*dMax;
 		transitionMatrix = new SimpleMatrix(matrixSize,matrixSize);
 	}
@@ -63,7 +61,7 @@ public class BasicMarkov {
 		int first = (int)(rand.nextDouble()*matrixSize);
 		double tot = 0;
 		double accum = 0;
-		newSong.add(Note.getNote(first, pMax, dMax));
+		newSong.add(getNote(first));
 		while(tot < length) {
 			double roll = rand.nextDouble();
 			int i = 0;
@@ -71,7 +69,7 @@ public class BasicMarkov {
 				accum+=transitionMatrix.get(first, i);
 				i++;
 			}
-			Note newNote = Note.getNote(i, pMax, dMax);
+			Note newNote = getNote(i);
 			tot += 1/((double)newNote.getDuration());
 			newSong.add(newNote);
 			i = 0;
