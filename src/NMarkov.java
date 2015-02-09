@@ -8,12 +8,21 @@ import org.ejml.simple.SimpleMatrix;
 public class NMarkov {
 
 	SimpleMatrix transitionMatrix;
-	private int n; //order n
+	private final int n; //order n
+	private final int pMax;
+	private final int dMax;
 	
-	private static int matrixSize = Note.DURATIONMAX*Note.PITCHMAX;
+	private final int matrixSize;
 	
-	public NMarkov(int n) {
+	/**
+	 * @param pMax The number of pitches represented in the notes
+	 * @param dMax The number of durations represented in the notes
+	 */
+	public NMarkov(int n, int pMax, int dMax) {
 		this.n = n;
+		this.pMax = pMax;
+		this.dMax = dMax;
+		matrixSize = dMax*pMax;
 		transitionMatrix = new SimpleMatrix((int)Math.pow(matrixSize, n),matrixSize);
 		
 	}
@@ -25,9 +34,9 @@ public class NMarkov {
 		for( List<Note> song : data) {
 			Note prev = song.get(0);
 			for(int i = 1; i < song.size(); i++) {
-				a = prev.getNumberRepresentation();
-				b = song.get(i).getNumberRepresentation();
-				transitionMatrix.set(b, a, transitionMatrix.get(b, a));
+				a = prev.getNumberRepresentation(pMax);
+				b = song.get(i).getNumberRepresentation(pMax);
+				transitionMatrix.set(b, a, transitionMatrix.get(b, a)+1);
 				counter[a]++;
 				prev = song.get(i);
 			}
@@ -52,7 +61,7 @@ public class NMarkov {
 		int first = (int)(rand.nextDouble()*matrixSize);
 		double tot = 0;
 		double accum = 0;
-		newSong.add(Note.getNote(first));
+		newSong.add(Note.getNote(first, pMax, dMax));
 		while(tot < length) {
 			double roll = rand.nextDouble();
 			int i = 0;
@@ -60,7 +69,7 @@ public class NMarkov {
 				accum+=transitionMatrix.get(first, i);
 				i++;
 			}
-			Note newNote = Note.getNote(i);
+			Note newNote = Note.getNote(i, pMax, dMax);
 			tot += 1/((double)newNote.getDuration());
 			newSong.add(newNote);
 			i = 0;

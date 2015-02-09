@@ -2,9 +2,7 @@
 public class Note {
 	private int pitch;
 	private int duration;
-	public static int PITCHMAX = 14;
-	public static int DURATIONMAX = 15;
-	
+
 	public Note(int duration,int pitch) {
 		this.pitch = pitch;
 		this.duration = duration;
@@ -15,17 +13,14 @@ public class Note {
 	public float getDuration() {
 		return duration;
 	}
-	public boolean isNote() {
-		return pitch <= PITCHMAX && duration <= DURATIONMAX; 
-	} //magic numbers!
-	public int getNumberRepresentation() {
-		return pitch+1+(duration-1)*PITCHMAX;
+	public int getNumberRepresentation(int pitchMax) {
+		return pitch+1+(duration-1)*pitchMax;
 	}
 	/**
 	 * @param numberRepresentation of the note
 	 * @return note the note corresponding to the given number
 	 */
-	public static Note getNote(int matrixNumber) {
-		return new Note((matrixNumber+PITCHMAX)/DURATIONMAX, matrixNumber%DURATIONMAX-1);
+	public static Note getNote(int matrixNumber, int pitchMax, int durationMax) {
+		return new Note((matrixNumber+pitchMax)/durationMax, matrixNumber%durationMax-1);
 	}
 }

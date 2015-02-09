@@ -8,12 +8,26 @@ import org.ejml.*;
 import org.ejml.simple.SimpleMatrix;
 public class BasicMarkov {
 	SimpleMatrix transitionMatrix;
-	private static int matrixSize = Note.DURATIONMAX*Note.PITCHMAX;
+	private static int matrixSize;
+	private final int pMax;
+	private final int dMax;
+	
+	
+	/**
+	 * @param pMax The number of pitches represented in the notes
+	 * @param dMax The number of durations represented in the notes
+	 */
+	public BasicMarkov(int pMax, int dMax) {
+		this.pMax = pMax;
+		this.dMax = dMax;
+		matrixSize = pMax*dMax;
+		transitionMatrix = new SimpleMatrix(matrixSize,matrixSize);
+	}
 	
 	public BasicMarkov() {
-		transitionMatrix = new SimpleMatrix(matrixSize,matrixSize);
-		
+		this(14, 15);
 	}
+	
 	public void train(List<List<Note>> data) {
 		int[] counter = new int[matrixSize];
 		
@@ -22,8 +36,8 @@ public class BasicMarkov {
 		for( List<Note> song : data) {
 			Note prev = song.get(0);
 			for(int i = 1; i < song.size(); i++) {
-				a = prev.getNumberRepresentation();
-				b = song.get(i).getNumberRepresentation();
+				a = prev.getNumberRepresentation(pMax);
+				b = song.get(i).getNumberRepresentation(pMax);
 				transitionMatrix.set(b, a, transitionMatrix.get(b, a) + 1);
 				counter[a]++;
 				prev = song.get(i);
@@ -38,9 +52,6 @@ public class BasicMarkov {
 			}
 		}
 	}
-	public Note getNote(int matrixNumber) {
-		return new Note((matrixNumber-1)*15+1, ((int)Math.floor((matrixNumber-1)/15))+1);
-	}
 	/**
 	 * 
 	 * @param length how many bars of melody is to be generated
@@ -52,7 +63,7 @@ public class BasicMarkov {
 		int first = (int)(rand.nextDouble()*matrixSize);
 		double tot = 0;
 		double accum = 0;
-		newSong.add(getNote(first));
+		newSong.add(Note.getNote(first, pMax, dMax));
 		while(tot < length) {
 			double roll = rand.nextDouble();
 			int i = 0;
@@ -60,7 +71,7 @@ public class BasicMarkov {
 				accum+=transitionMatrix.get(first, i);
 				i++;
 			}
-			Note newNote = getNote(i);
+			Note newNote = Note.getNote(i, pMax, dMax);
 			tot += 1/((double)newNote.getDuration());
 			newSong.add(newNote);
 			i = 0;
@@ -69,10 +80,4 @@ public class BasicMarkov {
 		
 		return newSong;
 	}
-	
-	
-	public static void main(String[] args) {
-		
-	}
-	
 }
