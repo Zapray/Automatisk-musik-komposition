@@ -7,17 +7,16 @@ import java.util.Random;
 import org.ejml.*;
 import org.ejml.simple.SimpleMatrix;
 public class BasicMarkov extends MelodyGenerator{
-	SimpleMatrix transitionMatrix;
+	private SimpleMatrix transitionMatrix;
+	private FirstNoteGenerator firstNoteGen;
 	private static int matrixSize;
-	
-	
 	/**
 	 * @param pMax The number of pitches represented in the notes
 	 * @param dMax The number of durations represented in the notes
 	 */
 	public BasicMarkov(int pMax, int dMax) {
 		super(pMax,dMax);
-		
+		firstNoteGen = new FirstNoteGenerator(pMax, dMax);
 		matrixSize = pMax*dMax;
 		transitionMatrix = new SimpleMatrix(matrixSize,matrixSize);
 	}
@@ -27,6 +26,7 @@ public class BasicMarkov extends MelodyGenerator{
 	}
 	
 	public void train(List<List<Note>> data) {
+		firstNoteGen.train(data);
 		int[] counter = new int[matrixSize];
 		
 		int a = 0;
@@ -58,20 +58,23 @@ public class BasicMarkov extends MelodyGenerator{
 	public List<Note> generateSong(int length) { //assuming four four
 		ArrayList<Note> newSong = new ArrayList<Note>();
 		Random rand = new Random();
-		int first = (int)(rand.nextDouble()*matrixSize);
+		Note first = firstNoteGen.generateNote();
 		double tot = 0;
 		double accum = 0;
-		newSong.add(getNote(first));
+		
+		newSong.add(first);
 		while(tot < length) {
 			double roll = rand.nextDouble();
 			int i = 0;
 			while(accum <= roll) {
-				accum+=transitionMatrix.get(first, i);
+				accum+=transitionMatrix.get(first.getNumberRepresentation(pMax), i);
 				i++;
 			}
 			Note newNote = getNote(i);
 			tot += 1/((double)newNote.getDuration());
 			newSong.add(newNote);
+
+			first = newNote;
 			i = 0;
 			accum = 0;
 		}

@@ -8,15 +8,16 @@ import org.ejml.simple.SimpleMatrix;
 public class NMarkov extends MelodyGenerator{
 
 	SimpleMatrix transitionMatrix;
+	private FirstNoteGenerator firstNoteGen;
 	private final int n; //order n
 	private final int matrixSize;
-	
 	/**
 	 * @param pMax The number of pitches represented in the notes
 	 * @param dMax The number of durations represented in the notes
 	 */
 	public NMarkov(int n, int pMax, int dMax) {
 		super(pMax, dMax);
+		firstNoteGen = new FirstNoteGenerator(pMax,dMax);
 		this.n = n;
 		matrixSize = dMax*pMax;
 		transitionMatrix = new SimpleMatrix((int)Math.pow(matrixSize, n),matrixSize);
@@ -24,7 +25,7 @@ public class NMarkov extends MelodyGenerator{
 	}
 	public void train(List<List<Note>> data) {
 		int[] counter = new int[transitionMatrix.numRows()];
-		
+		firstNoteGen.train(data);
 		int a = 0;
 		int b = 0;
 		for( List<Note> song : data) {
@@ -57,7 +58,8 @@ public class NMarkov extends MelodyGenerator{
 		int first = (int)(rand.nextDouble()*matrixSize);
 		double tot = 0;
 		double accum = 0;
-		newSong.add(getNote(first));
+		newSong.add(firstNoteGen.generateNote());
+		
 		while(tot < length) {
 			double roll = rand.nextDouble();
 			int i = 0;

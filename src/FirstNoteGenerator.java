@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -6,6 +5,7 @@ import java.util.Random;
 public class FirstNoteGenerator extends MelodyGenerator{
 	private double[] notes;
 	private Random randgen;
+	
 	public FirstNoteGenerator(int pMax, int dMax) {
 		super(pMax,dMax);
 		notes = new double[dMax*pMax];
