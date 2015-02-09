@@ -8,7 +8,7 @@ public class Main {
 	public static void main(String[] args){
 		
 		MidiManager mm = new MidiManager(System.getProperty("user.dir")+"songData.txt");
-		List<List<Notes>> l = mm.getData();
+		List<List<Note>> l = mm.getData();
 		pMax = mm.getPMax();
 		dMax = mm.getDMax();
 		NMarkov markov = new NMarkov(order,pMax, dMax);
