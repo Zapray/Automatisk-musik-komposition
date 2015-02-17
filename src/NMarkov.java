@@ -119,7 +119,6 @@ public class NMarkov extends MelodyGenerator{
 //		System.out.println(Note.getNote(19, 6, 8).getDuration());
 //		System.out.println(Note.getNote(19, 6, 8).getPitch());
 		
-		
 	}
 	
 }

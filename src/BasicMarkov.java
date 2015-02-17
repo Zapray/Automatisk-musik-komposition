@@ -49,6 +49,16 @@ public class BasicMarkov extends MelodyGenerator{
 				transitionMatrix.set(i, j, transitionMatrix.get(i, j)/counter[i]);
 			}
 		}
+		Random rand = new Random();
+		for(int i = 0; i < matrixSize; i++) {
+			double rowLength = 0;
+			for(int j = 0; j < matrixSize; j++) {
+				rowLength+=transitionMatrix.get(i, j);
+			}
+			if (rowLength == 0) {
+				transitionMatrix.set(i,(int)(rand.nextDouble()*matrixSize), 1);
+			}
+		}
 	}
 	/**
 	 * 
