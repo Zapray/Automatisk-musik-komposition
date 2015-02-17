@@ -6,13 +6,19 @@ import java.util.*;
 
 public class MidiManager {
 
-	private List<List<Note>> songList;
-	private ArrayList<Float> unconPitchList; //All the songs unconverted from textfile, only the pitch
-	private ArrayList<Float> unconDurationList; //All the songs unconverted from textfile, only the duration
-	private ArrayList<Float> convertTablePitch; // Convert table used to convert between midivalues and model values for the pitch
-	private ArrayList<Float> convertTableDuration; //Convert table used to convert between midivalues and model values for the duration
-	private ArrayList<Integer> convertedPitchList; // All the songs converted to model values, only the pitch
-	private ArrayList<Integer> convertedDurationList; // All the songs converted to model values, only the duration
+	private List<ArrayList<Note>> songList = new ArrayList<ArrayList<Note>>();
+	//All the songs unconverted from textfile, only the pitch
+	private ArrayList<Float> unconPitchList = new ArrayList<Float>();
+	 //All the songs unconverted from textfile, only the duration
+	private ArrayList<Float> unconDurationList = new ArrayList<Float>();
+	// Convert table used to convert between midivalues and model values for the pitch
+	private ArrayList<Float> convertTablePitch = new ArrayList<Float>();
+	//Convert table used to convert between midivalues and model values for the duration
+	private ArrayList<Float> convertTableDuration = new ArrayList<Float>(); 
+	// All the songs converted to model values, only the pitch
+	private ArrayList<Integer> convertedPitchList= new ArrayList<Integer>();
+	// All the songs converted to model values, only the duration
+	private ArrayList<Integer> convertedDurationList = new ArrayList<Integer>(); 
 
 	private int pMax;
 	private int dMax;
@@ -44,7 +50,8 @@ public class MidiManager {
 
 
 
-
+	//Makes two ArrayList, one which contains all the the note pitches in the songs and one which contains
+	//all the durations in the song. Nothing is converted 
 	private void createUnconvertedArrays(BufferedReader  in){
 
 
@@ -83,7 +90,8 @@ public class MidiManager {
 
 	}
 
-
+	//Creating convering tables that show which pitch is which number in the model.
+	//Same for duration
 	private void createConvertTables(){
 		for(int i=0;i<unconPitchList.size();i++){
 
@@ -100,7 +108,7 @@ public class MidiManager {
 
 	}
 
-
+	//Change from unconverted to converted for the songs
 	private void convertArraysToModelFormat(){
 		for(int i = 0;i < unconPitchList.size();i++){
 			if(unconPitchList.get(i)==-1){
@@ -119,26 +127,27 @@ public class MidiManager {
 
 	private void createSongList(){
 		ArrayList<Note> song=new ArrayList<Note>(0);
-		List<Integer> tempPitch;
-		List<Integer> tempDuration;
+		List<Integer> tempPitch = new ArrayList<Integer>();
+		List<Integer> tempDuration = new ArrayList<Integer>();
 		int step=0;
-		
 		for(int i=0;i<convertedPitchList.size();i++){
 			if(convertedPitchList.get(i)==-1){
-				tempPitch = convertedPitchList.subList(step,i-1);
-				tempDuration = convertedDurationList.subList(step,i-1);
+				tempPitch = convertedPitchList.subList(step,i);
+				tempDuration = convertedDurationList.subList(step,i);
 					for(int j=0; j<tempPitch.size();j++){
 					Note note = new Note(tempDuration.get(j),tempPitch.get(j));
 					song.add(note);
 					}
+					songList.add(song);
+					song=new ArrayList<Note>(0);
+					step=i+1;
 			}
-			songList.add(song);
 		}
 		
 		
 		
 	}
-	public List<List<Note>> getData(){
+	public List<ArrayList<Note>> getData(){
 		return songList;
 	}
 
@@ -148,6 +157,12 @@ public class MidiManager {
 		
 		
 	}
-		
+	// -1 because we don't count the notation -1
+	public int getPMax(){
+		return pMax-1;
+	}
+	public int getDMax(){
+		return dMax-1;
+	}
 	
 }
