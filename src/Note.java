@@ -7,10 +7,10 @@ public class Note {
 		this.pitch = pitch;
 		this.duration = duration;
 	}
-	public float getPitch() {
+	public int getPitch() {
 		return pitch;
 	}
-	public float getDuration() {
+	public int getDuration() {
 		return duration;
 	}
 	public int getNumberRepresentation(int pitchMax) {
