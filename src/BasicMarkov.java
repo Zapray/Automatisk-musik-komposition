@@ -25,7 +25,7 @@ public class BasicMarkov extends MelodyGenerator{
 		this(14, 15);
 	}
 	
-	public void train(List<List<Note>> data) {
+	public void train(List<? extends List<Note>> data) {
 		firstNoteGen.train(data);
 		int[] counter = new int[matrixSize];
 		

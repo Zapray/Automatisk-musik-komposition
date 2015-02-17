@@ -34,7 +34,13 @@ public class FirstNoteGenerator extends MelodyGenerator{
 	}
 	@Override
 	public List<Note> generateSong(int length) {
-		throw new Exception("TODO bad infrastructure, (USE generateNote() instead!)");
+		try {
+			throw new Exception("TODO bad infrastructure, (USE generateNote() instead!)");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 }
