@@ -1,7 +1,15 @@
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
+
+import javax.sound.midi.MidiEvent;
+import javax.sound.midi.MidiMessage;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.Sequence;
+import javax.sound.midi.ShortMessage;
+import javax.sound.midi.Track;
 
 
 public class MidiManager {
@@ -143,11 +151,71 @@ public class MidiManager {
 	}
 
 	
-	public static void createMidi(List<List<Note>> newSongList){
-		
+	public void createMidi(List<Note> newSongList) throws Exception{
+		 Sequence sequence;//need sequencer to crete midi
+         int resolution = 192;
+		 sequence=new Sequence(Sequence.PPQ,resolution); //Sets divisiontype and resolution. 
+         long tick =0;      			//varible for converting to ticks
+         long tickMeter=0;				//varible for keeping track of what tick the song is on
+         MidiEvent NoteOn;				//
+         MidiEvent NoteOff;
+         File outputFile = new File("/Users/Albin/Desktop/callme.mid");
+         Track track = sequence.createTrack();
+        
+         
+         for(int  i=0; i<newSongList.size();i++ ){
+        	 
+        	 tick=convertNoteLengthToTicks(convertTableDuration.get((newSongList.get(i)).getDuration()),192);
+        	 System.out.println(tickMeter);
+        	 if(convertTablePitch.get((newSongList.get(i)).getPitch())==0){
+        		tickMeter=tickMeter + tick;
+        		 
+        	 }
+        	 
+        	 //System.out.println((theSong.get(i)).getPitch());
+        	 if(convertTablePitch.get((newSongList.get(i)).getPitch())!=0){
+        		
+        		//System.out.println("Command1=   " +ShortMessage.NOTE_ON);
+        		//System.out.println("Command2=   " + ShortMessage.NOTE_OFF);
+        		ShortMessage	shortMessage1 = new ShortMessage();
+        		shortMessage1.setMessage(ShortMessage.NOTE_ON,0,(convertTablePitch.get((newSongList.get(i)).getPitch())).intValue(), 114 );
+        		NoteOn=new MidiEvent(shortMessage1,tickMeter);
+        		//System.out.println("commad:" +shortMessage.getCommand() + "     " + shortMessage.getData1() + "     " + shortMessage.getData2());
+        		track.add(NoteOn);
+        		ShortMessage	shortMessage2 = new ShortMessage();
+        		tickMeter=tickMeter + tick;	
+        		shortMessage2.setMessage(ShortMessage.NOTE_OFF,0,(convertTablePitch.get((newSongList.get(i)).getPitch())).intValue(), 0 );
+        		//System.out.println("commad:" +shortMessage.getCommand() + "     " + shortMessage.getData1() + "     " + shortMessage.getData2());
+        		NoteOff=new MidiEvent(shortMessage2,tickMeter);
+        		
+        		track.add(NoteOff);
+        			
+        	 }
+        		 
+        	 
+        	  
+         }
+         MidiSystem.write(sequence,0,outputFile);
+         MidiSystem.write(sequence, 0, outputFile);
+         for(int nEvent = 0; nEvent < track.size()-1; nEvent++){	 
+        	 MidiEvent event = track.get(nEvent);
+        	 MidiMessage message = event.getMessage();
+        	 System.out.println(message);
+         }
+
+
+         
+         
+
 		
 		
 	}
 		
+	public static long convertNoteLengthToTicks(float noteLength,int res){
+        res=res*4;
+        
+        return (long) (res*noteLength);
+  
+	}//end convertNoteLengthToTicks
 	
 }

@@ -6,7 +6,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.PrintWriter;
 import java.util.*;
 
 import javax.sound.midi.*;
@@ -36,7 +36,7 @@ public class MidiAnalysator {
       Sequencer sequencer = MidiSystem.getSequencer();//Creates a sequencer
       sequencer.open();// have to open the sequencer to be able to use sequences. Don't know why, it works without the first two lines.
       //InputStream is = new BufferedInputStream(new FileInputStream(new File("D:\\MidiMusic\\Hooktheory-2015-02-04-01-25-10.mid")));
-      InputStream is = new BufferedInputStream(new FileInputStream(new File("/Users/Albin/Desktop/chiquitita.mid")));
+      InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/Albin/Desktop/Filerfranhook/Hooktheory-2015-02-17-04-48-14.mid")));
       //InputStream is = new BufferedInputStream(new FileInputStream(new File("/Users/Albin/Desktop/music.mid")));
       Sequence sequence = MidiSystem.getSequence(is);//Creates a sequence which you can analyze.
       float res = sequence.getResolution();
@@ -49,7 +49,7 @@ public class MidiAnalysator {
       for(int nEvent = 0; nEvent < track.size()-1; nEvent++){//loop through events
          MidiEvent event = track.get(nEvent);
         	MidiMessage message = event.getMessage();
-        	System.out.println(message);
+        	//System.out.println(message);
          MidiEvent event2 = track.get(nEvent+1);
          if(message instanceof MetaMessage){
         	 MetaMessage metaMessage=(MetaMessage) message;
@@ -81,9 +81,10 @@ public class MidiAnalysator {
                   note.add(shortMessage.getData1());
                 //dataarray[counter1][0]=shortMessage.getData1();
                 tick=event.getTick();
+                System.out.println("Detta Šr en note on");
               System.out.println(tick);
         			}else if(shortMessage.getCommand() == ShortMessage.NOTE_OFF){
-                  
+        				System.out.println("Detta Šr en note off");
                   notelength.add(convertTicksToNoteLength(tick, event.getTick(), res));
                   //dataarray[counter1][1]=convertTicksToNoteLength(tick, event.getTick(), res);
                   counter1 +=1;  
@@ -110,12 +111,31 @@ public class MidiAnalysator {
          
          
          }
+      File file = new File("/Users/Albin/Desktop/databas.txt");
+   // if file doesnt exists, then create it
+   			if (!file.exists()) {
+   				file.createNewFile();
+   			}
     
+      
+      PrintWriter outFile = new PrintWriter(new FileWriter("/Users/Albin/Desktop/databas.txt", true));
+  
+     
+      for (int i=0;i<counter1;i++){
+      
+    		    outFile.println(note.get(i) + "," + notelength.get(i));
+   
+      }
+    outFile.println("-");
+	outFile.close();
+      
+      /**
        String content = "";
        for (int i=0;i<counter1;i++){
-    	   System.out.println(note.get(i) + "," + notelength.get(i));
+    	   //System.out.println(note.get(i) + "," + notelength.get(i));
          content = content + note.get(i) + "," + notelength.get(i) + "\r\n";
        }
+       content = content + "-" + "\r\n";
     
  
 			//File file = new File("D:\\filename.txt");
@@ -131,7 +151,7 @@ public class MidiAnalysator {
 			bw.close();
  
 			System.out.println("Done");   
-       
+       */
          
     //for (int i = 0; i<100;i++){
          //System.out.print(dataarray[i][0] + "   ");
