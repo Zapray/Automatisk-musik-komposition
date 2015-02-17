@@ -56,16 +56,17 @@ public class NMarkov extends MelodyGenerator{
 				 prevs.addFirst(song.get(i));
 			}
 			
-			for(int i = 1; i < song.size(); i++) {
+			for(int i = n; i < song.size(); i++) {
 				row = getRowPos(prevs);
 				col = song.get(i).getNumberRepresentation(pMax);
 				transitionMatrix.set(row, col, transitionMatrix.get(row, col)+1);
 				counter[row]++;
-				prevNote = song.get(i);
+				prevs.removeLast();
+				prevs.addFirst(song.get(i));
 			}
 		}
-		for(int i = 0; i < matrixSize; i++) {
-			for(int j = 0; j < matrixSize; j++) {
+		for(int i = 0; i < transitionMatrix.numRows(); i++) {
+			for(int j = 0; j < transitionMatrix.numCols(); j++) {
 				if(counter[i] == 0) {
 					counter[i] = 1;
 				}
@@ -79,6 +80,10 @@ public class NMarkov extends MelodyGenerator{
 	 * @return a new song
 	 */
 	public List<Note> generateSong(int length) { //assuming four four
+		
+		//construct [n-1, n-2.. firstNoteGenerator]
+		
+		
 		ArrayList<Note> newSong = new ArrayList<Note>();
 		Random rand = new Random();
 		int first = (int)(rand.nextDouble()*matrixSize);
