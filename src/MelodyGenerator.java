@@ -18,4 +18,6 @@ public abstract class MelodyGenerator {
 	public Note getNote(int numberRepr) {
 		return Note.getNote(numberRepr, pMax, dMax);
 	}
+	public abstract List<Note> generateSong(int length);
+	
 }
