@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.*;
 
 import javax.sound.midi.*;
 
@@ -34,9 +35,13 @@ public class MidiAnalysator {
       boolean startOfSong = true;
       Sequencer sequencer = MidiSystem.getSequencer();//Creates a sequencer
       sequencer.open();// have to open the sequencer to be able to use sequences. Don't know why, it works without the first two lines.
-      InputStream is = new BufferedInputStream(new FileInputStream(new File("D:\\MidiMusic\\Hooktheory-2015-02-04-01-25-10.mid")));
+      //InputStream is = new BufferedInputStream(new FileInputStream(new File("D:\\MidiMusic\\Hooktheory-2015-02-04-01-25-10.mid")));
+      InputStream is = new BufferedInputStream(new FileInputStream(new File("/Users/Albin/Desktop/chiquitita.mid")));
+      //InputStream is = new BufferedInputStream(new FileInputStream(new File("/Users/Albin/Desktop/music.mid")));
       Sequence sequence = MidiSystem.getSequence(is);//Creates a sequence which you can analyze.
       float res = sequence.getResolution();
+      System.out.println(res);
+      System.out.println(sequence.getDivisionType());
       Track[] tracks = sequence.getTracks();//Creates an array to be able to separate tracks.
       
       int melodytrack = 0;
@@ -44,15 +49,23 @@ public class MidiAnalysator {
       for(int nEvent = 0; nEvent < track.size()-1; nEvent++){//loop through events
          MidiEvent event = track.get(nEvent);
         	MidiMessage message = event.getMessage();
+        	System.out.println(message);
          MidiEvent event2 = track.get(nEvent+1);
-   
+         if(message instanceof MetaMessage){
+        	 MetaMessage metaMessage=(MetaMessage) message;
+        	 System.out.println("type:   " + metaMessage.getType());
+        	 System.out.println("data:   " + metaMessage.getData());
+        		 
+        		 
+        	 
+         }
          
          if(message instanceof ShortMessage)//every event contains a short message or a meta message.
         		{
                ShortMessage shortMessage = (ShortMessage) message;
                
                if(event.getTick()!=0 && startOfSong){
-               
+            	  
                   notelength.add(convertTicksToNoteLength(0, event.getTick(), res));
                   note.add(0);
              
@@ -64,11 +77,11 @@ public class MidiAnalysator {
                
                if(shortMessage.getCommand() == ShortMessage.NOTE_ON)
         			{
-                  
+                  System.out.println(shortMessage.getData1() +  "    " + shortMessage.getData2()  );
                   note.add(shortMessage.getData1());
                 //dataarray[counter1][0]=shortMessage.getData1();
                 tick=event.getTick();
-              
+              System.out.println(tick);
         			}else if(shortMessage.getCommand() == ShortMessage.NOTE_OFF){
                   
                   notelength.add(convertTicksToNoteLength(tick, event.getTick(), res));
@@ -100,12 +113,13 @@ public class MidiAnalysator {
     
        String content = "";
        for (int i=0;i<counter1;i++){
+    	   System.out.println(note.get(i) + "," + notelength.get(i));
          content = content + note.get(i) + "," + notelength.get(i) + "\r\n";
        }
     
  
-			File file = new File("D:\\filename.txt");
- 
+			//File file = new File("D:\\filename.txt");
+       		File file = new File("/Users/Albin/Desktop/filename.txt");
 			// if file doesnt exists, then create it
 			if (!file.exists()) {
 				file.createNewFile();
@@ -124,8 +138,7 @@ public class MidiAnalysator {
          //System.out.println(dataarray[i][1]);
     //}  
       
-  
-      
+			
       
       
    
