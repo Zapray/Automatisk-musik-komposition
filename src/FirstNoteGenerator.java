@@ -15,7 +15,7 @@ public class FirstNoteGenerator extends MelodyGenerator{
 	public Note generateNote() {
 		double roll = randgen.nextDouble();
 		int i = 0;
-		int accum = 0;
+		double accum = 0;
 		while(accum <= roll) {
 			accum+=notes[i];
 			i++;
@@ -24,7 +24,7 @@ public class FirstNoteGenerator extends MelodyGenerator{
 
 	}
 
-	public void train(List<List<Note>> data) {
+	public void train(List<? extends List<Note>> data) {
 		for(List<Note> song : data) {
 			notes[song.get(0).getNumberRepresentation(pMax)]++;
 		}

@@ -21,6 +21,6 @@ public class Note {
 	 * @return note the note corresponding to the given number
 	 */
 	public static Note getNote(int matrixNumber, int pitchMax, int durationMax) {
-		return new Note((matrixNumber+pitchMax)/durationMax, (matrixNumber%pitchMax)); //TODO pitch är feel!
+		return new Note((matrixNumber+pitchMax)/durationMax, (matrixNumber%pitchMax)+1); //TODO pitch ï¿½r feel!
 	}
 }
