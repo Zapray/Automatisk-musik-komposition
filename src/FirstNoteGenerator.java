@@ -32,5 +32,15 @@ public class FirstNoteGenerator extends MelodyGenerator{
 			notes[i] /= data.size();
 		}
 	}
+	@Override
+	public List<Note> generateSong(int length) {
+		try {
+			throw new Exception("TODO bad infrastructure, (USE generateNote() instead!)");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 	
 }

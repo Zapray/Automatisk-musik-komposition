@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Random;
 
 import org.ejml.simple.SimpleMatrix;
@@ -8,7 +10,6 @@ import org.ejml.simple.SimpleMatrix;
 public class NMarkov extends MelodyGenerator{
 
 	SimpleMatrix transitionMatrix;
-	private FirstNoteGenerator firstNoteGen;
 	private final int n; //order n
 	private final int matrixSize;
 	/**
@@ -17,25 +18,50 @@ public class NMarkov extends MelodyGenerator{
 	 */
 	public NMarkov(int n, int pMax, int dMax) {
 		super(pMax, dMax);
-		firstNoteGen = new FirstNoteGenerator(pMax,dMax);
 		this.n = n;
 		matrixSize = dMax*pMax;
 		transitionMatrix = new SimpleMatrix((int)Math.pow(matrixSize, n),matrixSize);
 		
 	}
-	public void train(List<List<Note>> data) {
+	/**
+	 * @return an integer representing what row the note combination is located
+	 * @throws IllegalArgumentException
+	 */
+	private int getRowPos(List<Note> notes) throws IllegalArgumentException{
+		if(notes.size() != n) {
+			throw new IllegalArgumentException("error in getRowPos");
+		}
+		int sum1 = 0;
+		for(int i = 1; i <= n; i++) {
+			sum1+= (int)(Math.pow(pMax, i)*(int)Math.pow(dMax, i-1)*(notes.get(i-1).getPitch()-1));
+		}
+		
+		int sum2 = 0;
+		for(int i = 2; i <= n; i++) {
+			sum1+= (int)Math.pow(pMax, i-1)*(int)Math.pow(dMax, i-1)*(notes.get(i-1).getDuration()-1);
+		}
+		
+		
+		return notes.get(0).getPitch()+sum1+sum2+1;
+	}
+	
+	public void train(List<? extends List<Note>> data) {
 		int[] counter = new int[transitionMatrix.numRows()];
-		firstNoteGen.train(data);
-		int a = 0;
-		int b = 0;
+		int row = 0;
+		int col = 0;
+		LinkedList<Note> prevs = new LinkedList<Note>();
 		for( List<Note> song : data) {
-			Note prev = song.get(0);
+			
+			for(int i = 0; i < n; i++) {
+				 prevs.addFirst(song.get(i));
+			}
+			
 			for(int i = 1; i < song.size(); i++) {
-				a = prev.getNumberRepresentation(pMax);
-				b = song.get(i).getNumberRepresentation(pMax);
-				transitionMatrix.set(b, a, transitionMatrix.get(b, a)+1);
-				counter[a]++;
-				prev = song.get(i);
+				row = getRowPos(prevs);
+				col = song.get(i).getNumberRepresentation(pMax);
+				transitionMatrix.set(row, col, transitionMatrix.get(row, col)+1);
+				counter[row]++;
+				prevNote = song.get(i);
 			}
 		}
 		for(int i = 0; i < matrixSize; i++) {
@@ -58,7 +84,6 @@ public class NMarkov extends MelodyGenerator{
 		int first = (int)(rand.nextDouble()*matrixSize);
 		double tot = 0;
 		double accum = 0;
-		newSong.add(firstNoteGen.generateNote());
 		
 		while(tot < length) {
 			double roll = rand.nextDouble();
@@ -75,6 +100,21 @@ public class NMarkov extends MelodyGenerator{
 		}
 		
 		return newSong;
+	}
+	public static void main(String[] args) {
+		//NMarkov m = new NMarkov(2,6,8);
+		NMarkov m = new NMarkov(2,6,8);
+		ArrayList<Note> list = new ArrayList<Note>();
+		list.add(new Note(3,2));
+		list.add(new Note(5,3));
+//		list.add(new Note(2,4));
+//		list.add(new Note(3,4));
+		System.out.println("rowPos = " + m.getRowPos(list));
+//		System.out.println(list.get(3).getNumberRepresentation(6));
+//		System.out.println(Note.getNote(19, 6, 8).getDuration());
+//		System.out.println(Note.getNote(19, 6, 8).getPitch());
+		
+		
 	}
 	
 }

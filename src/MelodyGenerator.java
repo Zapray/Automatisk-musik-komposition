@@ -2,7 +2,7 @@ import java.util.List;
 
 
 public abstract class MelodyGenerator {
-	public abstract void train(List<List<Note>> data);
+	public abstract void train(List<? extends List<Note>> data);
 	protected final int pMax;
 	protected final int dMax;
 	
@@ -18,4 +18,6 @@ public abstract class MelodyGenerator {
 	public Note getNote(int numberRepr) {
 		return Note.getNote(numberRepr, pMax, dMax);
 	}
+	public abstract List<Note> generateSong(int length);
+	
 }
