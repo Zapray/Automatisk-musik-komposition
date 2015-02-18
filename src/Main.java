@@ -7,7 +7,7 @@ public class Main {
 	
 	public static void main(String[] args){
 		
-		MidiManager mm = new MidiManager(System.getProperty("user.dir")+"/Test.txt");
+		MidiManager mm = new MidiManager(System.getProperty("user.dir")+"/databas.txt");
 		List<? extends List<Note>> l = mm.getData();
 		pMax = mm.getPMax();
 		dMax = mm.getDMax();

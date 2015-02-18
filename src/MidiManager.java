@@ -167,8 +167,11 @@ public class MidiManager {
          
          for(int  i=0; i<newSongList.size();i++ ){
         	 
+        	 System.out.println(convertTableDuration.get((newSongList.get(i)).getDuration()));
+        	 System.out.println(convertTablePitch.get((newSongList.get(i)).getPitch()));
+        	 
+        	 
         	 tick=convertNoteLengthToTicks(convertTableDuration.get((newSongList.get(i)).getDuration()),192);
-        	 System.out.println(tickMeter);
         	 if(convertTablePitch.get((newSongList.get(i)).getPitch())==0){
         		tickMeter=tickMeter + tick;
         		 
@@ -202,7 +205,7 @@ public class MidiManager {
          for(int nEvent = 0; nEvent < track.size()-1; nEvent++){	 
         	 MidiEvent event = track.get(nEvent);
         	 MidiMessage message = event.getMessage();
-        	 System.out.println(message);
+  
          }
 
 
