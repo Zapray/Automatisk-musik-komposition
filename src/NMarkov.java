@@ -28,6 +28,15 @@ public class NMarkov extends MelodyGenerator{
 	 * @throws IllegalArgumentException
 	 */
 	private int getRowPos(List<Note> notes) throws IllegalArgumentException{
+		
+		//testloop
+		for(Note n : notes) {
+			if (n.getPitch() > pMax || n.getDuration() > dMax) {
+				throw new IllegalArgumentException("p > pMax | d > dMax");
+			}
+		}
+		
+		
 		if(notes.size() != n) {
 			throw new IllegalArgumentException("error in getRowPos");
 		}
@@ -73,6 +82,7 @@ public class NMarkov extends MelodyGenerator{
 				transitionMatrix.set(i, j, transitionMatrix.get(i, j)/counter[i]);
 			}
 		}
+		transitionMatrix = this.addOneToEmptyRows(transitionMatrix);
 	}
 	/**
 	 * 
@@ -106,18 +116,38 @@ public class NMarkov extends MelodyGenerator{
 		
 		return newSong;
 	}
+	/**
+	 * 
+	 * @return a new NMarkov with n-1
+	 */
+	public NMarkov getNMinusOneMarkov() {
+		NMarkov newMarkov = new NMarkov(n-1,pMax,dMax);
+		int nrOfRepr = newMarkov.transitionMatrix.numCols();
+		for(int i = 0; i < newMarkov.transitionMatrix.numRows(); i++) {
+			for(int j = 0; j < newMarkov.transitionMatrix.numCols(); j++) {
+				double sum = 0;
+				for(int t = 0; t < nrOfRepr; t++) {
+					sum += this.transitionMatrix.get(i*nrOfRepr+t, j);
+				}
+				newMarkov.transitionMatrix.set(i, j, sum/nrOfRepr);
+			}
+		}
+		return newMarkov;
+	}
+	
 	public static void main(String[] args) {
 		//NMarkov m = new NMarkov(2,6,8);
-		NMarkov m = new NMarkov(2,6,8);
+		NMarkov m = new NMarkov(2,2,1);
+		ArrayList<ArrayList<Note>> data = new ArrayList<ArrayList<Note>>(); 
 		ArrayList<Note> list = new ArrayList<Note>();
-		list.add(new Note(3,2));
-		list.add(new Note(5,3));
-//		list.add(new Note(2,4));
-//		list.add(new Note(3,4));
-		System.out.println("rowPos = " + m.getRowPos(list));
-//		System.out.println(list.get(3).getNumberRepresentation(6));
-//		System.out.println(Note.getNote(19, 6, 8).getDuration());
-//		System.out.println(Note.getNote(19, 6, 8).getPitch());
+		list.add(new Note(1,1));
+		list.add(new Note(1,2));
+		list.add(new Note(1,2));
+		list.add(new Note(1,1));
+		data.add(list);
+		m.train(data);
+		//System.out.println("N = " + m.transitionMatrix);
+		//System.out.println("N - 1 = " + m.getNMinusOneMarkov().transitionMatrix);
 		
 	}
 	

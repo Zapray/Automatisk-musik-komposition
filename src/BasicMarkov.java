@@ -70,10 +70,6 @@ public class BasicMarkov extends MelodyGenerator{
 			double roll = rand.nextDouble();
 			int i = 0;
 			
-//			while(accum <= roll) {
-//				accum+=transitionMatrix.get(first.getNumberRepresentation(pMax), i);
-//				i++;
-//			}
 			for(; i < transitionMatrix.numCols()-1; i++) {
 				accum+=transitionMatrix.get(first.getNumberRepresentation(pMax), i);
 				if(accum >= roll) {
