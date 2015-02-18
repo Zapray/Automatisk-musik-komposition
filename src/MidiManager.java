@@ -161,7 +161,7 @@ public class MidiManager {
          long tickMeter=0;				//varible for keeping track of what tick the song is on
          MidiEvent NoteOn;				//
          MidiEvent NoteOff;
-         File outputFile = new File(System.getProperty("user.dir")+"/TestSong.mid");
+         File outputFile = new File(System.getProperty("user.dir")+"/songs/TestSong.mid");
          Track track = sequence.createTrack();
         
          
