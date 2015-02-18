@@ -18,7 +18,7 @@ public class BasicMarkov extends MelodyGenerator{
 		super(pMax,dMax);
 		firstNoteGen = new FirstNoteGenerator(pMax, dMax);
 		matrixSize = pMax*dMax;
-		transitionMatrix = new SimpleMatrix(matrixSize,matrixSize);
+		transitionMatrix = new SimpleMatrix(matrixSize, matrixSize);
 	}
 	
 	public BasicMarkov() {
@@ -36,7 +36,7 @@ public class BasicMarkov extends MelodyGenerator{
 			for(int i = 1; i < song.size(); i++) {
 				a = prev.getNumberRepresentation(pMax);
 				b = song.get(i).getNumberRepresentation(pMax);
-				transitionMatrix.set(a, b, transitionMatrix.get(a, b) + 1);
+				transitionMatrix.set(b, a, transitionMatrix.get(b, a) + 1);
 				counter[a]++;
 				prev = song.get(i);
 			}
