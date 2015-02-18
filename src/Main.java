@@ -11,7 +11,7 @@ public class Main {
 		List<? extends List<Note>> l = mm.getData();
 		pMax = mm.getPMax();
 		dMax = mm.getDMax();
-		BasicMarkov markov = new BasicMarkov(pMax, dMax);
+		BasicMarkov markov = new BasicMarkov(pMax, dMax); //TODO give conversion table
 		markov.train(l);
 		List<Note> song = markov.generateSong(length);
 		try {
