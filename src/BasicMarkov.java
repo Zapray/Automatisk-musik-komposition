@@ -76,10 +76,18 @@ public class BasicMarkov extends MelodyGenerator{
 		while(tot < length) {
 			double roll = rand.nextDouble();
 			int i = 0;
-			while(accum <= roll) {
+			
+//			while(accum <= roll) {
+//				accum+=transitionMatrix.get(first.getNumberRepresentation(pMax), i);
+//				i++;
+//			}
+			for(; i < transitionMatrix.numCols(); i++) {
 				accum+=transitionMatrix.get(first.getNumberRepresentation(pMax), i);
-				i++;
+				if(accum >= roll) {
+					break;
+				}
 			}
+			
 			Note newNote = getNote(i);
 			tot += 1/((double)newNote.getDuration());
 			newSong.add(newNote);
