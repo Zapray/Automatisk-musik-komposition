@@ -81,7 +81,7 @@ public class BasicMarkov extends MelodyGenerator{
 //				accum+=transitionMatrix.get(first.getNumberRepresentation(pMax), i);
 //				i++;
 //			}
-			for(; i < transitionMatrix.numCols(); i++) {
+			for(; i < transitionMatrix.numCols()-1; i++) {
 				accum+=transitionMatrix.get(first.getNumberRepresentation(pMax), i);
 				if(accum >= roll) {
 					break;
