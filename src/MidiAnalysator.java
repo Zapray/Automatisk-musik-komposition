@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.*;
+
 
 import javax.sound.midi.*;
 
@@ -25,7 +25,15 @@ public class MidiAnalysator {
    
 
    public static void main(String args[])throws Exception{
-      long tick=1;
+      
+	  File[] files =new File ("/Users/Albin/Desktop/Filerfranhook/Chorus").listFiles(); 
+	   
+	  for (File file : files){
+		  String ext1 = FilenameUtils.getExtension(file.getName());
+		  
+	
+	   
+	  long tick=1;
       long spectick=1;
       ArrayList note= new ArrayList(0);
       ArrayList notelength= new ArrayList(0);
@@ -36,7 +44,8 @@ public class MidiAnalysator {
       Sequencer sequencer = MidiSystem.getSequencer();//Creates a sequencer
       sequencer.open();// have to open the sequencer to be able to use sequences. Don't know why, it works without the first two lines.
       //InputStream is = new BufferedInputStream(new FileInputStream(new File("D:\\MidiMusic\\Hooktheory-2015-02-04-01-25-10.mid")));
-      InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/Albin/Desktop/Filerfranhook/Hooktheory-2015-02-17-04-48-14.mid")));
+      System.out.println("/Users/Albin/Desktop/Filerfranhook/Chorus/" + file.getName());
+      InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/Albin/Desktop/Filerfranhook/Chorus/" + file.getName())));
       //InputStream is = new BufferedInputStream(new FileInputStream(new File("/Users/Albin/Desktop/music.mid")));
       Sequence sequence = MidiSystem.getSequence(is);//Creates a sequence which you can analyze.
       float res = sequence.getResolution();
@@ -111,10 +120,10 @@ public class MidiAnalysator {
          
          
          }
-      File file = new File("/Users/Albin/Desktop/databas.txt");
+      File filen = new File("/Users/Albin/Desktop/testdoc.txt");
    // if file doesnt exists, then create it
-   			if (!file.exists()) {
-   				file.createNewFile();
+   			if (!filen.exists()) {
+   				filen.createNewFile();
    			}
     
       
@@ -127,6 +136,7 @@ public class MidiAnalysator {
    
       }
     outFile.println("-");
+    
 	outFile.close();
       
       /**
@@ -168,6 +178,7 @@ public class MidiAnalysator {
    
    
    sequencer.close();
+	  }
    }//end main
 
 
