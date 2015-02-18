@@ -6,5 +6,7 @@
 	<classpathentry kind="lib" path="libs/EJML-equation-0.26.jar"/>
 	<classpathentry kind="lib" path="libs/EJML-experimental-0.26.jar"/>
 	<classpathentry kind="lib" path="libs/EJML-core-0.26-sources.jar"/>
+	<classpathentry kind="lib" path="libs/commons-io-2.4.jar"/>
+	<classpathentry kind="lib" path="libs/jsoup-1.8.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -110,14 +110,9 @@ public class MidiAnalysator {
                }
 
                startOfSong=false;
-         
+
          
             }
-         
-            
-            
-         
-         
          
          }
       File filen = new File("/Users/Albin/Desktop/testdoc.txt");
