@@ -101,14 +101,9 @@ public class MidiAnalysator {
                }
 
                startOfSong=false;
-         
+
          
             }
-         
-            
-            
-         
-         
          
          }
       File file = new File("/Users/Albin/Desktop/databas.txt");
