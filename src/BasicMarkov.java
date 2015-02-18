@@ -49,17 +49,10 @@ public class BasicMarkov extends MelodyGenerator{
 				transitionMatrix.set(i, j, transitionMatrix.get(i, j)/counter[i]);
 			}
 		}
-		Random rand = new Random();
-		for(int i = 0; i < matrixSize; i++) {
-			double rowLength = 0;
-			for(int j = 0; j < matrixSize; j++) {
-				rowLength+=transitionMatrix.get(i, j);
-			}
-			if (rowLength == 0) {
-				transitionMatrix.set(i,(int)(rand.nextDouble()*matrixSize), 1);
-			}
-		}
+		transitionMatrix = this.addOneToEmptyRows(transitionMatrix);
 	}
+	
+	
 	/**
 	 * 
 	 * @param length how many bars of melody is to be generated
@@ -77,10 +70,6 @@ public class BasicMarkov extends MelodyGenerator{
 			double roll = rand.nextDouble();
 			int i = 0;
 			
-//			while(accum <= roll) {
-//				accum+=transitionMatrix.get(first.getNumberRepresentation(pMax), i);
-//				i++;
-//			}
 			for(; i < transitionMatrix.numCols()-1; i++) {
 				accum+=transitionMatrix.get(first.getNumberRepresentation(pMax), i);
 				if(accum >= roll) {

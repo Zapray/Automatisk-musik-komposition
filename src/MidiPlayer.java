@@ -50,8 +50,9 @@ public class MidiPlayer {
 	            	 }
 	             }
 	        	 line=in.readLine();
-	        	 Note note = new Note(noteLength,notePitch); 
-	        	 theSong.add(note);
+	        	 //Note note = new Note(noteLength,notePitch); 
+	        	 //theSong.add(note);
+	        	 //TODO fix this Albin ?
 	            
 	         
 	         }

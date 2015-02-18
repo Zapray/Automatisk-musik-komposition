@@ -42,5 +42,8 @@ public class FirstNoteGenerator extends MelodyGenerator{
 		}
 		return null;
 	}
-	
+	@Override
+	public String toString(){
+		return notes.toString();
+	}
 }
