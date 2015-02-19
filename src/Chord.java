@@ -11,14 +11,14 @@ public class Chord {
 	private int note2;
 	private int note3;
 	private int duration;
-	private String label;
+	private String label= "other";
 	private String notes[] = {"C","C#","D","D#","E","F","F#","G","G#","A","A#","B"};
 	ArrayList<String> chord = new ArrayList<String>(0);
 	Map<String, List<String>> chordTable= new HashMap<String, List<String>>();
 	private String keys[] = {"C","Cm","D","Dm","E","Em","F","Fm","G","Gm","A","Am","B","Bm"};
 	
 	public static void main(String[] args){
-		Chord theChord = new Chord(72, 76, 79, 0);
+		Chord theChord = new Chord(76, 72, 79, 0);
 		System.out.println(theChord.getLabel());
 	}
 	
