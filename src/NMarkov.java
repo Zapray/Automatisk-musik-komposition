@@ -36,7 +36,7 @@ public class NMarkov extends MelodyGenerator{
 	}
 	
 	/**
-	 * @return an integer representing what row the note combination is located
+	 * @return an integer representing what number the note combination represents
 	 * @throws IllegalArgumentException
 	 */
 	private int getRowPos(List<Note> notes) throws IllegalArgumentException{
@@ -52,16 +52,6 @@ public class NMarkov extends MelodyGenerator{
 		if(notes.size() != n) {
 			throw new IllegalArgumentException("error in getRowPos");
 		}
-//		int sum1 = 0;
-//		for(int i = 1; i <= n; i++) {
-//			sum1+= (int)(Math.pow(pMax, i)*(int)Math.pow(dMax, i-1)*(notes.get(i-1).getPitch()-1));
-//		}
-//		
-//		int sum2 = 0;
-//		for(int i = 2; i <= n; i++) {
-//			sum1+= (int)Math.pow(pMax, i-1)*(int)Math.pow(dMax, i-1)*(notes.get(i-1).getDuration()-1);
-//		}
-//		
 		int sum1 = 0;
 		for(int i = 1; i < n; i++) {
 			sum1+= ((int)Math.pow(pMax, i)*(int)Math.pow(dMax, i-1))*(notes.get(i).getPitch()-1);
@@ -82,8 +72,8 @@ public class NMarkov extends MelodyGenerator{
 		int row = 0;
 		int col = 0;
 		LinkedList<Note> prevs = new LinkedList<Note>();
+		
 		for( List<Note> song : data) {
-			
 			for(int i = 0; i < n; i++) {
 				 prevs.addFirst(song.get(i));
 			}
@@ -96,6 +86,7 @@ public class NMarkov extends MelodyGenerator{
 				prevs.removeLast();
 				prevs.addFirst(song.get(i));
 			}
+			prevs.clear();
 		}
 		for(int i = 0; i < transitionMatrix.numRows(); i++) {
 			for(int j = 0; j < transitionMatrix.numCols(); j++) {
@@ -105,7 +96,7 @@ public class NMarkov extends MelodyGenerator{
 				transitionMatrix.set(i, j, transitionMatrix.get(i, j)/counter[i]);
 			}
 		}
-		//transitionMatrix = this.addOneToEmptyRows(transitionMatrix);
+		transitionMatrix = this.addOneToEmptyRows(transitionMatrix);
 	}
 	public List<MelodyGenerator> getGenerators() {
 		ArrayList<MelodyGenerator> gens = new ArrayList<MelodyGenerator>();
@@ -129,35 +120,51 @@ public class NMarkov extends MelodyGenerator{
 	 */
 	public List<Note> generateSong(int length) { //assuming four four
 		
-		List<MelodyGenerator> generators = getGenerators();
-		
 		ArrayList<Note> newSong = new ArrayList<Note>();
 		Random rand = new Random();
-		int first = (int)(rand.nextDouble()*matrixSize);
+		
+		List<MelodyGenerator> generators = getGenerators();
+		LinkedList<Note> prevs = new LinkedList<Note>();
+		//TODO correct order?
+		for(int i = 0; i < n; i++) {
+			prevs.add(generators.get(i).generateNote(prevs, rand));
+		}
+		
+		//TODO int length needs to work as intended
+		
+		
 		double tot = 0;
-		double accum = 0;
 		
 		while(tot < length) {
-			double roll = rand.nextDouble();
-			int i = 0;
-			while(accum <= roll) {
-				accum+=transitionMatrix.get(first, i);
-				i++;
-			}
-			Note newNote = getNote(i);
-			tot += 1/((double)newNote.getDuration());
+			Note newNote = generateNote(prevs, rand);
 			newSong.add(newNote);
-			i = 0;
-			accum = 0;
+			prevs.addFirst(newNote);
+			prevs.removeLast();
+			
+			tot += 1/((double)newNote.getDuration());
 		}
 		
 		return newSong;
+	}
+	public Note generateNote(List<Note> prevs, Random rand) {
+		double roll = rand.nextDouble();
+		int i = 0;
+		double accum = 0;
+		
+		for(; i < transitionMatrix.numCols()-1; i++) {
+			accum+=transitionMatrix.get(getRowPos(prevs), i);
+			if(accum >= roll) {
+				break;
+			}
+		}
+		
+		return getNote(i);
 	}
 	
 	
 	public static void main(String[] args) {
 		//NMarkov m = new NMarkov(2,6,8);
-		NMarkov m = new NMarkov(4,2,1);
+		NMarkov m = new NMarkov(2,2,1);
 		ArrayList<ArrayList<Note>> data = new ArrayList<ArrayList<Note>>(); 
 		ArrayList<Note> list = new ArrayList<Note>();
 		list.add(new Note(1,1));
@@ -166,12 +173,11 @@ public class NMarkov extends MelodyGenerator{
 		list.add(new Note(1,1));
 		
 //		ArrayList<Note> list2 = new ArrayList<Note>();
-//		list2.add(new Note(1,2));
-//		list2.add(new Note(1,2));
-//		//TODO train crashes for n = 5
+		list.add(new Note(1,2));
+		list.add(new Note(1,2));
 		data.add(list);
 		m.train(data);
-		System.out.println(m.getGenerators());
+		System.out.println(m.generateSong(2));
 	}
 	@Override
 	public String toString() {

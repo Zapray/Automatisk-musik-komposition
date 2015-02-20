@@ -34,6 +34,8 @@ public abstract class MelodyGenerator {
 		}
 		return m;
 	}
+	public abstract Note generateNote(List<Note> prevs, Random rand);
+	
 	public abstract List<Note> generateSong(int length);
 	
 }

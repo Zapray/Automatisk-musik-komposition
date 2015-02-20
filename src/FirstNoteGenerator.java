@@ -4,16 +4,15 @@ import java.util.Random;
 
 public class FirstNoteGenerator extends MelodyGenerator{
 	private double[] notes;
-	private Random randgen;
-	
 	public FirstNoteGenerator(int pMax, int dMax) {
 		super(pMax,dMax);
 		notes = new double[dMax*pMax];
-		randgen = new Random();
-
 	}
-	public Note generateNote() {
-		double roll = randgen.nextDouble();
+	
+	@Override
+	public Note generateNote(List<Note> prevs, Random rand) {
+		//prevs deliberatley not used, since it doesnt depend on the prevs
+		double roll = rand.nextDouble();
 		int i = 0;
 		double accum = 0;
 		while(accum <= roll) {

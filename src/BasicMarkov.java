@@ -61,7 +61,7 @@ public class BasicMarkov extends MelodyGenerator{
 	public List<Note> generateSong(int length) { //assuming four four
 		ArrayList<Note> newSong = new ArrayList<Note>();
 		Random rand = new Random();
-		Note first = firstNoteGen.generateNote();
+		Note first = firstNoteGen.generateNote(null, rand);
 		double tot = 0;
 		double accum = 0;
 		
@@ -87,5 +87,10 @@ public class BasicMarkov extends MelodyGenerator{
 		}
 		
 		return newSong;
+	}
+
+	@Override
+	public Note generateNote(List<Note> prevs, Random rand) {
+		throw new UnsupportedOperationException("not implemented");
 	}
 }
