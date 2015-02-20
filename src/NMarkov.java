@@ -178,6 +178,7 @@ public class NMarkov extends MelodyGenerator{
 		data.add(list);
 		m.train(data);
 		System.out.println(m.generateSong(2));
+		System.out.println(Integer.MAX_VALUE);
 	}
 	@Override
 	public String toString() {
