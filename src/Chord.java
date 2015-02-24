@@ -3,7 +3,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
+//MŒste se šver denna, spottar ut fel ackord ibland :( Tex sŒ blir (62, 67, 59) - (D G B) ett D nŠr det ska vara ett G. 
 
 public class Chord {
 
