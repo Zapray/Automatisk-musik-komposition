@@ -52,7 +52,9 @@ public class ChordAnalyzer {
 		Sequencer sequencer = MidiSystem.getSequencer();//Creates a sequencer
 		sequencer.open();// have to open the sequencer to be able to use sequences. Don't know why, it works without the first two lines.
 		//InputStream is = new BufferedInputStream(new FileInputStream(new File("D:\\MidiMusic\\Hooktheory-2015-02-04-01-25-10.mid")));
-		InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Desktop/Hooktheory_data/Chorus/Hooktheory-2015-02-18-03-40-19.mid")));
+		//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Desktop/Hooktheory_data/Chorus/Hooktheory-2015-02-18-03-40-19.mid")));
+		InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Desktop/Hooktheory_data/Chorus/PausBeginning.mid")));
+		
 		//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/Albin/Desktop/Hooktheory-2015-02-18-01-46-41.mid")));
 		//InputStream is = new BufferedInputStream(new FileInputStream(new File("/Users/Albin/Desktop/music.mid")));
 		Sequence sequence = MidiSystem.getSequence(is);//Creates a sequence which you can analyze.
@@ -73,16 +75,31 @@ public class ChordAnalyzer {
 		MidiEvent [] eventAfter = new MidiEvent[track.size()];
 		MidiEvent [] eventBefore = new MidiEvent[track.size()];
 
-		
+
 		System.out.println(track.size());
+
 		for(int nEvent = 0; nEvent < track.size()-1; nEvent++){
 			MidiEvent event = track.get(nEvent);
 			MidiMessage message = event.getMessage();
 			//System.out.println(event.getTick());
-			
+
 			if(message instanceof ShortMessage){
 
+				long hej = track.get(nEvent).getTick();
+
+				MidiEvent ev = track.get(nEvent);
+				MidiMessage mess = ev.getMessage();
+				ShortMessage shortMess = (ShortMessage) mess;
+				int comm = shortMess.getCommand();
+				if(eventCount == 0 && comm != ShortMessage.NOTE_ON){
+					
+					System.out.print("PAUS    ");
+					System.out.println(convertTicksToDuration(track.get(nEvent).getTick(), 0,res));
+
+				}
+				
 				eventCount++;
+				
 
 
 				if(newTick(track, nEvent)){
@@ -91,16 +108,63 @@ public class ChordAnalyzer {
 					tickCount++;
 					breakPoints[tickCount] = eventCount;
 					int nbrOfEvents = eventCount - breakPoints[tickCount-1];
-					System.out.println("Tick: " + tickCount);
-					System.out.println("Antal events: " + nbrOfEvents);
+					//System.out.println("Tick: " + tickCount);
+					//System.out.println("Antal events: " + nbrOfEvents);
 
-					
+
 
 					if(nbrOfEvents == 3){
+
+
 						
-						
+						MidiEvent event1 = track.get(nEvent-3);
+						MidiMessage message1 = event1.getMessage();
+
+						MidiEvent event2 = track.get(nEvent-2);
+						MidiMessage message2 = event2.getMessage();
+
+						MidiEvent event3 = track.get(nEvent-1);
+						MidiMessage message3 = event3.getMessage();
+
+						ShortMessage shortMessage1 = (ShortMessage) message1;
+						ShortMessage shortMessage2 = (ShortMessage) message2;
+						ShortMessage shortMessage3 = (ShortMessage) message3;
+
+
+						int[] commands = new int[6];
+						commands[0] = shortMessage1.getCommand();
+						commands[1] = shortMessage2.getCommand();
+						commands[2] = shortMessage3.getCommand();
+
+						if(commands[0] == ShortMessage.NOTE_OFF){
+
+
+
+
+							int[] notesInChord = new int[3];
+
+							int[] data = new int[6];
+							notesInChord[0] = shortMessage1.getData1();
+							notesInChord[1] = shortMessage2.getData1();
+							notesInChord[2] = shortMessage3.getData1();
+
+
+							Chord chord = new Chord(notesInChord[0],notesInChord[1],notesInChord[2], convertTicksToDuration(eventAfter[tickCount-2].getTick(), eventBefore[tickCount-2].getTick(),res)); 
+							chordList.add(chord);
+
+
+
+							
+							System.out.println("------------------------ACCORD---------------------");
+							System.out.println(chord.getLabel() + "     " + chord.getDuration());
+							System.out.print("PAUS    ");
+							System.out.println(convertTicksToDuration(eventAfter[tickCount-1].getTick(), eventBefore[tickCount-1].getTick(),res));
+							
+							tmpcount++;
+						}
+
 					}else if(nbrOfEvents == 6){
-						
+
 						MidiEvent event1 = track.get(nEvent-6);
 						MidiMessage message1 = event1.getMessage();
 
@@ -115,7 +179,7 @@ public class ChordAnalyzer {
 
 						MidiEvent event5 = track.get(nEvent-2);
 						MidiMessage message5 = event5.getMessage();
-						
+
 						MidiEvent event6 = track.get(nEvent-1);
 						MidiMessage message6 = event6.getMessage();
 
@@ -126,20 +190,20 @@ public class ChordAnalyzer {
 						ShortMessage shortMessage5 = (ShortMessage) message5;
 						ShortMessage shortMessage6 = (ShortMessage) message6;
 
-//						System.out.println("--------------------NOTE ON/OFF------------------");
-//						System.out.println(shortMessage1.getCommand());
-//						System.out.println(shortMessage2.getCommand());
-//						System.out.println(shortMessage3.getCommand());
-//						System.out.println(shortMessage4.getCommand()); 
-//						System.out.println(shortMessage5.getCommand());
-//						System.out.println(shortMessage6.getCommand());
-						System.out.println("------------------------TICK---------------------");
-						System.out.println(event1.getTick());
-						System.out.println(event2.getTick());
-						System.out.println(event3.getTick());
-						System.out.println(event4.getTick());
-						System.out.println(event5.getTick());
-						System.out.println(event6.getTick());
+						//						System.out.println("--------------------NOTE ON/OFF------------------");
+						//						System.out.println(shortMessage1.getCommand());
+						//						System.out.println(shortMessage2.getCommand());
+						//						System.out.println(shortMessage3.getCommand());
+						//						System.out.println(shortMessage4.getCommand()); 
+						//						System.out.println(shortMessage5.getCommand());
+						//						System.out.println(shortMessage6.getCommand());
+						//						System.out.println("------------------------TICK---------------------");
+						//						System.out.println(event1.getTick());
+						//						System.out.println(event2.getTick());
+						//						System.out.println(event3.getTick());
+						//						System.out.println(event4.getTick());
+						//						System.out.println(event5.getTick());
+						//						System.out.println(event6.getTick());
 
 
 						int[] commands = new int[6];
@@ -170,14 +234,14 @@ public class ChordAnalyzer {
 
 						}
 
-						
+
 						Chord chord = new Chord(notesInChord[0],notesInChord[1],notesInChord[2], convertTicksToDuration(eventAfter[tickCount-2].getTick(), eventBefore[tickCount-2].getTick(),res)); 
 						chordList.add(chord);
-						System.out.println("------------------------NOTES---------------------");
-						System.out.println(notesInChord[0]);
-						System.out.println(notesInChord[1]);
-						System.out.println(notesInChord[2]);
-						
+						//						System.out.println("------------------------NOTES---------------------");
+						//						System.out.println(notesInChord[0]);
+						//						System.out.println(notesInChord[1]);
+						//						System.out.println(notesInChord[2]);
+
 						System.out.println("------------------------ACCORD---------------------");
 						System.out.println(chord.getLabel() + "     " + chord.getDuration());
 						tmpcount++;
