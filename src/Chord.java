@@ -79,7 +79,7 @@ public class Chord {
 		chordD.add("D"); chordD.add("F#"); chordD.add("A");
 		chordE.add("E"); chordE.add("G#"); chordE.add("B");
 		chordF.add("F"); chordF.add("A"); chordF.add("C");
-		chordD.add("G"); chordD.add("B"); chordD.add("D");
+		chordG.add("G"); chordG.add("B"); chordG.add("D");
 		chordA.add("A"); chordA.add("C#"); chordA.add("E");
 		chordB.add("B"); chordB.add("D#"); chordB.add("F#");
 		chordCm.add("C"); chordCm.add("D#"); chordCm.add("G");
