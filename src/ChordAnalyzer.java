@@ -70,8 +70,10 @@ public class ChordAnalyzer {
 		int eventCount = 0;
 		int[] breakPoints = new int[(int) track.ticks()];
 		breakPoints[0] = 1;
+		MidiEvent [] eventAfter = new MidiEvent[track.size()];
+		MidiEvent [] eventBefore = new MidiEvent[track.size()];
 
-
+		
 		System.out.println(track.size());
 		for(int nEvent = 0; nEvent < track.size()-1; nEvent++){
 			MidiEvent event = track.get(nEvent);
@@ -84,14 +86,18 @@ public class ChordAnalyzer {
 
 
 				if(newTick(track, nEvent)){
+					eventAfter[tickCount] = track.get(nEvent);
+					eventBefore[tickCount] = track.get(nEvent-1);
 					tickCount++;
 					breakPoints[tickCount] = eventCount;
 					int nbrOfEvents = eventCount - breakPoints[tickCount-1];
 					System.out.println("Tick: " + tickCount);
-					//System.out.println("Antal events: " + nbrOfEvents);
+					System.out.println("Antal events: " + nbrOfEvents);
 
+					
 
 					if(nbrOfEvents == 3){
+						
 						
 					}else if(nbrOfEvents == 6){
 						
@@ -164,9 +170,8 @@ public class ChordAnalyzer {
 
 						}
 
-						MidiEvent eventAfter = track.get(eventCount);
-						MidiEvent eventBefore = track.get(eventCount-1);
-						Chord chord = new Chord(notesInChord[0],notesInChord[1],notesInChord[2], convertTicksToDuration(eventAfter.getTick(), eventBefore.getTick(),res)); 
+						
+						Chord chord = new Chord(notesInChord[0],notesInChord[1],notesInChord[2], convertTicksToDuration(eventAfter[tickCount-2].getTick(), eventBefore[tickCount-2].getTick(),res)); 
 						chordList.add(chord);
 						System.out.println("------------------------NOTES---------------------");
 						System.out.println(notesInChord[0]);
@@ -174,7 +179,7 @@ public class ChordAnalyzer {
 						System.out.println(notesInChord[2]);
 						
 						System.out.println("------------------------ACCORD---------------------");
-						System.out.println(chord.getLabel());
+						System.out.println(chord.getLabel() + "     " + chord.getDuration());
 						tmpcount++;
 
 
