@@ -53,7 +53,7 @@ public class ChordAnalyzer {
 		sequencer.open();// have to open the sequencer to be able to use sequences. Don't know why, it works without the first two lines.
 		//InputStream is = new BufferedInputStream(new FileInputStream(new File("D:\\MidiMusic\\Hooktheory-2015-02-04-01-25-10.mid")));
 		//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Desktop/Hooktheory_data/Chorus/Hooktheory-2015-02-18-03-40-19.mid")));
-		InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Desktop/Hooktheory_data/Chorus/PausBeginning.mid")));
+		InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Desktop/Hooktheory_data/Intro/Hooktheory-2015-02-18-03-54-00.mid")));//Paus in beginning!!
 		
 		//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/Albin/Desktop/Hooktheory-2015-02-18-01-46-41.mid")));
 		//InputStream is = new BufferedInputStream(new FileInputStream(new File("/Users/Albin/Desktop/music.mid")));
@@ -76,26 +76,19 @@ public class ChordAnalyzer {
 		MidiEvent [] eventBefore = new MidiEvent[track.size()];
 
 
-		System.out.println(track.size());
+		//System.out.println(track.size());
 
 		for(int nEvent = 0; nEvent < track.size()-1; nEvent++){
 			MidiEvent event = track.get(nEvent);
 			MidiMessage message = event.getMessage();
-			//System.out.println(event.getTick());
+			//System.out.println("Tick:  " + event.getTick());
 
 			if(message instanceof ShortMessage){
 
-				long hej = track.get(nEvent).getTick();
-
-				MidiEvent ev = track.get(nEvent);
-				MidiMessage mess = ev.getMessage();
-				ShortMessage shortMess = (ShortMessage) mess;
-				int comm = shortMess.getCommand();
-				if(eventCount == 0 && comm != ShortMessage.NOTE_ON){
-					
+				//If PAUS in begginning
+				if(eventCount == 0 && track.get(nEvent).getTick() != 0){
 					System.out.print("PAUS    ");
 					System.out.println(convertTicksToDuration(track.get(nEvent).getTick(), 0,res));
-
 				}
 				
 				eventCount++;
