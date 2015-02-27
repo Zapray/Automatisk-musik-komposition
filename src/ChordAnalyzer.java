@@ -138,15 +138,15 @@ public class ChordAnalyzer {
 		}else return null;
 
 	}
-	
-	
+
+
 	public static void main(String[] args) throws Exception{
 		ArrayList<Chord> chordList=new ArrayList<Chord>(0);
 		Sequencer sequencer = MidiSystem.getSequencer();//Creates a sequencer
 		sequencer.open();// have to open the sequencer to be able to use sequences. Don't know why, it works without the first two lines.
 		//InputStream is = new BufferedInputStream(new FileInputStream(new File("D:\\MidiMusic\\Hooktheory-2015-02-04-01-25-10.mid")));
-		//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Desktop/Hooktheory_data/Chorus/Hooktheory-2015-02-18-03-40-19.mid")));
-		InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Desktop/Hooktheory_data/Intro/Hooktheory-2015-02-18-03-54-00.mid")));//Paus in beginning!!
+		InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Chorus/Hooktheory-2015-02-18-03-40-19.mid")));
+		//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Intro/Hooktheory-2015-02-18-03-54-00.mid")));//Paus in beginning!!
 
 		//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/Albin/Desktop/Hooktheory-2015-02-18-01-46-41.mid")));
 		//InputStream is = new BufferedInputStream(new FileInputStream(new File("/Users/Albin/Desktop/music.mid")));
@@ -192,15 +192,16 @@ public class ChordAnalyzer {
 
 						int[] notesInChord = new int[3];
 						notesInChord = extractChordNotes(event1, event2, event3, null, null, null);
+						if(!Arrays.equals(notesInChord, new int[3])){
+							Chord chord = addChord(notesInChord, eventAfter[tickCount-2].getTick(), eventBefore[tickCount-2].getTick(), res, chordList);
 
-						Chord chord = addChord(notesInChord, eventAfter[tickCount-2].getTick(), eventBefore[tickCount-2].getTick(), res, chordList);
-						
-						if(chord!=null){
-							System.out.println("------------------------ACCORD---------------------");
-							System.out.println(chord.getLabel() + "     " + chord.getDuration());
-							System.out.print("PAUS    ");
-							System.out.println(convertTicksToDuration(eventAfter[tickCount-1].getTick(), eventBefore[tickCount-1].getTick(),res));
-							chordCount++;
+							if(chord!=null){
+								System.out.println("------------------------ACCORD---------------------");
+								System.out.println(chord.getLabel() + "     " + chord.getDuration());
+								System.out.print("PAUS    ");
+								System.out.println(convertTicksToDuration(eventAfter[tickCount-1].getTick(), eventBefore[tickCount-1].getTick(),res));
+								chordCount++;
+							}
 						}
 					}else if(nbrOfEvents == 6){
 
@@ -210,17 +211,18 @@ public class ChordAnalyzer {
 						MidiEvent event4 = track.get(nEvent-2);
 						MidiEvent event5 = track.get(nEvent-1);
 						MidiEvent event6 = track.get(nEvent);
-						
+
 						int[] notesInChord = new int[3];
 						notesInChord = extractChordNotes(event1, event2, event3, event4, event5, event6);
+						if(!Arrays.equals(notesInChord, new int[3])){
+							Chord chord = addChord(notesInChord, eventAfter[tickCount-2].getTick(), eventBefore[tickCount-2].getTick(), res, chordList);
 
-						Chord chord = addChord(notesInChord, eventAfter[tickCount-2].getTick(), eventBefore[tickCount-2].getTick(), res, chordList);
-						
-						if(chord!=null){
+							if(chord!=null){
 
-							System.out.println("------------------------ACCORD---------------------");
-							System.out.println(chord.getLabel() + "     " + chord.getDuration());				
-							chordCount++;
+								System.out.println("------------------------ACCORD---------------------");
+								System.out.println(chord.getLabel() + "     " + chord.getDuration());				
+								chordCount++;
+							}
 						}
 					}
 				}
@@ -242,14 +244,16 @@ public class ChordAnalyzer {
 
 						int[] notesInChord = new int[3];
 						notesInChord = extractChordNotes(event1, event2, event3, null, null, null);
-						Chord chord = addChord(notesInChord, eventAfter[tickCount-2].getTick(), eventBefore[tickCount-2].getTick(), res, chordList);
+						if(!Arrays.equals(notesInChord, new int[3])){
+							Chord chord = addChord(notesInChord, eventAfter[tickCount-2].getTick(), eventBefore[tickCount-2].getTick(), res, chordList);
 
-						if(chord!=null){
-							System.out.println("------------------------ACCORD---------------------");
-							System.out.println(chord.getLabel() + "     " + chord.getDuration());
-							System.out.print("PAUS    ");
-							System.out.println(convertTicksToDuration(eventAfter[tickCount-1].getTick(), eventBefore[tickCount-1].getTick(),res));
-							chordCount++;
+							if(chord!=null){
+								System.out.println("------------------------ACCORD---------------------");
+								System.out.println(chord.getLabel() + "     " + chord.getDuration());
+								System.out.print("PAUS    ");
+								System.out.println(convertTicksToDuration(eventAfter[tickCount-1].getTick(), eventBefore[tickCount-1].getTick(),res));
+								chordCount++;
+							}
 						}
 
 					}else if(nbrOfEvents == 6){ //CHORD ON and OFF in same tick
@@ -264,13 +268,15 @@ public class ChordAnalyzer {
 
 						int[] notesInChord = new int[3];
 						notesInChord = extractChordNotes(event1, event2, event3, event4, event5, event6);
-						Chord chord = addChord(notesInChord, eventAfter[tickCount-2].getTick(), eventBefore[tickCount-2].getTick(), res, chordList);
+						if(!Arrays.equals(notesInChord, new int[3])){
+							Chord chord = addChord(notesInChord, eventAfter[tickCount-2].getTick(), eventBefore[tickCount-2].getTick(), res, chordList);
 
-						if(chord!=null){
+							if(chord!=null){
 
-							System.out.println("------------------------ACCORD---------------------");
-							System.out.println(chord.getLabel() + "     " + chord.getDuration());
-							chordCount++;
+								System.out.println("------------------------ACCORD---------------------");
+								System.out.println(chord.getLabel() + "     " + chord.getDuration());
+								chordCount++;
+							}
 						}
 
 					}
