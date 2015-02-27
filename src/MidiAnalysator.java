@@ -39,6 +39,7 @@ public class MidiAnalysator {
 				long spectick=1;
 				ArrayList note= new ArrayList(0);
 				ArrayList notelength= new ArrayList(0);
+				ArrayList halfbars= new ArrayList(0);
 				int counter1=0;
 				int counter2=0;
 				boolean foundNote = false;
@@ -57,7 +58,8 @@ public class MidiAnalysator {
 
 				int melodytrack = 0;
 				Track   track = tracks[melodytrack];
-				
+				float halfbar = 0;
+				float notel = 0;
 				
 				for(int nEvent = 0; nEvent < track.size()-1; nEvent++){//loop through events
 					MidiEvent event = track.get(nEvent);
@@ -102,6 +104,8 @@ public class MidiAnalysator {
 							//dataarray[counter1][1]=convertTicksToNoteLength(tick, event.getTick(), res);
 							counter1 +=1;  
 							if(event.getTick()!=event2.getTick()&& nEvent!=track.size()-2){
+								halfbar=halfbar + convertTicksToNoteLength(event.getTick(), event2.getTick(), res);
+								
 								notelength.add(convertTicksToNoteLength(event.getTick(), event2.getTick(), res));
 								note.add(0);
 
@@ -112,7 +116,11 @@ public class MidiAnalysator {
 
 
 						}
-
+						//if (halfbar<0.5){
+							
+							
+							//halfbar=0;
+						//}
 						startOfSong=false;
 
 
