@@ -1,11 +1,9 @@
-import java.util.List;
 import java.util.Random;
 
 import org.ejml.simple.SimpleMatrix;
 
 
 public abstract class MelodyGenerator {
-	public abstract void train(List<? extends List<Note>> data);
 	protected final int pMax;
 	protected final int dMax;
 	
@@ -13,14 +11,7 @@ public abstract class MelodyGenerator {
 			this.pMax = pMax;
 			this.dMax = dMax;
 	}
-	/**
-	 * 
-	 * @param numberRepr a number representation of a note
-	 * @return the corresponding note
-	 */
-	public Note getNote(int numberRepr) {
-		return Note.getNote(numberRepr, pMax, dMax);
-	}
+	
 	protected SimpleMatrix addOneToEmptyRows(SimpleMatrix m) {
 		Random rand = new Random(); //TODO matrixSize -> rows
 		for(int i = 0; i < m.numRows(); i++) {
@@ -34,8 +25,4 @@ public abstract class MelodyGenerator {
 		}
 		return m;
 	}
-	public abstract Note generateNote(List<Note> prevs, Random rand);
-	
-	public abstract List<Note> generateSong(int length);
-	
 }

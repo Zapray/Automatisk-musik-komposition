@@ -23,6 +23,6 @@ public class Frame {
 		return melodyPackage[0];
 	}
 	public Note getLastNote() {
-		return melodyPackage[melodyPackage.length];
+		return melodyPackage[melodyPackage.length-1];
 	}
 }

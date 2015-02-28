@@ -6,7 +6,7 @@ import java.util.Random;
 
 import org.ejml.*;
 import org.ejml.simple.SimpleMatrix;
-public class BasicMarkov extends MelodyGenerator{
+public class BasicMarkov extends MelodyNotesGenerator{
 	private SimpleMatrix transitionMatrix;
 	private FirstNoteGenerator firstNoteGen;
 	private static int matrixSize;

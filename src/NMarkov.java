@@ -7,10 +7,10 @@ import java.util.Random;
 import org.ejml.simple.SimpleMatrix;
 
 
-public class NMarkov extends MelodyGenerator{
+public class NMarkov extends MelodyNotesGenerator{
 
 	private SimpleMatrix transitionMatrix;
-	private MelodyGenerator nMinusOneMarkov;
+	private MelodyNotesGenerator nMinusOneMarkov;
 	
 	private final int n; //order n
 	private final int matrixSize;
@@ -29,9 +29,8 @@ public class NMarkov extends MelodyGenerator{
 		} else {
 			nMinusOneMarkov = new FirstNoteGenerator(pMax,dMax);
 		}
-		
 	}
-	public MelodyGenerator getNMinusOneMarkov() {
+	public MelodyNotesGenerator getNMinusOneMarkov() {
 		return nMinusOneMarkov;
 	}
 	
@@ -98,8 +97,8 @@ public class NMarkov extends MelodyGenerator{
 		}
 		transitionMatrix = this.addOneToEmptyRows(transitionMatrix);
 	}
-	public List<MelodyGenerator> getGenerators() {
-		ArrayList<MelodyGenerator> gens = new ArrayList<MelodyGenerator>();
+	public List<MelodyNotesGenerator> getGenerators() {
+		ArrayList<MelodyNotesGenerator> gens = new ArrayList<MelodyNotesGenerator>();
 		
 		if(nMinusOneMarkov instanceof FirstNoteGenerator) {
 			gens.add(nMinusOneMarkov);
@@ -112,26 +111,49 @@ public class NMarkov extends MelodyGenerator{
 		
 		return gens;
 	}
-	
+	public List<Note> generateSong(double length, int firstPitch) {
+		ArrayList<Note> newSong = new ArrayList<Note>();
+		Random rand = new Random();
+		
+		List<MelodyNotesGenerator> generators = getGenerators();
+		LinkedList<Note> prevs = new LinkedList<Note>();
+		
+		prevs.add(0, new Note(generators.get(0).generateNote(null, rand).getDuration(), firstPitch));
+		//TODO is this done ?
+		for(int i = 1; i < n; i++) {
+			prevs.add(generators.get(i).generateNote(prevs, rand));
+		}
+
+		double tot = 0;
+		
+		while(tot < length) {
+			Note newNote = generateNote(prevs, rand);
+			newSong.add(newNote);
+			prevs.addFirst(newNote);
+			prevs.removeLast();
+			
+			tot += 1/((double)newNote.getDuration());
+		}
+		
+		return newSong;
+	}
 	/**
 	 * 
 	 * @param length how many bars of melody is to be generated
 	 * @return a new song
 	 */
-	public List<Note> generateSong(int length) { //assuming four four
+	public List<Note> generateSong(double length) { //assuming four four
 		
 		ArrayList<Note> newSong = new ArrayList<Note>();
 		Random rand = new Random();
 		
-		List<MelodyGenerator> generators = getGenerators();
+		List<MelodyNotesGenerator> generators = getGenerators();
 		LinkedList<Note> prevs = new LinkedList<Note>();
-		//TODO correct order?
 		for(int i = 0; i < n; i++) {
 			prevs.add(generators.get(i).generateNote(prevs, rand));
 		}
 		
 		//TODO int length needs to work as intended
-		
 		
 		double tot = 0;
 		
