@@ -232,5 +232,13 @@ public class MidiManager {
 		return dMax-1;
 	}
 
+
+
+
+
+	public List<Float> getConversionTable() {
+		return convertTableDuration;
+	}
+
 	
 }

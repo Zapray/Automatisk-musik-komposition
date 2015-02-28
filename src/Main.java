@@ -2,7 +2,8 @@ import java.util.List;
 
 
 public class Main {
-	private static int pMax, dMax, order = 2 , length = 20;
+	private static int pMax, dMax, order = 2;
+	private static double length = 0.5;
 	public static void main(String[] args) {
 		//You need to allow more memory in eclipse / java to run!
 		
@@ -10,10 +11,10 @@ public class Main {
 		List<? extends List<Note>> l = mm.getData();
 		pMax = mm.getPMax();
 		dMax = mm.getDMax();
-		NMarkov markov = new NMarkov(order, pMax, dMax); //TODO give conversion table
+		NMarkov markov = new NMarkov(order, pMax, dMax);
 		markov.train(l);
 		
-		List<Note> song = markov.generateSong(length);
+		List<Note> song = markov.generateSong(length, mm.getConversionTable());
 		try {
 			mm.createMidi(song);
 		} catch (Exception e) {

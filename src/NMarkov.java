@@ -111,7 +111,7 @@ public class NMarkov extends MelodyNotesGenerator{
 		
 		return gens;
 	}
-	public List<Note> generateSong(double length, int firstPitch) {
+	public List<Note> generateSong(double length, int firstPitch, List<Float> conversionTable) {
 		ArrayList<Note> newSong = new ArrayList<Note>();
 		Random rand = new Random();
 		
@@ -119,7 +119,6 @@ public class NMarkov extends MelodyNotesGenerator{
 		LinkedList<Note> prevs = new LinkedList<Note>();
 		
 		prevs.add(0, new Note(generators.get(0).generateNote(null, rand).getDuration(), firstPitch));
-		//TODO is this done ?
 		for(int i = 1; i < n; i++) {
 			prevs.add(generators.get(i).generateNote(prevs, rand));
 		}
@@ -132,41 +131,45 @@ public class NMarkov extends MelodyNotesGenerator{
 			prevs.addFirst(newNote);
 			prevs.removeLast();
 			
-			tot += 1/((double)newNote.getDuration());
+			tot += (conversionTable.get(newNote.getDuration())); //TODO +1-1 ?
 		}
-		
-		return newSong;
+		if (tot != length) {
+			return generateSong(length, firstPitch, conversionTable);
+		}else{
+			return newSong;
+		}
 	}
 	/**
 	 * 
 	 * @param length how many bars of melody is to be generated
 	 * @return a new song
 	 */
-	public List<Note> generateSong(double length) { //assuming four four
+	public List<Note> generateSong(double length, List<Float> conversionTable) { //assuming four four
 		
 		ArrayList<Note> newSong = new ArrayList<Note>();
 		Random rand = new Random();
 		
 		List<MelodyNotesGenerator> generators = getGenerators();
-		LinkedList<Note> prevs = new LinkedList<Note>();
-		for(int i = 0; i < n; i++) {
-			prevs.add(generators.get(i).generateNote(prevs, rand));
-		}
-		
-		//TODO int length needs to work as intended
-		
-		double tot = 0;
-		
-		while(tot < length) {
-			Note newNote = generateNote(prevs, rand);
-			newSong.add(newNote);
-			prevs.addFirst(newNote);
-			prevs.removeLast();
-			
-			tot += 1/((double)newNote.getDuration());
-		}
-		
-		return newSong;
+		return this.generateSong(length, generators.get(0).generateNote(null, rand).getPitch(), conversionTable);
+//		LinkedList<Note> prevs = new LinkedList<Note>();
+//		for(int i = 0; i < n; i++) {
+//			prevs.add(generators.get(i).generateNote(prevs, rand));
+//		}
+//		
+//		//TODO int length needs to work as intended
+//		
+//		double tot = 0;
+//		
+//		while(tot < length) {
+//			Note newNote = generateNote(prevs, rand);
+//			newSong.add(newNote);
+//			prevs.addFirst(newNote);
+//			prevs.removeLast();
+//			
+//			tot += 1/((double)newNote.getDuration());
+//		}
+//		
+//			return newSong;
 	}
 	public Note generateNote(List<Note> prevs, Random rand) {
 		double roll = rand.nextDouble();
@@ -181,26 +184,6 @@ public class NMarkov extends MelodyNotesGenerator{
 		}
 		
 		return getNote(i);
-	}
-	
-	
-	public static void main(String[] args) {
-		//NMarkov m = new NMarkov(2,6,8);
-		NMarkov m = new NMarkov(2,2,1);
-		ArrayList<ArrayList<Note>> data = new ArrayList<ArrayList<Note>>(); 
-		ArrayList<Note> list = new ArrayList<Note>();
-		list.add(new Note(1,1));
-		list.add(new Note(1,2));
-		list.add(new Note(1,2));
-		list.add(new Note(1,1));
-		
-//		ArrayList<Note> list2 = new ArrayList<Note>();
-		list.add(new Note(1,2));
-		list.add(new Note(1,2));
-		data.add(list);
-		m.train(data);
-		System.out.println(m.generateSong(2));
-		System.out.println(Integer.MAX_VALUE);
 	}
 	@Override
 	public String toString() {

@@ -38,7 +38,49 @@ public class Tmn extends MelodyFrameGenerator{
 
 	@Override
 	public void train(List<? extends List<Frame>> data) {
+		chordsMarkov.train(getChordData(data));
+		Frame prevFrame;
 		
+		int[] counter = new int[nextToneMatrix.numRows()];
+		for(List<Frame> song : data) {
+			prevFrame = song.get(0);
+			for(int i = 1; i < song.size(); i++) {
+				int col = song.get(i).getFirstNote().getPitch(); //+1?
+				int lastNote = prevFrame.getLastNote().getPitch();
+				int lastChord = prevFrame.getChord();
+				int row = getRowPos(lastNote, lastChord);
+				nextToneMatrix.set(row, col, nextToneMatrix.get(row, col)+1);
+				counter[row]++;
+				prevFrame = song.get(i);
+			}
+		}
+
+		for(int i = 0; i < nextToneMatrix.numRows(); i++) {
+			for(int j = 0; j < nextToneMatrix.numCols(); j++) {
+				if(counter[i] == 0) {
+					counter[i] = 1;
+				}
+				nextToneMatrix.set(i, j, nextToneMatrix.get(i, j)/counter[i]);
+			}
+		}
+		nextToneMatrix = this.addOneToEmptyRows(nextToneMatrix);
+	}
+	/**
+	 * 
+	 * @param data A list of of all songs, where a song is a list of frames
+	 * @return a list of notes with duration 1 and pitch equal to the chord in the corresponding frame
+	 */
+	private List<? extends List<Note>> getChordData(
+			List<? extends List<Frame>> data) {
+		List<ArrayList<Note>> chordData = new ArrayList<ArrayList<Note>>();
+		for(List<Frame> song : data) {
+			ArrayList<Note> newList = new ArrayList<Note>();
+			for(Frame frame : song) {
+				newList.add(new Note(1, frame.getChord()));
+			}
+			chordData.add(newList);
+		}
+		return chordData;
 	}
 
 	public Frame generateFrame(Frame prev, List<List<Frame>> data, Random rand) {
@@ -47,13 +89,10 @@ public class Tmn extends MelodyFrameGenerator{
 		int chord = chordsMarkov.generateNote(prevs, rand).getPitch();
 		
 		int pitch = generatePitch(prev.getLastNote().getPitch(), chord ,rand);
-		//TODO add pitch thingy
-		
 		
 		NMarkov melodyGen = new NMarkov(MELODYORDER, pMax, dMax);
 		melodyGen.train(filterData(chord, data));
-		melodyGen.generateNote(prevs, rand);
-		List<Note> melodyPackage = melodyGen.generateSong(0.5); //halvtakter
+		List<Note> melodyPackage = melodyGen.generateSong(0.5, pitch); //halvtakter
 		//hopefully the garbage collector deals with the old melodyGen here
 		return new Frame(melodyPackage, chord);
 	}

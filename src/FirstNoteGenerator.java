@@ -11,7 +11,7 @@ public class FirstNoteGenerator extends MelodyNotesGenerator{
 	
 	@Override
 	public Note generateNote(List<Note> prevs, Random rand) {
-		//prevs deliberatley not used, since it doesnt depend on the prevs
+		//prevs deliberately not used, since it doesnt depend on the prevs
 		double roll = rand.nextDouble();
 		int i = 0;
 		double accum = 0;
@@ -32,7 +32,12 @@ public class FirstNoteGenerator extends MelodyNotesGenerator{
 		}
 	}
 	@Override
-	public List<Note> generateSong(double length) {
+	public String toString(){
+		return notes.toString();
+	}
+
+	@Override
+	public List<Note> generateSong(double length, List<Float> conversionTable) {
 		try {
 			throw new Exception("TODO bad infrastructure, (USE generateNote() instead!)");
 		} catch (Exception e) {
@@ -40,9 +45,5 @@ public class FirstNoteGenerator extends MelodyNotesGenerator{
 			e.printStackTrace();
 		}
 		return null;
-	}
-	@Override
-	public String toString(){
-		return notes.toString();
 	}
 }
