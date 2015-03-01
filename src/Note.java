@@ -21,7 +21,7 @@ public class Note {
 	 * @return note the note corresponding to the given number
 	 */
 	public static Note getNote(int matrixNumber, int pitchMax, int durationMax) {
-		return new Note((int) Math.floor(matrixNumber/pitchMax)+1, (matrixNumber%pitchMax)+1); //TODO pitch �r feel!
+		return new Note((int) Math.floor(matrixNumber/pitchMax)+1, (matrixNumber%pitchMax)+1);
 	}
 	@Override
 	public String toString() {

@@ -2,7 +2,7 @@ import java.util.List;
 import java.util.Random;
 
 
-public class FirstNoteGenerator extends MelodyGenerator{
+public class FirstNoteGenerator extends MelodyNotesGenerator{
 	private double[] notes;
 	public FirstNoteGenerator(int pMax, int dMax) {
 		super(pMax,dMax);
@@ -32,7 +32,7 @@ public class FirstNoteGenerator extends MelodyGenerator{
 		}
 	}
 	@Override
-	public List<Note> generateSong(int length) {
+	public List<Note> generateSong(double length) {
 		try {
 			throw new Exception("TODO bad infrastructure, (USE generateNote() instead!)");
 		} catch (Exception e) {

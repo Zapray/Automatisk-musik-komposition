@@ -25,5 +25,6 @@ public class Frame {
 	}
 	public Note getLastNote() {
 		return melodyPackage.get(melodyPackage.size());
+
 	}
 }
