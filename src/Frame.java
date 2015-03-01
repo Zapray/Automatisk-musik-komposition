@@ -1,15 +1,16 @@
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class Frame {
-	private Note[] melodyPackage; //TODO queue Instead? Maybe?
+	List<Note> melodyPackage; //TODO queue Instead? Maybe?
 	private int chord;
 	
 	public Frame(List<Note> melodyPackage, int chord) {
 		this.chord = chord;
-		this.melodyPackage = (Note[]) melodyPackage.toArray();
+		this.melodyPackage = melodyPackage;
 	}
-	public Note[] getMelodyPackage(){
+	public List<Note> getMelodyPackage(){
 		return melodyPackage;
 	}
 	/**
@@ -20,9 +21,9 @@ public class Frame {
 		return chord;
 	}
 	public Note getFirstNote() {
-		return melodyPackage[0];
+		return melodyPackage.get(0);
 	}
 	public Note getLastNote() {
-		return melodyPackage[melodyPackage.length];
+		return melodyPackage.get(melodyPackage.size());
 	}
 }
