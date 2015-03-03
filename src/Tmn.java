@@ -19,7 +19,7 @@ public class Tmn extends MelodyFrameGenerator{
 	//transitionMatrix for determining the next tone of the next melodyPackage
 	private SimpleMatrix nextToneMatrix;
 	private NMarkov chordsMarkov;
-	private static final int chordsOrder = 1;
+	private static final int chordsOrder = 5;
 	private static final int MELODYORDER = 2;
 	/**
 	 * 

@@ -186,7 +186,10 @@ public class NMarkov extends MelodyNotesGenerator{
 	}
 	public Note generateNote(List<Note> prevs, Random rand) {
 		if(prevs == null) {
-			return this.getGenerators().get(0).generateNote(prevs, rand);
+			prevs = new ArrayList<Note>();
+		}
+		if(prevs.size() < n) {
+			return this.getGenerators().get(prevs.size()).generateNote(prevs, rand);
 		}
 		double roll = rand.nextDouble();
 		int i = 0;
