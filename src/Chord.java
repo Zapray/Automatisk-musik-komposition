@@ -64,6 +64,14 @@ public class Chord {
 
 				if(chordTable.get(key).contains(note2letter(note1)) && chordTable.get(key).contains(note2letter(note2)) && chordTable.get(key).contains(note2letter(note3))){
 					label = key;
+				}else if(chordTable.get(key).contains(note2letter(note1)) && chordTable.get(key).contains(note2letter(note2))){
+					label = key;
+				}else if(chordTable.get(key).contains(note2letter(note1)) && chordTable.get(key).contains(note2letter(note3))){
+					label = key;
+				}else if(chordTable.get(key).contains(note2letter(note2)) && chordTable.get(key).contains(note2letter(note3))){
+					label = key;
+				}else if(chordTable.get(key).contains(note2letter(note1))){
+					label = key;
 				}
 
 			}
@@ -119,51 +127,79 @@ public class Chord {
 	
 	public void createChordTable(){
 		List<String> chordC = new ArrayList<String>();
-		//List<String> chordCsharp = new ArrayList<String>();
+		List<String> chordCsharp = new ArrayList<String>();
 		List<String> chordD = new ArrayList<String>();
+		List<String> chordDsharp = new ArrayList<String>();
 		List<String> chordE = new ArrayList<String>();
 		List<String> chordF = new ArrayList<String>();
+		List<String> chordFsharp = new ArrayList<String>();
 		List<String> chordG = new ArrayList<String>();
+		List<String> chordGsharp = new ArrayList<String>();
 		List<String> chordA = new ArrayList<String>();
+		List<String> chordAsharp = new ArrayList<String>();
 		List<String> chordB = new ArrayList<String>();
 		List<String> chordCm = new ArrayList<String>();
+		List<String> chordCmsharp = new ArrayList<String>();
 		List<String> chordDm = new ArrayList<String>();
+		List<String> chordDmsharp = new ArrayList<String>();
 		List<String> chordEm = new ArrayList<String>();
 		List<String> chordFm = new ArrayList<String>();
+		List<String> chordFmsharp = new ArrayList<String>();
 		List<String> chordGm = new ArrayList<String>();
+		List<String> chordGmsharp = new ArrayList<String>();
 		List<String> chordAm = new ArrayList<String>();
+		List<String> chordAmsharp = new ArrayList<String>();
 		List<String> chordBm = new ArrayList<String>();
 
 
 		chordC.add("C"); chordC.add("E"); chordC.add("G");
-		//chordCsharp.add("C#"); chordCsharp.add("E#"); chordCsharp.add("G#");
+		chordCsharp.add("C#"); chordCsharp.add("E#"); chordCsharp.add("G#");
 		chordD.add("D"); chordD.add("F#"); chordD.add("A");
+		chordDsharp.add("D#"); chordDsharp.add("G"); chordDsharp.add("A#");
 		chordE.add("E"); chordE.add("G#"); chordE.add("B");
 		chordF.add("F"); chordF.add("A"); chordF.add("C");
+		chordFsharp.add("F#"); chordFsharp.add("A#"); chordFsharp.add("C#");
 		chordG.add("G"); chordG.add("B"); chordG.add("D");
+		chordGsharp.add("G#"); chordGsharp.add("C"); chordGsharp.add("D#");
 		chordA.add("A"); chordA.add("C#"); chordA.add("E");
+		chordAsharp.add("A#"); chordAsharp.add("D"); chordAsharp.add("F");
 		chordB.add("B"); chordB.add("D#"); chordB.add("F#");
 		chordCm.add("C"); chordCm.add("D#"); chordCm.add("G");
+		chordCmsharp.add("C#"); chordCmsharp.add("E"); chordCmsharp.add("G#");
 		chordDm.add("D"); chordDm.add("F"); chordDm.add("A");
+		chordDmsharp.add("D#"); chordDmsharp.add("F#"); chordDmsharp.add("A#");
 		chordEm.add("E"); chordEm.add("G"); chordEm.add("B");
 		chordFm.add("F"); chordFm.add("G#"); chordFm.add("C");
+		chordFmsharp.add("F#"); chordFmsharp.add("A"); chordFmsharp.add("C#");
 		chordGm.add("G"); chordGm.add("A#"); chordGm.add("D");
+		chordGmsharp.add("G#"); chordGmsharp.add("B"); chordGmsharp.add("D#");
 		chordAm.add("A"); chordAm.add("C"); chordAm.add("E");
+		chordAmsharp.add("A#"); chordAmsharp.add("C#"); chordAmsharp.add("F");
 		chordBm.add("B"); chordBm.add("D"); chordBm.add("F#");
 
 		chordTable.put("C", chordC);
+		chordTable.put("C#", chordCsharp);
 		chordTable.put("D", chordD);
+		chordTable.put("D#", chordDsharp);
 		chordTable.put("E", chordE);
 		chordTable.put("F", chordF);
+		chordTable.put("F#", chordFsharp);
 		chordTable.put("G", chordG);
+		chordTable.put("G#", chordGsharp);
 		chordTable.put("A", chordA);
+		chordTable.put("A#", chordAsharp);
 		chordTable.put("B", chordB);
 		chordTable.put("Cm", chordCm);
+		chordTable.put("Cm#", chordCmsharp);
 		chordTable.put("Dm", chordDm);
+		chordTable.put("Dm#", chordDmsharp);
 		chordTable.put("Em", chordEm);
 		chordTable.put("Fm", chordFm);
+		chordTable.put("Fm#", chordFmsharp);
 		chordTable.put("Gm", chordGm);
+		chordTable.put("Gm#", chordGmsharp);
 		chordTable.put("Am", chordAm);
+		chordTable.put("Am#", chordAmsharp);
 		chordTable.put("Bm", chordBm);
 
 	}
