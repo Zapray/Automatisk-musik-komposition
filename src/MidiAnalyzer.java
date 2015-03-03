@@ -37,59 +37,68 @@ import javax.sound.midi.*;
 
 
 public class MidiAnalyzer {
-	
+
 	public static void main(String args[]) throws Exception{
-		Sequencer sequencer = MidiSystem.getSequencer();//Creates a sequencer
-		sequencer.open();// have to open the sequencer to be able to use sequences. Don't know why, it works without the first two lines.
-		//InputStream is = new BufferedInputStream(new FileInputStream(new File("D:\\Latarfranhook\\Verse\\Hooktheory-2015-02-21-01-37-31.mid")));
-		//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Intro/Hooktheory-2015-02-18-03-54-00.mid")));//Paus in beginning!!
-		InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Chorus/Hooktheory-2015-02-18-03-40-19.mid")));//Paus in beginning!!
-		
-		//System.out.println("/Users/Albin/Desktop/Filerfranhook/Chorus/" + file.getName());
-		//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/Albin/Desktop/songweknow/" + file.getName())));
-		//InputStream is = new BufferedInputStream(new FileInputStream(new File("/Users/Albin/Desktop/music.mid")));
-		Sequence sequence = MidiSystem.getSequence(is);//Creates a sequence which you can analyze.
-		float res = sequence.getResolution();
-		//System.out.println(res);
-		//System.out.println(sequence.getDivisionType());
-		Track[] tracks = sequence.getTracks();//Creates an array to be able to separate tracks.
-		int track0 = 0;
-		int track1 = 1;
-		Track   melodytrack = tracks[track0];
-		Track   chordtrack = tracks[track1];
-		List<ArrayList<FloatNote>> melodyList = findMelody(melodytrack, res);
-		ArrayList<Chord> chordList = findChords(chordtrack, res);
-		//System.out.println(test.size());
-		//System.out.println(test.get(22).size());
-		//for(int i=0; i<test.size(); i++ ){
-			//System.out.println("Package");
-			//for(int j=0; j<test.get(i).size(); j++){
+		File[] files =new File (System.getProperty("user.dir")+"/database/Chorus/").listFiles(); 
+
+		for (File file : files){
+			String ext1 = FilenameUtils.getExtension(file.getName());
+			if(ext1.equals("mid")){
+
+				Sequencer sequencer = MidiSystem.getSequencer();//Creates a sequencer
+				sequencer.open();// have to open the sequencer to be able to use sequences. Don't know why, it works without the first two lines.
+				//InputStream is = new BufferedInputStream(new FileInputStream(new File("D:\\Latarfranhook\\Verse\\Hooktheory-2015-02-21-01-37-31.mid")));
+				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Intro/Hooktheory-2015-02-18-03-54-00.mid")));//Paus in beginning!!
+				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Chorus/Hooktheory-2015-02-18-03-40-19.mid")));
+				InputStream is = new BufferedInputStream(new FileInputStream( new File(System.getProperty("user.dir")+"/database/Chorus/" + file.getName())));
+				//System.out.println("/Users/Albin/Desktop/Filerfranhook/Chorus/" + file.getName());
+				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/Albin/Desktop/songweknow/" + file.getName())));
+				//InputStream is = new BufferedInputStream(new FileInputStream(new File("/Users/Albin/Desktop/music.mid")));
+				Sequence sequence = MidiSystem.getSequence(is);//Creates a sequence which you can analyze.
+				float res = sequence.getResolution();
+				//System.out.println(res);
+				//System.out.println(sequence.getDivisionType());
+				Track[] tracks = sequence.getTracks();//Creates an array to be able to separate tracks.
+				int track0 = 0;
+				int track1 = 1;
+				Track   melodytrack = tracks[track0];
+				Track   chordtrack = tracks[track1];
+				List<ArrayList<FloatNote>> melodyList = findMelody(melodytrack, res);
+				ArrayList<Chord> chordList = findChords(chordtrack, res);
+				//System.out.println(test.size());
+				//System.out.println(test.get(22).size());
+				//for(int i=0; i<test.size(); i++ ){
+				//System.out.println("Package");
+				//for(int j=0; j<test.get(i).size(); j++){
 				//System.out.println(test.get(i).size());
-				
+
 				//System.out.println(test.get(i).get(j));
-			//}//end for
-		//}//end for
-		File filen = new File("/Users/KarinBrotjefors/Desktop/testdoc.txt");
-		// if file doesnt exists, then create it
-		if (!filen.exists()) {
-			filen.createNewFile();
-		}
-
-
-		PrintWriter outFile = new PrintWriter(new FileWriter("/Users/KarinBrotjefors/Desktop/testdoc.txt", true));
-		
-		//if(test2.size()==test.size()){
-			for (int i=0;i<chordList.size();i++){
-				outFile.println("?"+chordList.get(i).getLabel());
-				for (int j =0; j<melodyList.get(i).size();j++){
-					outFile.println(melodyList.get(i).get(j).getPitch() + "," + melodyList.get(i).get(j).getDuration());
+				//}//end for
+				//}//end for
+				File filen = new File("/Users/KarinBrotjefors/Desktop/testdoc.txt");
+				// if file doesnt exists, then create it
+				if (!filen.exists()) {
+					filen.createNewFile();
 				}
-			}
-		//}
-		outFile.println("-");
 
-		outFile.close();
-		sequencer.close();
+
+				PrintWriter outFile = new PrintWriter(new FileWriter("/Users/KarinBrotjefors/Desktop/testdoc.txt", true));
+
+				if(chordList.size()==melodyList.size()){
+				for (int i=0;i<chordList.size();i++){
+					outFile.println("?"+chordList.get(i).getLabel());
+					for (int j =0; j<melodyList.get(i).size();j++){
+						outFile.println(melodyList.get(i).get(j).getPitch() + "," + melodyList.get(i).get(j).getDuration());
+					}
+				}
+				outFile.println("-");
+				}
+				
+
+				outFile.close();
+				sequencer.close();
+			}
+		}
 	}//end main
 
 	public static float convertTicksToNoteLength(long tick1, long tick2, float res){
@@ -98,7 +107,7 @@ public class MidiAnalyzer {
 		return (tick2-tick1)/res;
 
 	}//end convertTicksToNoteLength
-	
+
 	public static float convertTicksToDuration(long tick1, long tick2, float res){
 		res=res*4;
 		//System.out.println(tick1);
@@ -112,171 +121,169 @@ public class MidiAnalyzer {
 		return durationindec;
 
 	}//end convertTicksToDuration
-	
+
 	public static List<ArrayList<FloatNote>> findMelody(Track track, float res){//Takes a track and returns a list of melody packages
-		
+
 		//File[] files =new File ("/Users/Albin/Desktop/songweknow/").listFiles(); 
 
 		//for (File file : files){
-			//String ext1 = FilenameUtils.getExtension(file.getName());
-			//if(ext1.equals("mid")){
+		//String ext1 = FilenameUtils.getExtension(file.getName());
+		//if(ext1.equals("mid")){
 
 
-				long tick=1;
-				//long spectick=1;
-				ArrayList<Integer> note= new ArrayList<Integer>(0);
-				ArrayList<Float> notelength= new ArrayList<Float>(0);
-				//ArrayList halfbars= new ArrayList(0);
-				//int counter1=0;
-				//int counter2=0;
-				//boolean foundNote = false;
-				boolean startOfSong = true;
-				
-
-				
-				//float halfbar = 0;
-				//float notel = 0;
-				
-				for(int nEvent = 0; nEvent < track.size()-1; nEvent++){//loop through events
-					MidiEvent event = track.get(nEvent);
-					MidiMessage message = event.getMessage();
-					//System.out.println(message);
-					MidiEvent event2 = track.get(nEvent+1);
-					//if(message instanceof MetaMessage){
-						//MetaMessage metaMessage=(MetaMessage) message;
-						//System.out.println("type:   " + metaMessage.getType());
-						//System.out.println("data:   " + metaMessage.getData());
+		long tick=1;
+		//long spectick=1;
+		ArrayList<Integer> note= new ArrayList<Integer>(0);
+		ArrayList<Float> notelength= new ArrayList<Float>(0);
+		//ArrayList halfbars= new ArrayList(0);
+		//int counter1=0;
+		//int counter2=0;
+		//boolean foundNote = false;
+		boolean startOfSong = true;
 
 
 
-					//}
+		//float halfbar = 0;
+		//float notel = 0;
 
-					if(message instanceof ShortMessage){//every event contains a short message or a meta message.
-
-						ShortMessage shortMessage = (ShortMessage) message;
-
-						if(event.getTick()!=0 && startOfSong){
-
-							notelength.add(convertTicksToNoteLength(0, event.getTick(), res));
-							note.add(0);
-
-							//dataarray[counter1][1]=convertTicksToNoteLength(0, event.getTick(), res);
-							//dataarray[counter1][0]=0;
-
-							//counter1+=1;
-						}//End if
-
-						if(shortMessage.getCommand() == ShortMessage.NOTE_ON){
-							//System.out.println(shortMessage.getData1() +  "    " + shortMessage.getData2()  );
-							note.add(shortMessage.getData1());
-							//dataarray[counter1][0]=shortMessage.getData1();
-							tick=event.getTick();
-							//System.out.println("Detta Šr en note on");
-							//System.out.println(tick);
-						}else if(shortMessage.getCommand() == ShortMessage.NOTE_OFF){
-							//System.out.println("Detta Šr en note off");
-							notelength.add(convertTicksToNoteLength(tick, event.getTick(), res));
-							//dataarray[counter1][1]=convertTicksToNoteLength(tick, event.getTick(), res);
-							//counter1 +=1;  
-							if(event.getTick()!=event2.getTick()&& nEvent!=track.size()-2){
-								//halfbar=halfbar + convertTicksToNoteLength(event.getTick(), event2.getTick(), res);
-								
-								notelength.add(convertTicksToNoteLength(event.getTick(), event2.getTick(), res));
-								note.add(0);
-
-								//dataarray[counter1][1]=convertTicksToNoteLength(event.getTick(), event2.getTick(), res);
-								//dataarray[counter1][0]=0;
-								//counter1+=1;
-							}//End if
+		for(int nEvent = 0; nEvent < track.size()-1; nEvent++){//loop through events
+			MidiEvent event = track.get(nEvent);
+			MidiMessage message = event.getMessage();
+			//System.out.println(message);
+			MidiEvent event2 = track.get(nEvent+1);
+			//if(message instanceof MetaMessage){
+			//MetaMessage metaMessage=(MetaMessage) message;
+			//System.out.println("type:   " + metaMessage.getType());
+			//System.out.println("data:   " + metaMessage.getData());
 
 
-						}//End if
-						startOfSong=false;
 
+			//}
 
+			if(message instanceof ShortMessage){//every event contains a short message or a meta message.
+
+				ShortMessage shortMessage = (ShortMessage) message;
+
+				if(event.getTick()!=0 && startOfSong){
+
+					notelength.add(convertTicksToNoteLength(0, event.getTick(), res));
+					note.add(0);
+
+					//dataarray[counter1][1]=convertTicksToNoteLength(0, event.getTick(), res);
+					//dataarray[counter1][0]=0;
+
+					//counter1+=1;
+				}//End if
+
+				if(shortMessage.getCommand() == ShortMessage.NOTE_ON){
+					//System.out.println(shortMessage.getData1() +  "    " + shortMessage.getData2()  );
+					note.add(shortMessage.getData1());
+					//dataarray[counter1][0]=shortMessage.getData1();
+					tick=event.getTick();
+					//System.out.println("Detta Šr en note on");
+					//System.out.println(tick);
+				}else if(shortMessage.getCommand() == ShortMessage.NOTE_OFF){
+					//System.out.println("Detta Šr en note off");
+					notelength.add(convertTicksToNoteLength(tick, event.getTick(), res));
+					//dataarray[counter1][1]=convertTicksToNoteLength(tick, event.getTick(), res);
+					//counter1 +=1;  
+					if(event.getTick()!=event2.getTick()&& nEvent!=track.size()-2){
+						//halfbar=halfbar + convertTicksToNoteLength(event.getTick(), event2.getTick(), res);
+
+						notelength.add(convertTicksToNoteLength(event.getTick(), event2.getTick(), res));
+						note.add(0);
+
+						//dataarray[counter1][1]=convertTicksToNoteLength(event.getTick(), event2.getTick(), res);
+						//dataarray[counter1][0]=0;
+						//counter1+=1;
 					}//End if
 
-				}//End for
-				float lastDuration=0;
-				ArrayList<FloatNote> melody = new ArrayList<FloatNote>();
-				List<ArrayList<FloatNote>> melodyPack = new ArrayList<ArrayList<FloatNote>>();
-				float combinedLength=0;
-				int where=0;
-				FloatNote floatNote;
-				int nmbrOfPacks = 0;
-				for(int index = 0; index < notelength.size()-1; index++){
-					combinedLength=combinedLength + (float)notelength.get(index);
-					//System.out.println(combinedLength);
-					if(combinedLength >= (float)0.5){
-						if(lastDuration != 0){
-							floatNote = new FloatNote(lastDuration, (float) note.get(where-1));
-							melody.add(floatNote);
-						}
-						lastDuration = combinedLength - (float)0.5;
-						if(lastDuration != 0){
-							for(int i = where; i < index; i++){
-								floatNote = new FloatNote((float) notelength.get(i), (float) note.get(i));
-								melody.add(floatNote);
-								
-							}//End for
-							floatNote = new FloatNote( (float)notelength.get(index)-lastDuration, (float) note.get(index));
-							melody.add(floatNote);
-						}else{
-						
-							for(int i = where; i < index+1; i++){
-								floatNote = new FloatNote((float) notelength.get(i), (float) note.get(i));
-								melody.add(floatNote);
-							
-							}//End for
+
+				}//End if
+				startOfSong=false;
 
 
-						}//end else
-						nmbrOfPacks++;
-						melodyPack.add(melody);
-						//System.out.println(melodyPack.get(nmbrOfPacks-1).size());
-						melody = new ArrayList<FloatNote>();
-						where = index+1;
-						combinedLength=lastDuration;
-						
-						//System.out.println(melodyPack.size());
-						//System.out.println(melodyPack.get(nmbrOfPacks-1).size());
-					}//End if
-					
-					
-					
-					
-					
-				}//End for
-				return melodyPack;
-	
+			}//End if
+
+		}//End for
+		float lastDuration=0;
+		ArrayList<FloatNote> melody = new ArrayList<FloatNote>();
+		List<ArrayList<FloatNote>> melodyPack = new ArrayList<ArrayList<FloatNote>>();
+		float combinedLength=0;
+		int where=0;
+		FloatNote floatNote;
+		int nmbrOfPacks = 0;
+		for(int index = 0; index < notelength.size()-1; index++){
+			combinedLength=combinedLength + (float)notelength.get(index);
+			//System.out.println(combinedLength);
+			if(combinedLength >= (float)0.5){
+				if(lastDuration != 0){
+					floatNote = new FloatNote(lastDuration, (float) note.get(where-1));
+					melody.add(floatNote);
+				}
+				lastDuration = combinedLength - (float)0.5;
+				if(lastDuration != 0){
+					for(int i = where; i < index; i++){
+						floatNote = new FloatNote((float) notelength.get(i), (float) note.get(i));
+						melody.add(floatNote);
+
+					}//End for
+					floatNote = new FloatNote( (float)notelength.get(index)-lastDuration, (float) note.get(index));
+					melody.add(floatNote);
+				}else{
+
+					for(int i = where; i < index+1; i++){
+						floatNote = new FloatNote((float) notelength.get(i), (float) note.get(i));
+						melody.add(floatNote);
+
+					}//End for
+
+
+				}//end else
+				nmbrOfPacks++;
+				melodyPack.add(melody);
+				//System.out.println(melodyPack.get(nmbrOfPacks-1).size());
+				melody = new ArrayList<FloatNote>();
+				where = index+1;
+				combinedLength=lastDuration;
+
+				//System.out.println(melodyPack.size());
+				//System.out.println(melodyPack.get(nmbrOfPacks-1).size());
+			}//End if
+
+
+
+
+
+		}//End for
+		return melodyPack;
+
 	}// End MelodyAnalyzer
-	
+
 	public static ArrayList<Chord> findChords(Track track, float res){
-		
+
 		ArrayList<Chord> chordList = createChordList(track, res);
 
 		//Print chordList
-//		Iterator itr = chordList.iterator();
-//		while(itr.hasNext()) {
-//			Chord chord = (Chord) itr.next();
-//			System.out.println(chord.getLabel() + "   " + chord.getDuration());
-//		}
+		//		Iterator itr = chordList.iterator();
+		//		while(itr.hasNext()) {
+		//			Chord chord = (Chord) itr.next();
+		//			System.out.println(chord.getLabel() + "   " + chord.getDuration());
+		//		}
 
 		ArrayList<Chord> halfBarList = createHalfBarList(chordList);
 
 		//Print halfBarList
-//		System.out.println(" ");
-//		Iterator itr2 = halfBarList.iterator();
-//		while(itr2.hasNext()) {
-//			Chord chord = (Chord) itr2.next();
-//			System.out.println(chord.getLabel() + "   " + chord.getDuration());
-//		}
-		
+		//		System.out.println(" ");
+		//		Iterator itr2 = halfBarList.iterator();
+		//		while(itr2.hasNext()) {
+		//			Chord chord = (Chord) itr2.next();
+		//			System.out.println(chord.getLabel() + "   " + chord.getDuration());
+		//		}
+
 		return halfBarList;
-		
+
 	}
-	
-	
 
 	public static boolean newTick(Track track, int nEvent){
 
@@ -341,8 +348,8 @@ public class MidiAnalyzer {
 			commands[4] = shortMessage5.getCommand();
 			commands[5] = shortMessage6.getCommand();
 
-			
-			
+
+
 			int[] data = new int[6];
 			data[0] = shortMessage1.getData1();
 			data[1] = shortMessage2.getData1();
@@ -363,7 +370,7 @@ public class MidiAnalyzer {
 
 			}
 			return notesInChord;
-			
+
 		}
 
 
@@ -389,7 +396,7 @@ public class MidiAnalyzer {
 			MidiEvent event = track.get(track.size()-metaMessageCount);
 			MidiMessage message = event.getMessage();
 			isMeta = message instanceof MetaMessage;
-			
+
 		}
 
 		for(int nEvent = 0; nEvent < track.size(); nEvent++){
@@ -407,9 +414,9 @@ public class MidiAnalyzer {
 
 				}
 				//Extract last chord
-				
-				
-				
+
+
+
 				if(nEvent == track.size()-metaMessageCount-1){ //There is a MetaMessage in the end (Is it always??)
 					int nbrOfEvents = eventCount - breakPoints[tickCount-1]-1;
 					if(nbrOfEvents == 3){
@@ -632,12 +639,12 @@ public class MidiAnalyzer {
 	}
 
 
-	
-	
-		
-	
-	
-	
+
+
+
+
+
+
 
 
 }// End MidiAnalyzer
