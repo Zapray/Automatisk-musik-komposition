@@ -114,6 +114,8 @@ public class ChordAnalyzer {
 			commands[4] = shortMessage5.getCommand();
 			commands[5] = shortMessage6.getCommand();
 
+			
+			
 			int[] data = new int[6];
 			data[0] = shortMessage1.getData1();
 			data[1] = shortMessage2.getData1();
@@ -122,6 +124,7 @@ public class ChordAnalyzer {
 			data[4] = shortMessage5.getData1();
 			data[5] = shortMessage6.getData1();
 
+			
 			int[] notesInChord = new int[3];
 
 			int count = 0;
@@ -134,7 +137,7 @@ public class ChordAnalyzer {
 
 			}
 			return notesInChord;
-
+			
 		}
 
 
@@ -151,6 +154,17 @@ public class ChordAnalyzer {
 		MidiEvent [] eventAfter = new MidiEvent[track.size()];
 		MidiEvent [] eventBefore = new MidiEvent[track.size()];
 
+		//Count metaMessages in the end
+		int metaMessageCount = 0;
+		boolean isMeta = true;
+
+		while(isMeta){
+			metaMessageCount++;
+			MidiEvent event = track.get(track.size()-metaMessageCount);
+			MidiMessage message = event.getMessage();
+			isMeta = message instanceof MetaMessage;
+			
+		}
 
 		for(int nEvent = 0; nEvent < track.size(); nEvent++){
 			MidiEvent event = track.get(nEvent);
@@ -167,7 +181,10 @@ public class ChordAnalyzer {
 
 				}
 				//Extract last chord
-				if(nEvent == track.size()-2){ //There is a MetaMessage in the end (Is it always??)
+				
+				
+				
+				if(nEvent == track.size()-metaMessageCount-1){ //There is a MetaMessage in the end (Is it always??)
 					int nbrOfEvents = eventCount - breakPoints[tickCount-1]-1;
 					if(nbrOfEvents == 3){
 
@@ -395,6 +412,8 @@ public class ChordAnalyzer {
 		//InputStream is = new BufferedInputStream(new FileInputStream(new File("D:\\MidiMusic\\Hooktheory-2015-02-04-01-25-10.mid")));
 		//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Chorus/Hooktheory-2015-02-18-03-40-19.mid")));
 		//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Intro/Hooktheory-2015-02-18-03-54-00.mid")));//Paus in beginning!!
+		//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Intro/Hooktheory-2015-02-18-03-54-00.mid")));//Paus in beginning!!
+
 		//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Chorus/Hooktheory-2015-02-18-03-51-40.mid")));//Snabb lŒt, kompilerar ej , nŒt fel pŒ slutet...
 		InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/Albin/Desktop/Hooktheory-2015-02-18-01-46-41.mid")));
 		//InputStream is = new BufferedInputStream(new FileInputStream(new File("/Users/Albin/Desktop/music.mid")));
@@ -426,6 +445,7 @@ public class ChordAnalyzer {
 		}
 
 		sequencer.close();
+		System.exit(0);
 	}
 
 }

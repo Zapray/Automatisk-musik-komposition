@@ -418,6 +418,9 @@ public class MidiManager2 {
 		
 		
 	}
+	public List<Float> getDurationConversionTable() {
+		return convertTableDuration;
+	}
 	
 	
 	

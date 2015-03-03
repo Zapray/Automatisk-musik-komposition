@@ -20,6 +20,6 @@ public abstract class MelodyNotesGenerator extends MelodyGenerator{
 	}
 	public abstract Note generateNote(List<Note> prevs, Random rand);
 	
-	public abstract List<Note> generateSong(double length);
+	public abstract List<Note> generateSong(double length, List<Float> conversionTable);
 	
 }
