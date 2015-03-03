@@ -393,10 +393,10 @@ public class ChordAnalyzer {
 		Sequencer sequencer = MidiSystem.getSequencer();//Creates a sequencer
 		sequencer.open();// have to open the sequencer to be able to use sequences. Don't know why, it works without the first two lines.
 		//InputStream is = new BufferedInputStream(new FileInputStream(new File("D:\\MidiMusic\\Hooktheory-2015-02-04-01-25-10.mid")));
-		InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Chorus/Hooktheory-2015-02-18-03-40-19.mid")));
+		//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Chorus/Hooktheory-2015-02-18-03-40-19.mid")));
 		//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Intro/Hooktheory-2015-02-18-03-54-00.mid")));//Paus in beginning!!
 		//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Chorus/Hooktheory-2015-02-18-03-51-40.mid")));//Snabb låt, kompilerar ej , nåt fel på slutet...
-		//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/Albin/Desktop/Hooktheory-2015-02-18-01-46-41.mid")));
+		InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/Albin/Desktop/Hooktheory-2015-02-18-01-46-41.mid")));
 		//InputStream is = new BufferedInputStream(new FileInputStream(new File("/Users/Albin/Desktop/music.mid")));
 		Sequence sequence = MidiSystem.getSequence(is);//Creates a sequence which you can analyze.
 		int res = sequence.getResolution();

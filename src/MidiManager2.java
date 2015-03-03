@@ -247,9 +247,9 @@ public class MidiManager2 {
 	
 
 
-public List<ArrayList<Frame>> getData(){
-	return listOfFramesList;
-}
+	public List<ArrayList<Frame>> getData(){
+		return listOfFramesList;
+	}
 
 	
 	public void createMidi(List<Frame> newFrameList) throws Exception{
@@ -328,13 +328,12 @@ public List<ArrayList<Frame>> getData(){
         	ShortMessage	shortMessage3 = new ShortMessage();
       		shortMessage1.setMessage(ShortMessage.NOTE_ON,0,ackord.getNote1(), 114 );
       		shortMessage2.setMessage(ShortMessage.NOTE_ON,0,ackord.getNote2(), 114 );
-      		shortMessage1.setMessage(ShortMessage.NOTE_ON,0,ackord.getNote3(), 114 );
+      		shortMessage3.setMessage(ShortMessage.NOTE_ON,0,ackord.getNote3(), 114 );
       		NoteOn1=new MidiEvent(shortMessage1,tickMeter);
-      		NoteOn2=new MidiEvent(shortMessage1,tickMeter);
-      		NoteOn3=new MidiEvent(shortMessage1,tickMeter);
-      		
       		track2.add(NoteOn1);
+      		NoteOn2=new MidiEvent(shortMessage2,tickMeter);
       		track2.add(NoteOn2);
+      		NoteOn3=new MidiEvent(shortMessage3,tickMeter);
       		track2.add(NoteOn3);
       		
       		ShortMessage	shortMessage4 = new ShortMessage();
@@ -347,12 +346,14 @@ public List<ArrayList<Frame>> getData(){
       		shortMessage6.setMessage(ShortMessage.NOTE_OFF,0,ackord.getNote3(), 0 );
   
       		NoteOff1=new MidiEvent(shortMessage4,tickMeter);
-      		NoteOff2=new MidiEvent(shortMessage5,tickMeter);
-      		NoteOff3=new MidiEvent(shortMessage6,tickMeter);
-      		
       		track2.add(NoteOff1);
+      		NoteOff2=new MidiEvent(shortMessage5,tickMeter);
       		track2.add(NoteOff2);
+      		NoteOff3=new MidiEvent(shortMessage6,tickMeter);
       		track2.add(NoteOff3);
+      		
+      		
+      		
   			
       		
         	 
@@ -417,5 +418,7 @@ public List<ArrayList<Frame>> getData(){
 		
 		
 	}
+	
+	
 	
 }

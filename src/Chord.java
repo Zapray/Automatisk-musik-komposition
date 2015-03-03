@@ -106,7 +106,7 @@ public class Chord {
 	public int letter2note(String note){
 		for(int i = 0 ; i < notes.length;i++ ){
 			if(note.equals(notes[i])){
-				return 72+i;
+				return 60+i;
 			}
 			
 		}
