@@ -32,8 +32,8 @@ public class Tmn extends MelodyFrameGenerator{
 		super(pMax, dMax);
 		this.cMax = cMax;
 		this.conversionTable = conversionTable;
-		chordsMarkov = new NMarkov(chordsOrder, 1, cMax);
-		nextToneMatrix = new SimpleMatrix(pMax*cMax,pMax);
+		chordsMarkov = new NMarkov(chordsOrder, cMax, 1);
+		nextToneMatrix = new SimpleMatrix(pMax*cMax, pMax);
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class Tmn extends MelodyFrameGenerator{
 		for(List<Frame> song : data) {
 			prevFrame = song.get(0);
 			for(int i = 1; i < song.size(); i++) {
-				int col = song.get(i).getFirstNote().getPitch(); //+1?
+				int col = song.get(i).getFirstNote().getPitch()-1; //+1?
 				int lastNote = prevFrame.getLastNote().getPitch();
 				int lastChord = prevFrame.getChord();
 				int row = getRowPos(lastNote, lastChord);

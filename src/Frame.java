@@ -1,3 +1,4 @@
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class Frame {
 		return melodyPackage.get(0);
 	}
 	public Note getLastNote() {
-		return melodyPackage.get(melodyPackage.size());
+		return melodyPackage.get(melodyPackage.size()-1);
 
 	}
 }
