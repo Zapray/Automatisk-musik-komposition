@@ -417,5 +417,8 @@ public List<ArrayList<Frame>> getData(){
 		
 		
 	}
+	public List<Float> getDurationConversionTable() {
+		return convertTableDuration;
+	}
 	
 }

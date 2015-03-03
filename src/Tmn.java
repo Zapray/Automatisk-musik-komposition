@@ -83,7 +83,7 @@ public class Tmn extends MelodyFrameGenerator{
 		return chordData;
 	}
 
-	public Frame generateFrame(Frame prev, List<List<Frame>> data, Random rand) {
+	public Frame generateFrame(Frame prev, List<? extends List<Frame>> data, Random rand) {
 		ArrayList<Note> prevs = new ArrayList<Note>();
 		prevs.add(new Note(1, prev.getChord()));
 		int chord = chordsMarkov.generateNote(prevs, rand).getPitch();
@@ -136,7 +136,7 @@ public class Tmn extends MelodyFrameGenerator{
 	}
 
 	@Override
-	public List<Frame> generateSong(int frames, List<List<Frame>> data) {
+	public List<Frame> generateSong(int frames, List<? extends List<Frame>> data) {
 		
 		List<Frame> song = new ArrayList<Frame>();
 		Random rand = new Random();
@@ -158,8 +158,15 @@ public class Tmn extends MelodyFrameGenerator{
 		return song;
 	}
 
-	private List<List<Note>> filterData(int firstChord, List<List<Frame>> data) {
-		// TODO Auto-generated method stub
-		return null;
+	private List<List<Note>> filterData(int firstChord, List<? extends List<Frame>> data) {
+		ArrayList<List<Note>> newData = new ArrayList<List<Note>>();
+		for(List<Frame> song : data) {
+			for(Frame frame: song) {
+				if(frame.getChord() == firstChord) {
+					newData.add(frame.getMelodyPackage());
+				}
+			}
+		}
+		return newData;
 	}
 }

@@ -112,6 +112,7 @@ public class NMarkov extends MelodyNotesGenerator{
 		return gens;
 	}
 	public List<Note> generateSong(double length, int firstPitch, List<Float> conversionTable) {
+		
 		ArrayList<Note> newSong = new ArrayList<Note>();
 		Random rand = new Random();
 		
@@ -159,7 +160,9 @@ public class NMarkov extends MelodyNotesGenerator{
 		Random rand = new Random();
 		
 		List<MelodyNotesGenerator> generators = getGenerators();
-		return this.generateSong(length, generators.get(0).generateNote(null, rand).getPitch(), conversionTable);
+		int p = generators.get(0).generateNote(null, rand).getPitch();
+		System.out.println(p);
+		return this.generateSong(length, p, conversionTable);
 //		LinkedList<Note> prevs = new LinkedList<Note>();
 //		for(int i = 0; i < n; i++) {
 //			prevs.add(generators.get(i).generateNote(prevs, rand));
