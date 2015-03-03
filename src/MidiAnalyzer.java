@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 /*
  * This is a Midi Analyzer that can analyzer midi files from the midi database Hooktheory.
  * The class finds the chords and the melody in the files and writes them into a textfile on the format
@@ -16,7 +16,7 @@
  */
 
 
-=======
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,7 +32,7 @@ import java.util.List;
 import org.apache.commons.io.*;
 
 import javax.sound.midi.*;
->>>>>>> 385736916bc6810631007a0924bc5e408abfaa4d
+
 
 public class MidiAnalyzer {
 	
@@ -50,7 +50,7 @@ public class MidiAnalyzer {
 		Track[] tracks = sequence.getTracks();//Creates an array to be able to separate tracks.
 		int melodytrack = 0;
 		Track   track = tracks[melodytrack];
-		List<ArrayList<FloatNote>> test = MelodyAnalyzer(track, res);
+		List<ArrayList<FloatNote>> test = findMelody(track, res);
 		//System.out.println(test.size());
 		//System.out.println(test.get(22).size());
 		for(int i=0; i<test.size(); i++ ){
@@ -70,7 +70,7 @@ public class MidiAnalyzer {
 		return (tick2-tick1)/res;
 
 	}//end convertTicksToNoteLength
-	public static List<ArrayList<FloatNote>> MelodyAnalyzer(Track track, float res){//Takes a track and returns a list of melody packages
+	public static List<ArrayList<FloatNote>> findMelody(Track track, float res){//Takes a track and returns a list of melody packages
 		
 		//File[] files =new File ("/Users/Albin/Desktop/songweknow/").listFiles(); 
 
@@ -186,21 +186,7 @@ public class MidiAnalyzer {
 							
 							}//End for
 
-<<<<<<< HEAD
-	public static void findChords(){
-		
-		
-		
-	}
-	
-	
-	
-	
-	
-	
-	
-}
-=======
+
 						}//end else
 						nmbrOfPacks++;
 						melodyPack.add(melody);
@@ -221,5 +207,12 @@ public class MidiAnalyzer {
 				return melodyPack;
 	
 	}// End MelodyAnalyzer
+	public static void findChords(){
+	
+	
+	
+	}
+
+
 }// End MidiAnalyzer
->>>>>>> 385736916bc6810631007a0924bc5e408abfaa4d
+
