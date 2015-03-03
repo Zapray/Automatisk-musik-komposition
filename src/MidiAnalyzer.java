@@ -1,3 +1,22 @@
+
+/*
+ * This is a Midi Analyzer that can analyzer midi files from the midi database Hooktheory.
+ * The class finds the chords and the melody in the files and writes them into a textfile on the format
+ * 
+ * ?Chord
+ * Pitch,Duration
+ * Pitch,Duration
+ * Pitch,Duration
+ * ?Chord
+ * Pitch,Duration
+ * Pitch,Duration
+ * Pitch,Duration
+ * - (New Song)
+ * 
+ */
+
+
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,6 +32,7 @@ import java.util.List;
 import org.apache.commons.io.*;
 
 import javax.sound.midi.*;
+
 
 public class MidiAnalyzer {
 	
@@ -30,12 +50,14 @@ public class MidiAnalyzer {
 		Track[] tracks = sequence.getTracks();//Creates an array to be able to separate tracks.
 		int melodytrack = 0;
 		Track   track = tracks[melodytrack];
-		List<ArrayList<FloatNote>> test = MelodyAnalyzer(track, res);
-		System.out.println(test.size());
-		System.out.println(test.get(22).size());
+		List<ArrayList<FloatNote>> test = findMelody(track, res);
+		//System.out.println(test.size());
+		//System.out.println(test.get(22).size());
 		for(int i=0; i<test.size(); i++ ){
+			System.out.println("Package");
 			for(int j=0; j<test.get(i).size(); j++){
-				System.out.println(test.get(i).size());
+				//System.out.println(test.get(i).size());
+				
 				System.out.println(test.get(i).get(j));
 			}//end for
 		}//end for
@@ -48,7 +70,7 @@ public class MidiAnalyzer {
 		return (tick2-tick1)/res;
 
 	}//end convertTicksToNoteLength
-	public static List<ArrayList<FloatNote>> MelodyAnalyzer(Track track, float res){//Takes a track and returns a list of melody packages
+	public static List<ArrayList<FloatNote>> findMelody(Track track, float res){//Takes a track and returns a list of melody packages
 		
 		//File[] files =new File ("/Users/Albin/Desktop/songweknow/").listFiles(); 
 
@@ -58,13 +80,13 @@ public class MidiAnalyzer {
 
 
 				long tick=1;
-				long spectick=1;
+				//long spectick=1;
 				ArrayList<Integer> note= new ArrayList<Integer>(0);
 				ArrayList<Float> notelength= new ArrayList<Float>(0);
 				//ArrayList halfbars= new ArrayList(0);
 				//int counter1=0;
 				//int counter2=0;
-				boolean foundNote = false;
+				//boolean foundNote = false;
 				boolean startOfSong = true;
 				
 
@@ -138,28 +160,43 @@ public class MidiAnalyzer {
 				float combinedLength=0;
 				int where=0;
 				FloatNote floatNote;
+				int nmbrOfPacks = 0;
 				for(int index = 0; index < notelength.size()-1; index++){
 					combinedLength=combinedLength + (float)notelength.get(index);
-					if(combinedLength >= 0.5){
+					//System.out.println(combinedLength);
+					if(combinedLength >= (float)0.5){
 						if(lastDuration != 0){
-							floatNote = new FloatNote(lastDuration, (float) note.get(where));
+							floatNote = new FloatNote(lastDuration, (float) note.get(where-1));
 							melody.add(floatNote);
 						}
 						lastDuration = combinedLength - (float)0.5;
-						
-						floatNote = new FloatNote( (float)notelength.get(index)-lastDuration, (float) note.get(index));
-						melody.add(floatNote);
-
-						for(int i = index; i > where; i--){
-							floatNote = new FloatNote((float) notelength.get(i), (float) note.get(i));
+						if(lastDuration != 0){
+							for(int i = where; i < index; i++){
+								floatNote = new FloatNote((float) notelength.get(i), (float) note.get(i));
+								melody.add(floatNote);
+								
+							}//End for
+							floatNote = new FloatNote( (float)notelength.get(index)-lastDuration, (float) note.get(index));
 							melody.add(floatNote);
+						}else{
+						
+							for(int i = where; i < index+1; i++){
+								floatNote = new FloatNote((float) notelength.get(i), (float) note.get(i));
+								melody.add(floatNote);
 							
-						}//End for
+							}//End for
+
+
+						}//end else
+						nmbrOfPacks++;
 						melodyPack.add(melody);
-						melody.clear();
-						where = index;
+						//System.out.println(melodyPack.get(nmbrOfPacks-1).size());
+						melody = new ArrayList<FloatNote>();
+						where = index+1;
 						combinedLength=lastDuration;
 						
+						//System.out.println(melodyPack.size());
+						//System.out.println(melodyPack.get(nmbrOfPacks-1).size());
 					}//End if
 					
 					
@@ -170,4 +207,12 @@ public class MidiAnalyzer {
 				return melodyPack;
 	
 	}// End MelodyAnalyzer
+	public static void findChords(){
+	
+	
+	
+	}
+
+
 }// End MidiAnalyzer
+

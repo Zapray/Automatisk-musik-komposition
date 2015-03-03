@@ -154,7 +154,7 @@ public class MidiManager {
 
 	
 	public void createMidi(List<Note> newSongList) throws Exception{
-		 Sequence sequence;//need sequencer to crete midi
+		 Sequence sequence;//need sequencer to create midi
          int resolution = 192;
 		 sequence=new Sequence(Sequence.PPQ,resolution); //Sets divisiontype and resolution. 
          long tick =0;      			//varible for converting to ticks

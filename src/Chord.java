@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,51 +11,111 @@ public class Chord {
 	private int note1;
 	private int note2;
 	private int note3;
-	private int duration;
+	private float duration;
 	private String label= "other";
 	private String notes[] = {"C","C#","D","D#","E","F","F#","G","G#","A","A#","B"};
 	ArrayList<String> chord = new ArrayList<String>(0);
 	Map<String, List<String>> chordTable= new HashMap<String, List<String>>();
 	private String keys[] = {"C","Cm","D","Dm","E","Em","F","Fm","G","Gm","A","Am","B","Bm"};
-	
+
 	public static void main(String[] args){
-		Chord theChord = new Chord(76, 72, 79, 0);
-		System.out.println(theChord.getLabel());
+		Chord theChord = new Chord("");
+		System.out.println(theChord.getNote1() + " " + theChord.getNote2()+ " "+ theChord.getNote3());
 	}
-	
-	public Chord(int note1, int note2, int note3, int duration){
-		
-		this.note1 = note1;
-		this.note2 = note2;
-		this.note3 = note3;
-		this.duration = duration;
-		this.chord.add(note2letter(note1));
-		this.chord.add(note2letter(note2));
-		this.chord.add(note2letter(note3));
+	public Chord(String ackordet){
 		createChordTable();
-		
 		for(String key : keys){
-			
-			if(chordTable.get(key).contains(note2letter(note1)) && chordTable.get(key).contains(note2letter(note2)) && chordTable.get(key).contains(note2letter(note3))){
-				label = key;
+			if(key.equals(ackordet)){
+				List<String> allnotes = chordTable.get(key);
+				note1 = letter2note(allnotes.get(0));
+				note2 = letter2note(allnotes.get(1));
+				note3 = letter2note(allnotes.get(2));
+				
+				
 			}
 			
 		}
 		
+		
+		
+		
+	}
+	public Chord(int note1, int note2, int note3, float duration){
+
+		this.note1 = note1;
+		this.note2 = note2;
+		this.note3 = note3;
+		this.duration = duration;
+
+		int [] notesInChord = new int[3];
+		notesInChord[0] = note1;
+		notesInChord[1] = note2;
+		notesInChord[2] = note3;
+
+		if(Arrays.equals(notesInChord, new int[3])){
+			label = null;
+		}else{
+			this.chord.add(note2letter(note1));
+			this.chord.add(note2letter(note2));
+			this.chord.add(note2letter(note3));
+			createChordTable();
+
+			for(String key : keys){
+
+				if(chordTable.get(key).contains(note2letter(note1)) && chordTable.get(key).contains(note2letter(note2)) && chordTable.get(key).contains(note2letter(note3))){
+					label = key;
+				}
+
+			}
+		}
+
 	}
 	
-	public int getDuration(){
+	public Chord(String label, float duration){
+		
+		this.label = label;
+		this.duration = duration;
+		
+	}
+	public float getDuration(){
 		return this.duration;
 	}
-	
+
 	public String getLabel(){
 		return this.label;
 	}
-	
+
 	public String note2letter(int note){
-		
+
 		return notes[note%12];
 	}
+	public int getNote1(){
+
+		return note1;
+	}
+	public int getNote2(){
+
+		return note2;
+	}
+
+	public int getNote3(){
+		return note3;
+		
+	}
+	
+	public int letter2note(String note){
+		for(int i = 0 ; i < notes.length;i++ ){
+			if(note.equals(notes[i])){
+				return 72+i;
+			}
+			
+		}
+		return 0;
+		
+		
+	}
+	
+	
 	
 	public void createChordTable(){
 		List<String> chordC = new ArrayList<String>();
@@ -72,8 +133,8 @@ public class Chord {
 		List<String> chordGm = new ArrayList<String>();
 		List<String> chordAm = new ArrayList<String>();
 		List<String> chordBm = new ArrayList<String>();
-		
-		
+
+
 		chordC.add("C"); chordC.add("E"); chordC.add("G");
 		//chordCsharp.add("C#"); chordCsharp.add("E#"); chordCsharp.add("G#");
 		chordD.add("D"); chordD.add("F#"); chordD.add("A");
@@ -89,7 +150,7 @@ public class Chord {
 		chordGm.add("G"); chordGm.add("A#"); chordGm.add("D");
 		chordAm.add("A"); chordAm.add("C"); chordAm.add("E");
 		chordBm.add("B"); chordBm.add("D"); chordBm.add("F#");
-		
+
 		chordTable.put("C", chordC);
 		chordTable.put("D", chordD);
 		chordTable.put("E", chordE);
@@ -104,11 +165,11 @@ public class Chord {
 		chordTable.put("Gm", chordGm);
 		chordTable.put("Am", chordAm);
 		chordTable.put("Bm", chordBm);
-		
+
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 }
