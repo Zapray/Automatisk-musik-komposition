@@ -92,7 +92,7 @@ public class Tmn extends MelodyFrameGenerator{
 		
 		NMarkov melodyGen = new NMarkov(MELODYORDER, pMax, dMax);
 		melodyGen.train(filterData(chord, data));
-		List<Note> melodyPackage = melodyGen.generateSong(0.5, pitch); //halvtakter
+		List<Note> melodyPackage = melodyGen.generateSong(0.5, pitch, conversionTable); //halvtakter
 		//hopefully the garbage collector deals with the old melodyGen here
 		return new Frame(melodyPackage, chord);
 	}

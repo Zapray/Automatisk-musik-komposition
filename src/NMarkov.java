@@ -118,12 +118,21 @@ public class NMarkov extends MelodyNotesGenerator{
 		List<MelodyNotesGenerator> generators = getGenerators();
 		LinkedList<Note> prevs = new LinkedList<Note>();
 		
-		prevs.add(0, new Note(generators.get(0).generateNote(null, rand).getDuration(), firstPitch));
-		for(int i = 1; i < n; i++) {
-			prevs.add(generators.get(i).generateNote(prevs, rand));
-		}
-
 		double tot = 0;
+		Note firstNote = new Note(generators.get(0).generateNote(null, rand).getDuration(), firstPitch);
+		prevs.addFirst(firstNote);
+		newSong.add(firstNote);
+		tot += (conversionTable.get(firstNote.getDuration()));
+		for(int i = 1; i < n; i++) {
+			Note x = generators.get(i).generateNote(prevs, rand);
+			prevs.addFirst(x); //ADDFirst?
+			newSong.add(x);
+			tot += (conversionTable.get(x.getDuration())); //TODO +1-1 ?
+		}
+		
+		if (tot > length) {
+			return generateSong(length, firstPitch, conversionTable);
+		}
 		
 		while(tot < length) {
 			Note newNote = generateNote(prevs, rand);
