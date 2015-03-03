@@ -25,16 +25,16 @@ public class Main {
 		}
 	}
 	public static void runTmn() {
-		MidiManager2 mm = new MidiManager2(System.getProperty("user.dir")+"/databas.txt");
+		MidiManager2 mm = new MidiManager2(System.getProperty("user.dir")+"/nydatabas.txt");
 		List<? extends List<Frame>> l = mm.getData();
 		pMax = mm.getPMax();
 		dMax = mm.getDMax();
-		Tmn tmn = new Tmn(order, pMax, dMax, mm.getDurationConversionTable());
-		tmn.train(l);
-		
-		List<Frame> song = tmn.generateSong(frames, l);
+//		Tmn tmn = new Tmn(order, pMax, dMax, mm.getDurationConversionTable());
+//		tmn.train(l);
+//		
+		//List<Frame> song = tmn.generateSong(frames, l);
 		try {
-			mm.createMidi(song);
+			mm.createMidi(l.get(0));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
