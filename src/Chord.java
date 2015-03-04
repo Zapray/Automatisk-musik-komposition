@@ -16,7 +16,7 @@ public class Chord {
 	private String notes[] = {"C","C#","D","D#","E","F","F#","G","G#","A","A#","B"};
 	ArrayList<String> chord = new ArrayList<String>(0);
 	Map<String, List<String>> chordTable= new HashMap<String, List<String>>();
-	private String keys[] = {"C","Cm","D","Dm","E","Em","F","Fm","G","Gm","A","Am","B","Bm"};
+	private String keys[] = {"C","F","G","Am","Dm","Em","Cm","D","E","G#","Gm","Fm","F#","A","B","Bm","C#","D#","A#","Cm#","Dm#","Fm#","Gm#","Am#"};
 
 	public static void main(String[] args){
 		Chord theChord = new Chord("");
@@ -64,14 +64,19 @@ public class Chord {
 
 				if(chordTable.get(key).contains(note2letter(note1)) && chordTable.get(key).contains(note2letter(note2)) && chordTable.get(key).contains(note2letter(note3))){
 					label = key;
+					break;
 				}else if(chordTable.get(key).contains(note2letter(note1)) && chordTable.get(key).contains(note2letter(note2))){
 					label = key;
+					break;
 				}else if(chordTable.get(key).contains(note2letter(note1)) && chordTable.get(key).contains(note2letter(note3))){
 					label = key;
+					break;
 				}else if(chordTable.get(key).contains(note2letter(note2)) && chordTable.get(key).contains(note2letter(note3))){
 					label = key;
+					break;
 				}else if(chordTable.get(key).contains(note2letter(note1))){
 					label = key;
+					break;
 				}
 
 			}
