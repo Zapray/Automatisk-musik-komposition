@@ -58,7 +58,7 @@ public class BasicMarkov extends MelodyNotesGenerator{
 	 * @param length how many bars of melody is to be generated
 	 * @return a new song
 	 */
-	public List<Note> generateSong(int length) { //assuming four four
+	public List<Note> generateSong(double length,List<Float> conversionTable) { //assuming four four
 		ArrayList<Note> newSong = new ArrayList<Note>();
 		Random rand = new Random();
 		Note first = firstNoteGen.generateNote(null, rand);

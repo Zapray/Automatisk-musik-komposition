@@ -1,7 +1,7 @@
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.Random;
 
 import org.ejml.simple.SimpleMatrix;
@@ -43,13 +43,15 @@ public class NMarkov extends MelodyNotesGenerator{
 		//testloop
 		for(Note n : notes) {
 			if (n.getPitch() > pMax || n.getDuration() > dMax) {
+				System.out.println(pMax);
+				System.out.println(dMax);
 				throw new IllegalArgumentException("p > pMax | d > dMax");
 			}
 		}
 		
 		
 		if(notes.size() != n) {
-			throw new IllegalArgumentException("error in getRowPos");
+			throw new IllegalArgumentException("error in getRowPos, n = " + n + " and given notes = " + notes.size());
 		}
 		int sum1 = 0;
 		for(int i = 1; i < n; i++) {
@@ -71,9 +73,9 @@ public class NMarkov extends MelodyNotesGenerator{
 		int row = 0;
 		int col = 0;
 		LinkedList<Note> prevs = new LinkedList<Note>();
-		
+		System.out.println(data);
 		for( List<Note> song : data) {
-			for(int i = 0; i < n; i++) {
+			for(int i = 0; i < n && i < song.size(); i++) {
 				 prevs.addFirst(song.get(i));
 			}
 			
@@ -161,7 +163,6 @@ public class NMarkov extends MelodyNotesGenerator{
 		
 		List<MelodyNotesGenerator> generators = getGenerators();
 		int p = generators.get(0).generateNote(null, rand).getPitch();
-		System.out.println(p);
 		return this.generateSong(length, p, conversionTable);
 //		LinkedList<Note> prevs = new LinkedList<Note>();
 //		for(int i = 0; i < n; i++) {
@@ -184,6 +185,12 @@ public class NMarkov extends MelodyNotesGenerator{
 //			return newSong;
 	}
 	public Note generateNote(List<Note> prevs, Random rand) {
+		if(prevs == null) {
+			prevs = new ArrayList<Note>();
+		}
+		if(prevs.size() < n) {
+			return this.getGenerators().get(prevs.size()).generateNote(prevs, rand);
+		}
 		double roll = rand.nextDouble();
 		int i = 0;
 		double accum = 0;
@@ -205,3 +212,4 @@ public class NMarkov extends MelodyNotesGenerator{
 	
 	
 }
+

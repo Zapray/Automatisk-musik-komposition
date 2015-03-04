@@ -2,7 +2,7 @@ import java.util.List;
 
 
 public class Main {
-	private static int pMax, dMax, order = 2, frames = 1;
+	private static int cMax, pMax, dMax, order = 2, frames = 10;
 	private static double length = 0.5;
 	public static void main(String[] args) {
 		//You need to allow more memory in eclipse / java to run!
@@ -25,11 +25,12 @@ public class Main {
 		}
 	}
 	public static void runTmn() {
-		MidiManager2 mm = new MidiManager2(System.getProperty("user.dir")+"/databas.txt");
+		MidiManager2 mm = new MidiManager2(System.getProperty("user.dir")+"/nydatabas.txt");
 		List<? extends List<Frame>> l = mm.getData();
 		pMax = mm.getPMax();
 		dMax = mm.getDMax();
-		Tmn tmn = new Tmn(order, pMax, dMax, mm.getDurationConversionTable());
+		cMax = mm.getCMax();
+		Tmn tmn = new Tmn(pMax, dMax, cMax, mm.getDurationConversionTable());
 		tmn.train(l);
 		
 		List<Frame> song = tmn.generateSong(frames, l);
