@@ -41,7 +41,8 @@ public class MidiAnalyzer {
 	public static void main(String args[]) throws Exception{
 		File[] files =new File (System.getProperty("user.dir")+"/database/Chorus/").listFiles(); 
 
-		for (File file : files){
+		int count = 0;
+		for(File file : files){
 			String ext1 = FilenameUtils.getExtension(file.getName());
 			if(ext1.equals("mid")){
 
@@ -49,7 +50,7 @@ public class MidiAnalyzer {
 				sequencer.open();// have to open the sequencer to be able to use sequences. Don't know why, it works without the first two lines.
 				//InputStream is = new BufferedInputStream(new FileInputStream(new File("D:\\Latarfranhook\\Verse\\Hooktheory-2015-02-21-01-37-31.mid")));
 				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Intro/Hooktheory-2015-02-18-03-54-00.mid")));//Paus in beginning!!
-				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Chorus/Hooktheory-2015-02-18-03-40-19.mid")));
+				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Chorus/Hooktheory-2015-02-18-03-59-28.mid")));
 				InputStream is = new BufferedInputStream(new FileInputStream( new File(System.getProperty("user.dir")+"/database/Chorus/" + file.getName())));
 				//System.out.println("/Users/Albin/Desktop/Filerfranhook/Chorus/" + file.getName());
 				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/Albin/Desktop/songweknow/" + file.getName())));
@@ -75,15 +76,16 @@ public class MidiAnalyzer {
 				//System.out.println(test.get(i).get(j));
 				//}//end for
 				//}//end for
-				File filen = new File("/Users/KarinBrotjefors/Desktop/testdoc.txt");
+				File filen = new File("D:better.txt");
 				// if file doesnt exists, then create it
 				if (!filen.exists()) {
 					filen.createNewFile();
 				}
 
 
-				PrintWriter outFile = new PrintWriter(new FileWriter("/Users/KarinBrotjefors/Desktop/testdoc.txt", true));
-
+				PrintWriter outFile = new PrintWriter(new FileWriter("D:better.txt", true));
+				count++;
+				System.out.println(count+": " + chordList.size() + "  " + melodyList.size());
 				if(chordList.size()==melodyList.size()){
 				for (int i=0;i<chordList.size();i++){
 					outFile.println("?"+chordList.get(i).getLabel());
@@ -302,21 +304,21 @@ public class MidiAnalyzer {
 		ArrayList<Chord> chordList = createChordList(track, res);
 
 		//Print chordList
-		//		Iterator itr = chordList.iterator();
-		//		while(itr.hasNext()) {
-		//			Chord chord = (Chord) itr.next();
-		//			System.out.println(chord.getLabel() + "   " + chord.getDuration());
-		//		}
+				Iterator itr = chordList.iterator();
+				while(itr.hasNext()) {
+					Chord chord = (Chord) itr.next();
+					System.out.println(chord.getLabel() + "   " + chord.getDuration());
+				}
 
 		ArrayList<Chord> halfBarList = createHalfBarList(chordList);
 
 		//Print halfBarList
-		//		System.out.println(" ");
-		//		Iterator itr2 = halfBarList.iterator();
-		//		while(itr2.hasNext()) {
-		//			Chord chord = (Chord) itr2.next();
-		//			System.out.println(chord.getLabel() + "   " + chord.getDuration());
-		//		}
+				System.out.println(" ");
+				Iterator itr2 = halfBarList.iterator();
+				while(itr2.hasNext()) {
+					Chord chord = (Chord) itr2.next();
+					System.out.println(chord.getLabel() + "   " + chord.getDuration());
+				}
 
 		return halfBarList;
 
@@ -435,6 +437,8 @@ public class MidiAnalyzer {
 			isMeta = message instanceof MetaMessage;
 
 		}
+		metaMessageCount--;
+	
 
 		for(int nEvent = 0; nEvent < track.size(); nEvent++){
 			MidiEvent event = track.get(nEvent);
@@ -450,12 +454,12 @@ public class MidiAnalyzer {
 					chordList.add(paus);
 
 				}
+				
+				eventCount++;
+				
 				//Extract last chord
-
-
-
-				if(nEvent == track.size()-metaMessageCount-1){ //There is a MetaMessage in the end (Is it always??)
-					int nbrOfEvents = eventCount - breakPoints[tickCount-1]-1;
+				if(nEvent == track.size()-metaMessageCount-1){ 
+					int nbrOfEvents = eventCount+1 - breakPoints[tickCount];
 					if(nbrOfEvents == 3){
 
 						MidiEvent event1 = track.get(nEvent-2);
@@ -466,36 +470,39 @@ public class MidiAnalyzer {
 						notesInChord = extractChordNotes(event1, event2, event3, null, null, null);
 						if(!Arrays.equals(notesInChord, new int[3])){
 
-							Chord chord = new Chord(notesInChord[0],notesInChord[1],notesInChord[2], convertTicksToDuration(eventAfter[tickCount-2].getTick(), eventBefore[tickCount-2].getTick(),res)); 
+							Chord chord = new Chord(notesInChord[0], notesInChord[1], notesInChord[2], 
+									convertTicksToDuration(eventAfter[tickCount-1].getTick(), eventBefore[tickCount-1].getTick(),res)); 
 							chordList.add(chord);
-							Chord paus = new Chord(0, 0, 0, convertTicksToDuration(eventAfter[tickCount-1].getTick(), eventBefore[tickCount-1].getTick(),res)); 
-							chordList.add(paus);
+//							Chord paus = new Chord(0, 0, 0, 
+//									convertTicksToDuration(eventAfter[tickCount-1].getTick(), eventBefore[tickCount-1].getTick(),res)); 
+//							chordList.add(paus);
 							chordCount++;
 
 						}
 
-					}else if(nbrOfEvents == 6){
-
-						MidiEvent event1 = track.get(nEvent-5);
-						MidiEvent event2 = track.get(nEvent-4);
-						MidiEvent event3 = track.get(nEvent-3);
-						MidiEvent event4 = track.get(nEvent-2);
-						MidiEvent event5 = track.get(nEvent-1);
-						MidiEvent event6 = track.get(nEvent);
-
-						int[] notesInChord = new int[3];
-						notesInChord = extractChordNotes(event1, event2, event3, event4, event5, event6);
-						if(!Arrays.equals(notesInChord, new int[3])){
-
-							Chord chord = new Chord(notesInChord[0],notesInChord[1],notesInChord[2], convertTicksToDuration(eventAfter[tickCount-2].getTick(), eventBefore[tickCount-2].getTick(),res)); 
-							chordList.add(chord);
-							chordCount++;
-
-						}
 					}
+//					else if(nbrOfEvents == 6){//Kommer aldrig vara 6 st fšr ett nytt ackord bšrjar inte i slutet fšr det Šr ju sluuuut!!!
+//
+//						MidiEvent event1 = track.get(nEvent-5);
+//						MidiEvent event2 = track.get(nEvent-4);
+//						MidiEvent event3 = track.get(nEvent-3);
+//						MidiEvent event4 = track.get(nEvent-2);
+//						MidiEvent event5 = track.get(nEvent-1);
+//						MidiEvent event6 = track.get(nEvent);
+//
+//						int[] notesInChord = new int[3];
+//						notesInChord = extractChordNotes(event1, event2, event3, event4, event5, event6);
+//						if(!Arrays.equals(notesInChord, new int[3])){
+//
+//							Chord chord = new Chord(notesInChord[0],notesInChord[1],notesInChord[2], convertTicksToDuration(eventAfter[tickCount-2].getTick(), eventBefore[tickCount-2].getTick(),res)); 
+//							chordList.add(chord);
+//							chordCount++;
+//
+//						}
+//					}
 				}
 
-				eventCount++;
+				
 
 				//Extract all other chords
 				if(newTick(track, nEvent)){
@@ -546,7 +553,7 @@ public class MidiAnalyzer {
 				}
 			}
 		}
-
+		System.out.println(chordCount);
 		return chordList;
 	}
 
@@ -595,8 +602,8 @@ public class MidiAnalyzer {
 							halfBarList.add(new Chord(chord.getLabel(), 0.5f));
 							halfBarList.add(new Chord(chord.getLabel(), 0.5f));
 						}else{//PAUS (Fill with previous chord)
-							halfBarList.add(halfBarList.get(halfBarList.size()));
-							halfBarList.add(halfBarList.get(halfBarList.size()));
+							halfBarList.add(halfBarList.get(halfBarList.size()-1));
+							halfBarList.add(halfBarList.get(halfBarList.size()-1));
 						}
 					}else if(chordsInBar.size() == 2){ //
 						Chord chord2 = chordsInBar.get(1);
@@ -610,7 +617,7 @@ public class MidiAnalyzer {
 							}
 						}else{//PAUS 
 							if(chord1.getLabel() == null){ 
-								halfBarList.add(halfBarList.get(halfBarList.size()));//(fill with previous chord)
+								halfBarList.add(halfBarList.get(halfBarList.size()-1));//(fill with previous chord)
 								halfBarList.add(new Chord(chord2.getLabel(), 0.5f));
 							}else{ //Fill first chord twice
 								halfBarList.add(new Chord(chord1.getLabel(), 0.5f));
@@ -631,7 +638,7 @@ public class MidiAnalyzer {
 							}
 						}else{//PAUS
 							if(chord1.getLabel() == null){
-								halfBarList.add(halfBarList.get(halfBarList.size()));//(fill with previous chord)
+								halfBarList.add(halfBarList.get(halfBarList.size()-1));//(fill with previous chord)
 								if(chord1.getDuration() == 0.5f){
 									halfBarList.add(new Chord(chord2.getLabel(), 0.5f));
 								}else{
@@ -655,7 +662,7 @@ public class MidiAnalyzer {
 							halfBarList.add(new Chord(chord3.getLabel(), 0.5f));
 						}else{//PAUS
 							if(chord1.getLabel() == null){
-								halfBarList.add(halfBarList.get(halfBarList.size()));//(fill with previous chord)
+								halfBarList.add(halfBarList.get(halfBarList.size()-1));//(fill with previous chord)
 								halfBarList.add(new Chord(chord3.getLabel(), 0.5f));
 							}else if(chord3.getLabel() == null){
 								halfBarList.add(new Chord(chord1.getLabel(), 0.5f));
@@ -668,6 +675,13 @@ public class MidiAnalyzer {
 						}
 					}
 				}
+				chordsInBar.clear();
+				durationCount = 0;
+			}else if(durationCount == 2){//Chord lies over 2 bars
+				halfBarList.add(new Chord(chord.getLabel(), 0.5f));
+				halfBarList.add(new Chord(chord.getLabel(), 0.5f));
+				halfBarList.add(new Chord(chord.getLabel(), 0.5f));
+				halfBarList.add(new Chord(chord.getLabel(), 0.5f));
 				chordsInBar.clear();
 				durationCount = 0;
 			}
