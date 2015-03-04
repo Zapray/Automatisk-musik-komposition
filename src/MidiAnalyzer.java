@@ -41,7 +41,8 @@ public class MidiAnalyzer {
 	public static void main(String args[]) throws Exception{
 		File[] files =new File (System.getProperty("user.dir")+"/database/Chorus/").listFiles(); 
 
-		for (File file : files){
+		int count = 0;
+		for(File file : files){
 			String ext1 = FilenameUtils.getExtension(file.getName());
 			if(ext1.equals("mid")){
 
@@ -49,7 +50,7 @@ public class MidiAnalyzer {
 				sequencer.open();// have to open the sequencer to be able to use sequences. Don't know why, it works without the first two lines.
 				//InputStream is = new BufferedInputStream(new FileInputStream(new File("D:\\Latarfranhook\\Verse\\Hooktheory-2015-02-21-01-37-31.mid")));
 				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Intro/Hooktheory-2015-02-18-03-54-00.mid")));//Paus in beginning!!
-				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Chorus/Hooktheory-2015-02-18-03-40-19.mid")));
+				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Chorus/Hooktheory-2015-02-18-03-59-28.mid")));
 				InputStream is = new BufferedInputStream(new FileInputStream( new File(System.getProperty("user.dir")+"/database/Chorus/" + file.getName())));
 				//System.out.println("/Users/Albin/Desktop/Filerfranhook/Chorus/" + file.getName());
 				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/Albin/Desktop/songweknow/" + file.getName())));
@@ -83,7 +84,8 @@ public class MidiAnalyzer {
 
 
 				PrintWriter outFile = new PrintWriter(new FileWriter("/Users/KarinBrotjefors/Desktop/testdoc.txt", true));
-
+				count++;
+				System.out.println(count+": " + chordList.size() + "  " + melodyList.size());
 				if(chordList.size()==melodyList.size()){
 				for (int i=0;i<chordList.size();i++){
 					outFile.println("?"+chordList.get(i).getLabel());
@@ -450,11 +452,9 @@ public class MidiAnalyzer {
 					chordList.add(paus);
 
 				}
+				
 				//Extract last chord
-
-
-
-				if(nEvent == track.size()-metaMessageCount-1){ //There is a MetaMessage in the end (Is it always??)
+				if(nEvent == track.size()-metaMessageCount-1){ 
 					int nbrOfEvents = eventCount - breakPoints[tickCount-1]-1;
 					if(nbrOfEvents == 3){
 
@@ -668,6 +668,13 @@ public class MidiAnalyzer {
 						}
 					}
 				}
+				chordsInBar.clear();
+				durationCount = 0;
+			}else if(durationCount == 2){//Chord lies over 2 bars
+				halfBarList.add(new Chord(chord.getLabel(), 0.5f));
+				halfBarList.add(new Chord(chord.getLabel(), 0.5f));
+				halfBarList.add(new Chord(chord.getLabel(), 0.5f));
+				halfBarList.add(new Chord(chord.getLabel(), 0.5f));
 				chordsInBar.clear();
 				durationCount = 0;
 			}
