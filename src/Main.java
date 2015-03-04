@@ -29,21 +29,12 @@ public class Main {
 		List<? extends List<Frame>> l = mm.getData();
 		pMax = mm.getPMax();
 		dMax = mm.getDMax();
-<<<<<<< HEAD
-		Tmn tmn = new Tmn(order, pMax, dMax, mm.getDurationConversionTable());
-		tmn.train(l);
-	
-		List<Frame> song = tmn.generateSong(frames, l);
-		try {
-			//mm.createMidi(l.get(0));
-=======
 		cMax = mm.getCMax();
 		Tmn tmn = new Tmn(pMax, dMax, cMax, mm.getDurationConversionTable());
 		tmn.train(l);
 		
 		List<Frame> song = tmn.generateSong(frames, l);
 		try {
->>>>>>> 4063dd4af1c1844fc31e79fe6d008428951d4765
 			mm.createMidi(song);
 		} catch (Exception e) {
 			e.printStackTrace();
