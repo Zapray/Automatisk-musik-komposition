@@ -397,8 +397,8 @@ public class MidiManager2 {
 	}
 	
 	public static void main(String[] args) throws Exception{
-		//MidiManager2 mm = new MidiManager2("/Users/Albin/Desktop/test2.txt");
-		MidiManager2 mm = new MidiManager2(System.getProperty("user.dir")+"/database/Chorus/Hooktheory-2015-02-26-08-00-10.mid");
+		MidiManager2 mm = new MidiManager2("/Users/Albin/Desktop/test2.txt");
+		//MidiManager2 mm = new MidiManager2(System.getProperty("user.dir")+"/database/Chorus/Hooktheory-2015-02-26-08-00-10.mid");
 		List<ArrayList<Frame>> listOfFramesList = mm.getData();
 		ArrayList<Float> convertTablePitch = mm.getConvertTablePitch();
 		for(int i=0;i<listOfFramesList.size();i++){

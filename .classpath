@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre1.8.0_31"/>
 	<classpathentry kind="lib" path="libs/EJML-core-0.26.jar" sourcepath="libs/EJML-core-0.26-sources.jar"/>
 	<classpathentry kind="lib" path="libs/EJML-equation-0.26.jar"/>
 	<classpathentry kind="lib" path="libs/EJML-experimental-0.26.jar"/>
