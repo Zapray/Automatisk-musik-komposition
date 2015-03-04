@@ -76,14 +76,14 @@ public class MidiAnalyzer {
 				//System.out.println(test.get(i).get(j));
 				//}//end for
 				//}//end for
-				File filen = new File("/Users/KarinBrotjefors/Desktop/testdoc.txt");
+				File filen = new File("D:better.txt");
 				// if file doesnt exists, then create it
 				if (!filen.exists()) {
 					filen.createNewFile();
 				}
 
 
-				PrintWriter outFile = new PrintWriter(new FileWriter("/Users/KarinBrotjefors/Desktop/testdoc.txt", true));
+				PrintWriter outFile = new PrintWriter(new FileWriter("D:better.txt", true));
 				count++;
 				System.out.println(count+": " + chordList.size() + "  " + melodyList.size());
 				if(chordList.size()==melodyList.size()){
@@ -602,8 +602,8 @@ public class MidiAnalyzer {
 							halfBarList.add(new Chord(chord.getLabel(), 0.5f));
 							halfBarList.add(new Chord(chord.getLabel(), 0.5f));
 						}else{//PAUS (Fill with previous chord)
-							halfBarList.add(halfBarList.get(halfBarList.size()));
-							halfBarList.add(halfBarList.get(halfBarList.size()));
+							halfBarList.add(halfBarList.get(halfBarList.size()-1));
+							halfBarList.add(halfBarList.get(halfBarList.size()-1));
 						}
 					}else if(chordsInBar.size() == 2){ //
 						Chord chord2 = chordsInBar.get(1);
@@ -617,7 +617,7 @@ public class MidiAnalyzer {
 							}
 						}else{//PAUS 
 							if(chord1.getLabel() == null){ 
-								halfBarList.add(halfBarList.get(halfBarList.size()));//(fill with previous chord)
+								halfBarList.add(halfBarList.get(halfBarList.size()-1));//(fill with previous chord)
 								halfBarList.add(new Chord(chord2.getLabel(), 0.5f));
 							}else{ //Fill first chord twice
 								halfBarList.add(new Chord(chord1.getLabel(), 0.5f));
@@ -638,7 +638,7 @@ public class MidiAnalyzer {
 							}
 						}else{//PAUS
 							if(chord1.getLabel() == null){
-								halfBarList.add(halfBarList.get(halfBarList.size()));//(fill with previous chord)
+								halfBarList.add(halfBarList.get(halfBarList.size()-1));//(fill with previous chord)
 								if(chord1.getDuration() == 0.5f){
 									halfBarList.add(new Chord(chord2.getLabel(), 0.5f));
 								}else{
@@ -662,7 +662,7 @@ public class MidiAnalyzer {
 							halfBarList.add(new Chord(chord3.getLabel(), 0.5f));
 						}else{//PAUS
 							if(chord1.getLabel() == null){
-								halfBarList.add(halfBarList.get(halfBarList.size()));//(fill with previous chord)
+								halfBarList.add(halfBarList.get(halfBarList.size()-1));//(fill with previous chord)
 								halfBarList.add(new Chord(chord3.getLabel(), 0.5f));
 							}else if(chord3.getLabel() == null){
 								halfBarList.add(new Chord(chord1.getLabel(), 0.5f));
