@@ -65,21 +65,42 @@ public class Chord {
 				if(chordTable.get(key).contains(note2letter(note1)) && chordTable.get(key).contains(note2letter(note2)) && chordTable.get(key).contains(note2letter(note3))){
 					label = key;
 					break;
-				}else if(chordTable.get(key).contains(note2letter(note1)) && chordTable.get(key).contains(note2letter(note2))){
-					label = key;
-					break;
-				}else if(chordTable.get(key).contains(note2letter(note1)) && chordTable.get(key).contains(note2letter(note3))){
-					label = key;
-					break;
-				}else if(chordTable.get(key).contains(note2letter(note2)) && chordTable.get(key).contains(note2letter(note3))){
-					label = key;
-					break;
-				}else if(chordTable.get(key).contains(note2letter(note1))){
-					label = key;
-					break;
 				}
 
 			}
+			if(label=="other"){
+				for(String key : keys){
+					if(chordTable.get(key).contains(note2letter(note1)) && chordTable.get(key).contains(note2letter(note2))){
+						label = key;
+						break;
+					}
+				}
+			}
+			if(label=="other"){
+				for(String key : keys){
+					if(chordTable.get(key).contains(note2letter(note1)) && chordTable.get(key).contains(note2letter(note3))){
+						label = key;
+						break;
+					}
+				}
+			}
+			if(label=="other"){
+				for(String key : keys){
+					if(chordTable.get(key).contains(note2letter(note2)) && chordTable.get(key).contains(note2letter(note3))){
+						label = key;
+						break;
+					}
+				}
+			}
+			if(label=="other"){
+				for(String key : keys){
+					if(chordTable.get(key).contains(note2letter(note1))){
+						label = key;
+						break;
+					}
+				}
+			}
+			
 		}
 
 	}
