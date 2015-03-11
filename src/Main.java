@@ -7,6 +7,7 @@ public class Main {
 	public static void main(String[] args) {
 		//You need to allow more memory in eclipse / java to run!
 		runTmn();
+		//System.out.println(Runtime.getRuntime().totalMemory());
 	}
 	public static void runNMarkov() {
 
