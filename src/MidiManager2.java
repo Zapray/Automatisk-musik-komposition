@@ -48,10 +48,12 @@ public class MidiManager2 {
 		BufferedReader in =new BufferedReader(new FileReader(filePath));
 		createUnconvertedArrays(in);
 		createConvertTables();
+	
+		convertArraysToModelFormat();
+		fixConvertTables();
 		pMax=convertTablePitch.size();
 		dMax=convertTableDuration.size();
 		cMax=convertTableChords.size();
-		convertArraysToModelFormat();
 		//createSongList();
 		createlistOfFramesList();
 		}catch (IOException e) {
@@ -107,7 +109,26 @@ public class MidiManager2 {
 
 
 	}
-
+	/**
+	private void fixListOfListOfFrames(){
+		for(int i = 0; i< fixedListOfFrameList.size();i++){
+			Frame tempFrame = fixedListOfFrameList.get(i);
+			for(int j=0; j<tempFrame.getMelodyPackage().size();j++){
+				tempFrame.getMelodyPackage().get(j)
+				
+				
+				
+			}
+			
+		}
+		
+		
+		
+		
+	}
+	*/
+	
+	
 	//Creating convering tables that show which pitch is which number in the model.
 	//Same for duration
 	private void createConvertTables(){
@@ -146,8 +167,8 @@ public class MidiManager2 {
 				convertedPitchList.add(-2);
 				convertedDurationList.add(-2);
 			}else{
-				convertedPitchList.add(convertTablePitch.indexOf(unconPitchList.get(i)));
-				convertedDurationList.add(convertTableDuration.indexOf(unconDurationList.get(i)));
+				convertedPitchList.add(convertTablePitch.indexOf(unconPitchList.get(i))-1);
+				convertedDurationList.add(convertTableDuration.indexOf(unconDurationList.get(i))-1);
 			}
 		}	
 		for(int j = 0; j < unconChordList.size();j++){
@@ -159,6 +180,11 @@ public class MidiManager2 {
 			
 		}
 	}
+	private void fixConvertTables(){
+		convertTablePitch.remove(1);
+		convertTableDuration.remove(1);
+	}
+	
 	private ArrayList<Float> getConvertTablePitch(){
 		return convertTablePitch;
 	}
