@@ -52,14 +52,18 @@ public class MidiManager2 {
 		convertArraysToModelFormat();
 		//createSongList();
 		createlistOfFramesList();
+		//fixListOfFramesList();
 		}catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-
-
-
+ /**
+	private void fixListOfFramesList(){
+		for(int i=0;i<listOfFramesList;i++)
+		
+	}
+   */
 
 	//Makes two ArrayList, one which contains all the the note pitches in the songs and one which contains
 	//all the durations in the song. Nothing is converted 
