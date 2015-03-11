@@ -2,11 +2,12 @@ import java.util.List;
 
 
 public class Main {
-	private static int cMax, pMax, dMax, order = 2, frames = 10;
+	private static int cMax, pMax, dMax, order = 2, frames = 16;
 	private static double length = 0.5;
 	public static void main(String[] args) {
 		//You need to allow more memory in eclipse / java to run!
 		runTmn();
+		//System.out.println(Runtime.getRuntime().totalMemory());
 	}
 	public static void runNMarkov() {
 
@@ -25,7 +26,7 @@ public class Main {
 		}
 	}
 	public static void runTmn() {
-		MidiManager2 mm = new MidiManager2(System.getProperty("user.dir")+"/nydatabas.txt");
+		MidiManager2 mm = new MidiManager2(System.getProperty("user.dir")+"/better.txt");
 		List<? extends List<Frame>> l = mm.getData();
 		pMax = mm.getPMax();
 		dMax = mm.getDMax();

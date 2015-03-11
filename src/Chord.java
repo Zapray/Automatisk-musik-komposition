@@ -16,7 +16,7 @@ public class Chord {
 	private String notes[] = {"C","C#","D","D#","E","F","F#","G","G#","A","A#","B"};
 	ArrayList<String> chord = new ArrayList<String>(0);
 	Map<String, List<String>> chordTable= new HashMap<String, List<String>>();
-	private String keys[] = {"C","F","G","Am","Dm","Em","Cm","D","E","G#","Gm","Fm","F#","A","B","Bm","C#","D#","A#","Cm#","Dm#","Fm#","Gm#","Am#"};
+	private String keys[] = {"C","F","G","Am","Dm","Em","Cm","D","E","G#","Gm","Fm","F#","A","B","Bm","C#","D#","A#","Cm#","Dm#","Fm#","Gm#","Am#","Cdim","Ddim","Edim","Fdim","Gdim","Adim","Bdim","C#dim","D#dim","F#dim","G#dim","A#dim"};
 
 	public static void main(String[] args){
 		Chord theChord = new Chord("");
@@ -176,6 +176,30 @@ public class Chord {
 		List<String> chordAm = new ArrayList<String>();
 		List<String> chordAmsharp = new ArrayList<String>();
 		List<String> chordBm = new ArrayList<String>();
+		List<String> chordCdim = new ArrayList<String>();
+		List<String> chordCsharpdim = new ArrayList<String>();
+		List<String> chordDdim = new ArrayList<String>();
+		List<String> chordDsharpdim = new ArrayList<String>();
+		List<String> chordEdim = new ArrayList<String>();
+		List<String> chordFdim = new ArrayList<String>();
+		List<String> chordFsharpdim = new ArrayList<String>();
+		List<String> chordGdim = new ArrayList<String>();
+		List<String> chordGsharpdim = new ArrayList<String>();
+		List<String> chordAdim = new ArrayList<String>();
+		List<String> chordAsharpdim = new ArrayList<String>();
+		List<String> chordBdim = new ArrayList<String>();
+		List<String> chordCaug = new ArrayList<String>();
+		List<String> chordDaug = new ArrayList<String>();
+		List<String> chordEaug = new ArrayList<String>();
+		List<String> chordFaug = new ArrayList<String>();
+		List<String> chordGaug = new ArrayList<String>();
+		List<String> chordAaug = new ArrayList<String>();
+		List<String> chordBaug = new ArrayList<String>();
+		List<String> chordCsharpaug = new ArrayList<String>();
+		List<String> chordDsharpaug = new ArrayList<String>();
+		List<String> chordFsharpaug = new ArrayList<String>();
+		List<String> chordGsharpaug = new ArrayList<String>();
+		List<String> chordAsharpaug = new ArrayList<String>();
 
 
 		chordC.add("C"); chordC.add("E"); chordC.add("G");
@@ -202,7 +226,26 @@ public class Chord {
 		chordAm.add("A"); chordAm.add("C"); chordAm.add("E");
 		chordAmsharp.add("A#"); chordAmsharp.add("C#"); chordAmsharp.add("F");
 		chordBm.add("B"); chordBm.add("D"); chordBm.add("F#");
-
+		chordCdim.add("C"); chordCdim.add("D#"); chordCdim.add("F#");
+		chordDdim.add("D"); chordDdim.add("F"); chordDdim.add("G#");
+		chordEdim.add("E"); chordEdim.add("G"); chordEdim.add("A#");
+		chordFdim.add("F"); chordFdim.add("G#"); chordFdim.add("B");
+		chordGdim.add("G"); chordGdim.add("A#"); chordGdim.add("C#");
+		chordAdim.add("A"); chordAdim.add("C"); chordAdim.add("D#");
+		chordBdim.add("B"); chordBdim.add("D"); chordBdim.add("F");
+		chordCsharpdim.add("C#"); chordCsharpdim.add("E"); chordCsharpdim.add("G");
+		chordDsharpdim.add("D#"); chordDsharpdim.add("F#"); chordDsharpdim.add("A");
+		chordFsharpdim.add("F#"); chordFsharpdim.add("A"); chordFsharpdim.add("C");
+		chordGsharpdim.add("G#"); chordGsharpdim.add("B"); chordGsharpdim.add("D");
+		chordAsharpdim.add("A#"); chordAsharpdim.add("C#"); chordAsharpdim.add("E");
+		chordCaug.add("C"); chordCaug.add("E"); chordCaug.add("G#");
+		chordDaug.add("D"); chordDaug.add("F#"); chordDaug.add("A#");
+		chordEaug.add("E"); chordEaug.add("G#"); chordEaug.add("C");
+		chordFaug.add("F"); chordFaug.add("A"); chordFaug.add("C#");
+		chordGaug.add("G"); chordGaug.add("B"); chordGaug.add("D#");
+		chordAaug.add("A"); chordAaug.add("A#"); chordAaug.add("F");
+		
+		
 		chordTable.put("C", chordC);
 		chordTable.put("C#", chordCsharp);
 		chordTable.put("D", chordD);
@@ -227,6 +270,18 @@ public class Chord {
 		chordTable.put("Am", chordAm);
 		chordTable.put("Am#", chordAmsharp);
 		chordTable.put("Bm", chordBm);
+		chordTable.put("Cdim", chordCdim);
+		chordTable.put("Ddim", chordDdim);
+		chordTable.put("Edim", chordEdim);
+		chordTable.put("Fdim", chordFdim);
+		chordTable.put("Gdim", chordGdim);
+		chordTable.put("Adim", chordAdim);
+		chordTable.put("Bdim", chordBdim);
+		chordTable.put("C#dim", chordCsharpdim);
+		chordTable.put("D#dim", chordDsharpdim);
+		chordTable.put("F#dim", chordFsharpdim);
+		chordTable.put("G#dim", chordGsharpdim);
+		chordTable.put("A#dim", chordAsharpdim);
 
 	}
 
