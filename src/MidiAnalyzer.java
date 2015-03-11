@@ -602,9 +602,6 @@ public class MidiAnalyzer {
 
 
 			//If last bar doesnt equals 1;
-
-
-
 			if(i == chordList.size()-1 && durationCount != 1){
 				Chord chord1 = chordsInBar.get(0);
 				if(durationCount <= 0.5){
