@@ -40,7 +40,7 @@ public class Tmn extends MelodyFrameGenerator{
 	public void train(List<? extends List<Frame>> data) {
 		chordsMarkov.train(getChordData(data));
 		Frame prevFrame;
-		
+		//TODO train with longer notes in mind.
 		int[] counter = new int[nextToneMatrix.numRows()];
 		for(List<Frame> song : data) {
 			prevFrame = song.get(0);
@@ -137,7 +137,7 @@ public class Tmn extends MelodyFrameGenerator{
 
 	@Override
 	public List<Frame> generateSong(int frames, List<? extends List<Frame>> data) {
-		
+		//TODO let frames be longer than intended ? + paus
 		List<Frame> song = new ArrayList<Frame>();
 		Random rand = new Random();
 		int prevChord = chordsMarkov.generateNote(null, rand).getPitch();
