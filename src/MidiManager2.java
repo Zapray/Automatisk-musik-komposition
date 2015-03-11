@@ -35,6 +35,8 @@ public class MidiManager2 {
 	private ArrayList<String> convertTableChords = new ArrayList<String>();
 	//
 	private ArrayList<Integer> convertedChordList= new ArrayList<Integer>();
+	
+	private ArrayList<Frame> fixedListOfFrameList = new ArrayList<Frame>();
 
 	private int pMax;
 	private int dMax;
@@ -52,18 +54,11 @@ public class MidiManager2 {
 		convertArraysToModelFormat();
 		//createSongList();
 		createlistOfFramesList();
-		//fixListOfFramesList();
 		}catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
- /**
-	private void fixListOfFramesList(){
-		for(int i=0;i<listOfFramesList;i++)
-		
-	}
-   */
 
 	//Makes two ArrayList, one which contains all the the note pitches in the songs and one which contains
 	//all the durations in the song. Nothing is converted 
@@ -151,8 +146,8 @@ public class MidiManager2 {
 				convertedPitchList.add(-2);
 				convertedDurationList.add(-2);
 			}else{
-				convertedPitchList.add(convertTablePitch.indexOf(unconPitchList.get(i)));
-				convertedDurationList.add(convertTableDuration.indexOf(unconDurationList.get(i)));
+				convertedPitchList.add(convertTablePitch.indexOf(unconPitchList.get(i))-1);
+				convertedDurationList.add(convertTableDuration.indexOf(unconDurationList.get(i))-1);
 			}
 		}	
 		for(int j = 0; j < unconChordList.size();j++){
