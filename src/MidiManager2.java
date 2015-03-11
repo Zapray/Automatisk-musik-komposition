@@ -146,8 +146,8 @@ public class MidiManager2 {
 				convertedPitchList.add(-2);
 				convertedDurationList.add(-2);
 			}else{
-				convertedPitchList.add(convertTablePitch.indexOf(unconPitchList.get(i))-1);
-				convertedDurationList.add(convertTableDuration.indexOf(unconDurationList.get(i))-1);
+				convertedPitchList.add(convertTablePitch.indexOf(unconPitchList.get(i)));
+				convertedDurationList.add(convertTableDuration.indexOf(unconDurationList.get(i)));
 			}
 		}	
 		for(int j = 0; j < unconChordList.size();j++){
