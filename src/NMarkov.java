@@ -73,7 +73,7 @@ public class NMarkov extends MelodyNotesGenerator{
 		int row = 0;
 		int col = 0;
 		LinkedList<Note> prevs = new LinkedList<Note>();
-		System.out.println(data);
+		//System.out.println(data);
 		for( List<Note> song : data) {
 			for(int i = 0; i < n && i < song.size(); i++) {
 				 prevs.addFirst(song.get(i));

@@ -7,6 +7,7 @@ public class Main {
 	public static void main(String[] args) {
 		//You need to allow more memory in eclipse / java to run!
 		runTmn();
+		//System.out.println(Runtime.getRuntime().totalMemory());
 	}
 	public static void runNMarkov() {
 
@@ -25,14 +26,16 @@ public class Main {
 		}
 	}
 	public static void runTmn() {
-		MidiManager2 mm = new MidiManager2(System.getProperty("user.dir")+"/better.txt");
+		MidiManager2 mm = new MidiManager2(System.getProperty("user.dir")+"/database_chorus.txt");
 		List<? extends List<Frame>> l = mm.getData();
 		pMax = mm.getPMax();
 		dMax = mm.getDMax();
 		cMax = mm.getCMax();
 		Tmn tmn = new Tmn(pMax, dMax, cMax, mm.getDurationConversionTable());
 		tmn.train(l);
-		
+
+		System.out.println("hej svej i main!!");
+
 		List<Frame> song = tmn.generateSong(frames, l);
 		try {
 			mm.createMidi(song);
