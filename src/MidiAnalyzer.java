@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.apache.commons.io.*;
 
@@ -53,6 +54,8 @@ public class MidiAnalyzer {
 				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Intro/Hooktheory-2015-02-18-03-54-00.mid")));//Paus in beginning!!
 				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Chorus/Hooktheory-2015-02-18-03-59-28.mid")));
 				InputStream is = new BufferedInputStream(new FileInputStream( new File(System.getProperty("user.dir")+"/database/Chorus/" + file.getName())));
+				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Automatisk-musik-komposition/database/Chorus/Hooktheory-2015-02-21-04-50-00.mid")));
+				
 				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Chorus/Hooktheory-2015-02-18-04-29-49.mid")));
 
 				//System.out.println("/Users/Albin/Desktop/Filerfranhook/Chorus/" + file.getName());
@@ -79,14 +82,14 @@ public class MidiAnalyzer {
 				//System.out.println(test.get(i).get(j));
 				//}//end for
 				//}//end for
-				File filen = new File("D:better.txt");
+				File filen = new File(System.getProperty("user.dir")+"/better.txt");
 				// if file doesnt exists, then create it
 				if (!filen.exists()) {
 					filen.createNewFile();
 				}
 
 
-				PrintWriter outFile = new PrintWriter(new FileWriter("D:better.txt", true));
+				PrintWriter outFile = new PrintWriter(new FileWriter(System.getProperty("user.dir")+"/better.txt", true));
 				count++;
 
 				if(chordList.size() > melodyList.size()){
@@ -319,21 +322,21 @@ public class MidiAnalyzer {
 		ArrayList<Chord> chordList = createChordList(track, res);
 
 		//Print chordList
-		//		Iterator itr = chordList.iterator();
-		//		while(itr.hasNext()) {
-		//			Chord chord = (Chord) itr.next();
-		//			System.out.println(chord.getLabel() + "   " + chord.getDuration());
-		//		}
+		//				Iterator itr = chordList.iterator();
+		//				while(itr.hasNext()) {
+		//					Chord chord = (Chord) itr.next();
+		//					System.out.println(chord.getLabel() + "   " + chord.getDuration());
+		//				}
 
 		ArrayList<Chord> halfBarList = createHalfBarList(chordList);
 
 		//Print halfBarList
-		//		System.out.println(" ");
-		//		Iterator itr2 = halfBarList.iterator();
-		//		while(itr2.hasNext()) {
-		//			Chord chord = (Chord) itr2.next();
-		//			System.out.println(chord.getLabel() + "   " + chord.getDuration());
-		//		}
+//		System.out.println(" ");
+//		Iterator itr2 = halfBarList.iterator();
+//		while(itr2.hasNext()) {
+//			Chord chord = (Chord) itr2.next();
+//			System.out.println(chord.getLabel() + "   " + chord.getDuration());
+//		}
 
 		return halfBarList;
 
@@ -561,9 +564,9 @@ public class MidiAnalyzer {
 			Chord chord = chordList.get(i);
 			durationCount = durationCount + chord.getDuration();
 			chordsInBar.add(chord);
-			
+
 			//If last bar doesnt equals 1;
-			
+
 			if(i == chordList.size()-1 && durationCount != 1){
 				Chord chord1 = chordsInBar.get(0);
 				if(durationCount <= 0.5){
@@ -573,11 +576,11 @@ public class MidiAnalyzer {
 					halfBarList.add(new Chord(chord1.getLabel(), 0.5f));
 				}
 			}
-			
+
 			if(durationCount == 1){//One bar
 				barCount++;
 				Chord chord1 = chordsInBar.get(0);
-				if(barCount == 1 && chord1.getLabel() == null){
+				if(barCount == 1 && chord1.getLabel() == null && chordsInBar.size() <= 4){
 					if(chord1.getLabel() == null){//Paus in beginning
 						if(chordsInBar.size() == 1){ 
 							halfBarList.add(new Chord("C", 0.5f));//??
@@ -679,21 +682,78 @@ public class MidiAnalyzer {
 
 						}
 					}else if(chordsInBar.size() == 5){
-						Chord chord5 = chordsInBar.get(4);
-						halfBarList.add(new Chord(chord1.getLabel(), 0.5f));
-						halfBarList.add(new Chord(chord5.getLabel(), 0.5f));
+						int maxCount = 0;
+						Iterator itr = chordsInBar.iterator();
+						while(itr.hasNext()) {
+							Chord c = (Chord) itr.next();
+							if(c.getLabel() != null && maxCount == 0){
+								halfBarList.add(new Chord(c.getLabel(), 0.5f));
+								maxCount++;
+							}
+						}
+						ListIterator itrRev = chordsInBar.listIterator();
+						while(itrRev.hasPrevious()) {
+							Chord c = (Chord) itrRev.previous();
+							if(c.getLabel() != null && maxCount == 1){
+								halfBarList.add(new Chord(c.getLabel(), 0.5f));
+								maxCount++;
+							}
+						}
+						
 					}else if(chordsInBar.size() == 6){
-						Chord chord6 = chordsInBar.get(5);
-						halfBarList.add(new Chord(chord1.getLabel(), 0.5f));
-						halfBarList.add(new Chord(chord6.getLabel(), 0.5f));
+						int maxCount = 0;
+						Iterator itr = chordsInBar.iterator();
+						while(itr.hasNext()) {
+							Chord c = (Chord) itr.next();
+							if(c.getLabel() != null && maxCount == 0){
+								halfBarList.add(new Chord(c.getLabel(), 0.5f));
+								maxCount++;
+							}
+						}
+						ListIterator itrRev = chordsInBar.listIterator();
+						while(itrRev.hasPrevious()) {
+							Chord c = (Chord) itrRev.previous();
+							if(c.getLabel() != null && maxCount == 1){
+								halfBarList.add(new Chord(c.getLabel(), 0.5f));
+								maxCount++;
+							}
+						}
 					}else if(chordsInBar.size() == 7){
-						Chord chord7 = chordsInBar.get(6);
-						halfBarList.add(new Chord(chord1.getLabel(), 0.5f));
-						halfBarList.add(new Chord(chord7.getLabel(), 0.5f));
+						int maxCount = 0;
+						Iterator itr = chordsInBar.iterator();
+						while(itr.hasNext()) {
+							Chord c = (Chord) itr.next();
+							if(c.getLabel() != null && maxCount == 0){
+								halfBarList.add(new Chord(c.getLabel(), 0.5f));
+								maxCount++;
+							}
+						}
+						ListIterator itrRev = chordsInBar.listIterator();
+						while(itrRev.hasPrevious()) {
+							Chord c = (Chord) itrRev.previous();
+							if(c.getLabel() != null && maxCount == 1){
+								halfBarList.add(new Chord(c.getLabel(), 0.5f));
+								maxCount++;
+							}
+						}
 					}else if(chordsInBar.size() == 8){//Ner till 8-delar
-						Chord chord8 = chordsInBar.get(7);
-						halfBarList.add(new Chord(chord1.getLabel(), 0.5f));
-						halfBarList.add(new Chord(chord8.getLabel(), 0.5f));
+						int maxCount = 0;
+						ListIterator<Chord> itr = chordsInBar.listIterator();
+						while(itr.hasNext()) {
+							Chord c = (Chord) itr.next();
+							if(c.getLabel() != null && maxCount == 0){
+								halfBarList.add(new Chord(c.getLabel(), 0.5f));
+								maxCount++;
+							}
+						}
+
+						while(itr.hasPrevious()) {
+							Chord c = (Chord) itr.previous();
+							if(c.getLabel() != null && maxCount == 1){
+								halfBarList.add(new Chord(c.getLabel(), 0.5f));
+								maxCount++;
+							}
+						}
 					}
 				}
 				chordsInBar.clear();
@@ -706,18 +766,21 @@ public class MidiAnalyzer {
 				chordsInBar.clear();
 				durationCount = 0;
 			}
+			
+			
 
 
 		}
+		//Clear halfBarList if it contains any chords with null-label
+		ListIterator<Chord> itr = halfBarList.listIterator();
+		while(itr.hasNext() && !halfBarList.isEmpty()) {
+			Chord c = (Chord) itr.next();
+			if(c.getLabel() == null){
+				halfBarList.clear();
+			}
+		}
 		return halfBarList;
 	}
-
-
-
-
-
-
-
 
 
 
