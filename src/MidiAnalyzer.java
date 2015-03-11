@@ -40,7 +40,7 @@ import javax.sound.midi.*;
 public class MidiAnalyzer {
 
 	public static void main(String args[]) throws Exception{
-		File[] files =new File (System.getProperty("user.dir")+"/database/Chorus/").listFiles(); 
+		File[] files =new File (System.getProperty("user.dir")+"/database/Intro/").listFiles(); 
 
 		int count = 0;
 		int equalCount = 0;
@@ -53,7 +53,7 @@ public class MidiAnalyzer {
 				//InputStream is = new BufferedInputStream(new FileInputStream(new File("D:\\Latarfranhook\\Verse\\Hooktheory-2015-02-21-01-37-31.mid")));
 				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Intro/Hooktheory-2015-02-18-03-54-00.mid")));//Paus in beginning!!
 				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Chorus/Hooktheory-2015-02-18-03-59-28.mid")));
-				InputStream is = new BufferedInputStream(new FileInputStream( new File(System.getProperty("user.dir")+"/database/Chorus/" + file.getName())));
+				InputStream is = new BufferedInputStream(new FileInputStream( new File(System.getProperty("user.dir")+"/database/Intro/" + file.getName())));
 
 				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Automatisk-musik-komposition/database/Chorus/Hooktheory-2015-02-21-04-50-00.mid")));
 				
@@ -85,7 +85,7 @@ public class MidiAnalyzer {
 				//}//end for
 				//}//end for
 
-				File filen = new File("better.txt");
+				File filen = new File("database_intro.txt");
 
 				// if file doesnt exists, then create it
 				if (!filen.exists()) {
@@ -94,7 +94,7 @@ public class MidiAnalyzer {
 
 
 
-				PrintWriter outFile = new PrintWriter(new FileWriter("better.txt", true));
+				PrintWriter outFile = new PrintWriter(new FileWriter("database_intro.txt", true));
 
 				count++;
 
