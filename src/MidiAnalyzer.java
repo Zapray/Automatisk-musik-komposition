@@ -53,10 +53,16 @@ public class MidiAnalyzer {
 				//InputStream is = new BufferedInputStream(new FileInputStream(new File("D:\\Latarfranhook\\Verse\\Hooktheory-2015-02-21-01-37-31.mid")));
 				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Intro/Hooktheory-2015-02-18-03-54-00.mid")));//Paus in beginning!!
 				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Chorus/Hooktheory-2015-02-18-03-59-28.mid")));
-				InputStream is = new BufferedInputStream(new FileInputStream( new File(System.getProperty("user.dir")+"/database/Intro/" + file.getName())));
+
+				InputStream is = new BufferedInputStream(new FileInputStream( new File(System.getProperty("user.dir")+"/database/Chorus/" + file.getName())));
+				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Automatisk-musik-komposition/database/Chorus/Hooktheory-2015-02-21-04-50-00.mid")));
+				
+
+				//InputStream is = new BufferedInputStream(new FileInputStream( new File(System.getProperty("user.dir")+"/database/Intro/" + file.getName())));
 
 				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Automatisk-musik-komposition/database/Chorus/Hooktheory-2015-02-21-04-50-00.mid")));
 				
+
 
 				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Chorus/Hooktheory-2015-02-18-04-29-49.mid")));
 
@@ -85,7 +91,10 @@ public class MidiAnalyzer {
 				//}//end for
 				//}//end for
 
-				File filen = new File("database_intro.txt");
+				File filen = new File(System.getProperty("user.dir")+"/better.txt");
+
+
+				//File filen = new File("database_intro.txt");
 
 				// if file doesnt exists, then create it
 				if (!filen.exists()) {
@@ -94,7 +103,11 @@ public class MidiAnalyzer {
 
 
 
-				PrintWriter outFile = new PrintWriter(new FileWriter("database_intro.txt", true));
+				PrintWriter outFile = new PrintWriter(new FileWriter(System.getProperty("user.dir")+"/better.txt", true));
+
+
+				//PrintWriter outFile = new PrintWriter(new FileWriter("database_intro.txt", true));
+
 
 				count++;
 
@@ -575,6 +588,7 @@ public class MidiAnalyzer {
 			//If last bar doesnt equals 1;
 
 
+
 			if(i == chordList.size()-1 && durationCount != 1){
 				Chord chord1 = chordsInBar.get(0);
 				if(durationCount <= 0.5){
@@ -691,6 +705,9 @@ public class MidiAnalyzer {
 						}
 					}else if(chordsInBar.size() == 5){
 
+
+
+
 						int maxCount = 0;
 						Iterator itr = chordsInBar.iterator();
 						while(itr.hasNext()) {
@@ -764,6 +781,9 @@ public class MidiAnalyzer {
 							}
 						}
 
+
+
+
 					}
 				}
 				chordsInBar.clear();
@@ -789,12 +809,18 @@ public class MidiAnalyzer {
 			if(c.getLabel() == null){
 				halfBarList.clear();
 
+
+
+
 			}
+
 
 
 		}
 		return halfBarList;
 	}
+
+
 
 
 
