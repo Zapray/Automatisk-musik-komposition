@@ -35,6 +35,8 @@ public class MidiManager2 {
 	private ArrayList<String> convertTableChords = new ArrayList<String>();
 	//
 	private ArrayList<Integer> convertedChordList= new ArrayList<Integer>();
+	
+	private ArrayList<Frame> fixedListOfFrameList = new ArrayList<Frame>();
 
 	private int pMax;
 	private int dMax;
@@ -56,9 +58,6 @@ public class MidiManager2 {
 			e.printStackTrace();
 		}
 	}
-
-
-
 
 
 	//Makes two ArrayList, one which contains all the the note pitches in the songs and one which contains
@@ -173,7 +172,7 @@ public class MidiManager2 {
 		int counter1=0;
 		for(int i=0;i<convertedPitchList.size();i++){
 		
-			System.out.println(i + " " + step + " "+ convertedChordList.get(counter1) +  "  " + convertedPitchList.get(i));
+			//System.out.println(i + " " + step + " "+ convertedChordList.get(counter1) +  "  " + convertedPitchList.get(i));
 			if(convertedChordList.get(counter1) == -1 && convertedChordList.size()-1 !=counter1){
 				counter1++;
 			}
@@ -274,8 +273,8 @@ public class MidiManager2 {
         	 
         	 for(int j =0; j<noteList.size(); j++){
         		 
-        		 System.out.println(convertTableDuration.get((noteList.get(j)).getDuration()));
-            	 System.out.println(convertTablePitch.get((noteList.get(j)).getPitch()));
+        		// System.out.println(convertTableDuration.get((noteList.get(j)).getDuration()));
+            	 //System.out.println(convertTablePitch.get((noteList.get(j)).getPitch()));
             	 tick=convertNoteLengthToTicks(convertTableDuration.get((noteList.get(j)).getDuration()),192);
             	 if(convertTablePitch.get((noteList.get(j)).getPitch())==0){
             		tickMeter=tickMeter + tick;	 
@@ -320,7 +319,7 @@ public class MidiManager2 {
         	 int nbrchord = newFrameList.get(i).getChord();
         	 String chord = convertTableChords.get(nbrchord);
         	 Chord ackord = new Chord(chord);
-        	 System.out.println(ackord.getNote1() +  "  " + ackord.getNote2() + "  "+ ackord.getNote3());
+        	 //System.out.println(ackord.getNote1() +  "  " + ackord.getNote2() + "  "+ ackord.getNote3());
         	 
         	 
         	ShortMessage	shortMessage1 = new ShortMessage();
@@ -363,6 +362,7 @@ public class MidiManager2 {
          
          
          MidiSystem.write(sequence, 1, outputFile);
+         System.out.println("Song is created");
          //for(int nEvent = 0; nEvent < track.size()-1; nEvent++){	 
         	 //MidiEvent event = track.get(nEvent);
         	 //MidiMessage message = event.getMessage();
@@ -403,10 +403,10 @@ public class MidiManager2 {
 		ArrayList<Float> convertTablePitch = mm.getConvertTablePitch();
 		for(int i=0;i<listOfFramesList.size();i++){
 			for(int j=0; j<listOfFramesList.get(i).size();j++){
-				System.out.println("Ackord:  " + listOfFramesList.get(i).get(j).getChord());
+				//System.out.println("Ackord:  " + listOfFramesList.get(i).get(j).getChord());
 				
 				for(int k = 0; k<listOfFramesList.get(i).get(j).getMelodyPackage().size();k++){
-					System.out.println("Not:  " +convertTablePitch.get(listOfFramesList.get(i).get(j).getMelodyPackage().get(k).getPitch()));
+					//System.out.println("Not:  " +convertTablePitch.get(listOfFramesList.get(i).get(j).getMelodyPackage().get(k).getPitch()));
 				}
 			}
 		
