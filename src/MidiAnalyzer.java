@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.apache.commons.io.*;
 
@@ -42,67 +43,82 @@ public class MidiAnalyzer {
 		File[] files =new File (System.getProperty("user.dir")+"/database/Chorus/").listFiles(); 
 
 		int count = 0;
-		//		for(File file : files){
-		//			String ext1 = FilenameUtils.getExtension(file.getName());
-		//			if(ext1.equals("mid")){
+		int equalCount = 0;
+		for(File file : files){
+			String ext1 = FilenameUtils.getExtension(file.getName());
+			if(ext1.equals("mid")){
 
-		Sequencer sequencer = MidiSystem.getSequencer();//Creates a sequencer
-		sequencer.open();// have to open the sequencer to be able to use sequences. Don't know why, it works without the first two lines.
-		//InputStream is = new BufferedInputStream(new FileInputStream(new File("D:\\Latarfranhook\\Verse\\Hooktheory-2015-02-21-01-37-31.mid")));
-		//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Intro/Hooktheory-2015-02-18-03-54-00.mid")));//Paus in beginning!!
-		//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Chorus/Hooktheory-2015-02-18-03-59-28.mid")));
-		//InputStream is = new BufferedInputStream(new FileInputStream( new File(System.getProperty("user.dir")+"/database/Chorus/" + file.getName())));
-		InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Chorus/Hooktheory-2015-02-18-04-29-49.mid")));
+				Sequencer sequencer = MidiSystem.getSequencer();//Creates a sequencer
+				sequencer.open();// have to open the sequencer to be able to use sequences. Don't know why, it works without the first two lines.
+				//InputStream is = new BufferedInputStream(new FileInputStream(new File("D:\\Latarfranhook\\Verse\\Hooktheory-2015-02-21-01-37-31.mid")));
+				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Intro/Hooktheory-2015-02-18-03-54-00.mid")));//Paus in beginning!!
+				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Chorus/Hooktheory-2015-02-18-03-59-28.mid")));
+				InputStream is = new BufferedInputStream(new FileInputStream( new File(System.getProperty("user.dir")+"/database/Chorus/" + file.getName())));
+				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Automatisk-musik-komposition/database/Chorus/Hooktheory-2015-02-21-04-50-00.mid")));
+				
+				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Chorus/Hooktheory-2015-02-18-04-29-49.mid")));
 
-		//System.out.println("/Users/Albin/Desktop/Filerfranhook/Chorus/" + file.getName());
-		//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/Albin/Desktop/songweknow/" + file.getName())));
-		//InputStream is = new BufferedInputStream(new FileInputStream(new File("/Users/Albin/Desktop/music.mid")));
-		Sequence sequence = MidiSystem.getSequence(is);//Creates a sequence which you can analyze.
-		float res = sequence.getResolution();
-		//System.out.println(res);
-		//System.out.println(sequence.getDivisionType());
-		Track[] tracks = sequence.getTracks();//Creates an array to be able to separate tracks.
-		int track0 = 0;
-		int track1 = 1;
-		Track   melodytrack = tracks[track0];
-		Track   chordtrack = tracks[track1];
-		List<ArrayList<FloatNote>> melodyList = findMelody(melodytrack, res);
-		ArrayList<Chord> chordList = findChords(chordtrack, res);
-		//System.out.println(test.size());
-		//System.out.println(test.get(22).size());
-		//for(int i=0; i<test.size(); i++ ){
-		//System.out.println("Package");
-		//for(int j=0; j<test.get(i).size(); j++){
-		//System.out.println(test.get(i).size());
+				//System.out.println("/Users/Albin/Desktop/Filerfranhook/Chorus/" + file.getName());
+				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/Albin/Desktop/songweknow/" + file.getName())));
+				//InputStream is = new BufferedInputStream(new FileInputStream(new File("/Users/Albin/Desktop/music.mid")));
+				Sequence sequence = MidiSystem.getSequence(is);//Creates a sequence which you can analyze.
+				float res = sequence.getResolution();
+				//System.out.println(res);
+				//System.out.println(sequence.getDivisionType());
+				Track[] tracks = sequence.getTracks();//Creates an array to be able to separate tracks.
+				int track0 = 0;
+				int track1 = 1;
+				Track   melodytrack = tracks[track0];
+				Track   chordtrack = tracks[track1];
+				List<ArrayList<FloatNote>> melodyList = findMelody(melodytrack, res);
+				ArrayList<Chord> chordList = findChords(chordtrack, res);
+				//System.out.println(test.size());
+				//System.out.println(test.get(22).size());
+				//for(int i=0; i<test.size(); i++ ){
+				//System.out.println("Package");
+				//for(int j=0; j<test.get(i).size(); j++){
+				//System.out.println(test.get(i).size());
 
-		//System.out.println(test.get(i).get(j));
-		//}//end for
-		//}//end for
-		File filen = new File("D:better.txt");
-		// if file doesnt exists, then create it
-		if (!filen.exists()) {
-			filen.createNewFile();
-		}
-
-
-		PrintWriter outFile = new PrintWriter(new FileWriter("D:better.txt", true));
-		count++;
-		System.out.println(count+": " + chordList.size() + "  " + melodyList.size());
-		if(chordList.size()==melodyList.size()){
-			for (int i=0;i<chordList.size();i++){
-				outFile.println("?"+chordList.get(i).getLabel());
-				for (int j =0; j<melodyList.get(i).size();j++){
-					outFile.println(melodyList.get(i).get(j).getPitch() + "," + melodyList.get(i).get(j).getDuration());
+				//System.out.println(test.get(i).get(j));
+				//}//end for
+				//}//end for
+				File filen = new File("better.txt");
+				// if file doesnt exists, then create it
+				if (!filen.exists()) {
+					filen.createNewFile();
 				}
+
+
+				PrintWriter outFile = new PrintWriter(new FileWriter("better.txt", true));
+				count++;
+
+				if(chordList.size() > melodyList.size()){
+					int diff = chordList.size() - melodyList.size();
+					do{
+						chordList.remove(chordList.size()-diff);
+						diff--;
+					}while(diff > 0);
+
+				}
+				System.out.println(count+": " + chordList.size() + "  " + melodyList.size());
+
+				if(chordList.size()==melodyList.size() && chordList.size() != 0){
+					equalCount++;
+					for (int i=0;i<chordList.size();i++){
+						outFile.println("?"+chordList.get(i).getLabel());
+						for (int j =0; j<melodyList.get(i).size();j++){
+							outFile.println(melodyList.get(i).get(j).getPitch() + "," + melodyList.get(i).get(j).getDuration());
+						}
+					}
+					outFile.println("-");
+				}
+
+
+				outFile.close();
+				sequencer.close();
 			}
-			outFile.println("-");
 		}
-
-
-		outFile.close();
-		sequencer.close();
-		//			}
-		//		}
+		System.out.println((double)equalCount/count);
 	}//end main
 
 	public static float convertTicksToNoteLength(long tick1, long tick2, float res){
@@ -306,21 +322,21 @@ public class MidiAnalyzer {
 		ArrayList<Chord> chordList = createChordList(track, res);
 
 		//Print chordList
-		Iterator itr = chordList.iterator();
-		while(itr.hasNext()) {
-			Chord chord = (Chord) itr.next();
-			System.out.println(chord.getLabel() + "   " + chord.getDuration());
-		}
+		//				Iterator itr = chordList.iterator();
+		//				while(itr.hasNext()) {
+		//					Chord chord = (Chord) itr.next();
+		//					System.out.println(chord.getLabel() + "   " + chord.getDuration());
+		//				}
 
 		ArrayList<Chord> halfBarList = createHalfBarList(chordList);
 
 		//Print halfBarList
-		System.out.println(" ");
-		Iterator itr2 = halfBarList.iterator();
-		while(itr2.hasNext()) {
-			Chord chord = (Chord) itr2.next();
-			System.out.println(chord.getLabel() + "   " + chord.getDuration());
-		}
+//		System.out.println(" ");
+//		Iterator itr2 = halfBarList.iterator();
+//		while(itr2.hasNext()) {
+//			Chord chord = (Chord) itr2.next();
+//			System.out.println(chord.getLabel() + "   " + chord.getDuration());
+//		}
 
 		return halfBarList;
 
@@ -475,33 +491,11 @@ public class MidiAnalyzer {
 							Chord chord = new Chord(notesInChord[0], notesInChord[1], notesInChord[2], 
 									convertTicksToDuration(eventAfter[tickCount-1].getTick(), eventBefore[tickCount-1].getTick(),res)); 
 							chordList.add(chord);
-							//							Chord paus = new Chord(0, 0, 0, 
-							//									convertTicksToDuration(eventAfter[tickCount-1].getTick(), eventBefore[tickCount-1].getTick(),res)); 
-							//							chordList.add(paus);
 							chordCount++;
 
 						}
 
 					}
-					//					else if(nbrOfEvents == 6){//Kommer aldrig vara 6 st fšr ett nytt ackord bšrjar inte i slutet fšr det Šr ju sluuuut!!!
-					//
-					//						MidiEvent event1 = track.get(nEvent-5);
-					//						MidiEvent event2 = track.get(nEvent-4);
-					//						MidiEvent event3 = track.get(nEvent-3);
-					//						MidiEvent event4 = track.get(nEvent-2);
-					//						MidiEvent event5 = track.get(nEvent-1);
-					//						MidiEvent event6 = track.get(nEvent);
-					//
-					//						int[] notesInChord = new int[3];
-					//						notesInChord = extractChordNotes(event1, event2, event3, event4, event5, event6);
-					//						if(!Arrays.equals(notesInChord, new int[3])){
-					//
-					//							Chord chord = new Chord(notesInChord[0],notesInChord[1],notesInChord[2], convertTicksToDuration(eventAfter[tickCount-2].getTick(), eventBefore[tickCount-2].getTick(),res)); 
-					//							chordList.add(chord);
-					//							chordCount++;
-					//
-					//						}
-					//					}
 				}
 
 
@@ -555,7 +549,7 @@ public class MidiAnalyzer {
 				}
 			}
 		}
-		System.out.println(chordCount);
+		//System.out.println(chordCount);
 		return chordList;
 	}
 
@@ -571,10 +565,22 @@ public class MidiAnalyzer {
 			durationCount = durationCount + chord.getDuration();
 			chordsInBar.add(chord);
 
+			//If last bar doesnt equals 1;
+
+			if(i == chordList.size()-1 && durationCount != 1){
+				Chord chord1 = chordsInBar.get(0);
+				if(durationCount <= 0.5){
+					halfBarList.add(new Chord(chord1.getLabel(), 0.5f));
+				}else if(durationCount < 1){
+					halfBarList.add(new Chord(chord1.getLabel(), 0.5f));
+					halfBarList.add(new Chord(chord1.getLabel(), 0.5f));
+				}
+			}
+
 			if(durationCount == 1){//One bar
 				barCount++;
 				Chord chord1 = chordsInBar.get(0);
-				if(barCount == 1 && chord1.getLabel() == null){
+				if(barCount == 1 && chord1.getLabel() == null && chordsInBar.size() <= 4){
 					if(chord1.getLabel() == null){//Paus in beginning
 						if(chordsInBar.size() == 1){ 
 							halfBarList.add(new Chord("C", 0.5f));//??
@@ -654,7 +660,7 @@ public class MidiAnalyzer {
 								halfBarList.add(new Chord(chord2.getLabel(), 0.5f));
 							}
 						}
-					}else{ 
+					}else if(chordsInBar.size() == 4){ 
 						Chord chord2 = chordsInBar.get(1);
 						Chord chord3 = chordsInBar.get(2);
 						Chord chord4 = chordsInBar.get(3);
@@ -675,6 +681,79 @@ public class MidiAnalyzer {
 							}
 
 						}
+					}else if(chordsInBar.size() == 5){
+						int maxCount = 0;
+						Iterator itr = chordsInBar.iterator();
+						while(itr.hasNext()) {
+							Chord c = (Chord) itr.next();
+							if(c.getLabel() != null && maxCount == 0){
+								halfBarList.add(new Chord(c.getLabel(), 0.5f));
+								maxCount++;
+							}
+						}
+						ListIterator itrRev = chordsInBar.listIterator();
+						while(itrRev.hasPrevious()) {
+							Chord c = (Chord) itrRev.previous();
+							if(c.getLabel() != null && maxCount == 1){
+								halfBarList.add(new Chord(c.getLabel(), 0.5f));
+								maxCount++;
+							}
+						}
+						
+					}else if(chordsInBar.size() == 6){
+						int maxCount = 0;
+						Iterator itr = chordsInBar.iterator();
+						while(itr.hasNext()) {
+							Chord c = (Chord) itr.next();
+							if(c.getLabel() != null && maxCount == 0){
+								halfBarList.add(new Chord(c.getLabel(), 0.5f));
+								maxCount++;
+							}
+						}
+						ListIterator itrRev = chordsInBar.listIterator();
+						while(itrRev.hasPrevious()) {
+							Chord c = (Chord) itrRev.previous();
+							if(c.getLabel() != null && maxCount == 1){
+								halfBarList.add(new Chord(c.getLabel(), 0.5f));
+								maxCount++;
+							}
+						}
+					}else if(chordsInBar.size() == 7){
+						int maxCount = 0;
+						Iterator itr = chordsInBar.iterator();
+						while(itr.hasNext()) {
+							Chord c = (Chord) itr.next();
+							if(c.getLabel() != null && maxCount == 0){
+								halfBarList.add(new Chord(c.getLabel(), 0.5f));
+								maxCount++;
+							}
+						}
+						ListIterator itrRev = chordsInBar.listIterator();
+						while(itrRev.hasPrevious()) {
+							Chord c = (Chord) itrRev.previous();
+							if(c.getLabel() != null && maxCount == 1){
+								halfBarList.add(new Chord(c.getLabel(), 0.5f));
+								maxCount++;
+							}
+						}
+					}else if(chordsInBar.size() == 8){//Ner till 8-delar
+						int maxCount = 0;
+						ListIterator<Chord> itr = chordsInBar.listIterator();
+						while(itr.hasNext()) {
+							Chord c = (Chord) itr.next();
+							if(c.getLabel() != null && maxCount == 0){
+								halfBarList.add(new Chord(c.getLabel(), 0.5f));
+								maxCount++;
+							}
+						}
+
+						while(itr.hasPrevious()) {
+							Chord c = (Chord) itr.previous();
+							if(c.getLabel() != null && maxCount == 1){
+								halfBarList.add(new Chord(c.getLabel(), 0.5f));
+								maxCount++;
+							}
+						}
 					}
 				}
 				chordsInBar.clear();
@@ -686,21 +765,22 @@ public class MidiAnalyzer {
 				halfBarList.add(new Chord(chord.getLabel(), 0.5f));
 				chordsInBar.clear();
 				durationCount = 0;
-			}else if(durationCount == 1.5){
-				halfBarList.add(new Chord(chord.getLabel(), 0.5f));
-				halfBarList.add(new Chord(chord.getLabel(), 0.5f));
-				halfBarList.add(new Chord(chord.getLabel(), 0.5f));
+			}
+			
+			
+
+
+		}
+		//Clear halfBarList if it contains any chords with null-label
+		ListIterator<Chord> itr = halfBarList.listIterator();
+		while(itr.hasNext() && !halfBarList.isEmpty()) {
+			Chord c = (Chord) itr.next();
+			if(c.getLabel() == null){
+				halfBarList.clear();
 			}
 		}
 		return halfBarList;
 	}
-
-
-
-
-
-
-
 
 
 

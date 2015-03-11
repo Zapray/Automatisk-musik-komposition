@@ -25,7 +25,7 @@ public class Main {
 		}
 	}
 	public static void runTmn() {
-		MidiManager2 mm = new MidiManager2(System.getProperty("user.dir")+"/nydatabas.txt");
+		MidiManager2 mm = new MidiManager2(System.getProperty("user.dir")+"/better.txt");
 		List<? extends List<Frame>> l = mm.getData();
 		pMax = mm.getPMax();
 		dMax = mm.getDMax();
