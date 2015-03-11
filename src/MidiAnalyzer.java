@@ -54,8 +54,10 @@ public class MidiAnalyzer {
 				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Intro/Hooktheory-2015-02-18-03-54-00.mid")));//Paus in beginning!!
 				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Chorus/Hooktheory-2015-02-18-03-59-28.mid")));
 				InputStream is = new BufferedInputStream(new FileInputStream( new File(System.getProperty("user.dir")+"/database/Chorus/" + file.getName())));
+
 				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Automatisk-musik-komposition/database/Chorus/Hooktheory-2015-02-21-04-50-00.mid")));
 				
+
 				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Chorus/Hooktheory-2015-02-18-04-29-49.mid")));
 
 				//System.out.println("/Users/Albin/Desktop/Filerfranhook/Chorus/" + file.getName());
@@ -82,14 +84,18 @@ public class MidiAnalyzer {
 				//System.out.println(test.get(i).get(j));
 				//}//end for
 				//}//end for
+
 				File filen = new File("better.txt");
+
 				// if file doesnt exists, then create it
 				if (!filen.exists()) {
 					filen.createNewFile();
 				}
 
 
+
 				PrintWriter outFile = new PrintWriter(new FileWriter("better.txt", true));
+
 				count++;
 
 				if(chordList.size() > melodyList.size()){
@@ -565,7 +571,9 @@ public class MidiAnalyzer {
 			durationCount = durationCount + chord.getDuration();
 			chordsInBar.add(chord);
 
+
 			//If last bar doesnt equals 1;
+
 
 			if(i == chordList.size()-1 && durationCount != 1){
 				Chord chord1 = chordsInBar.get(0);
@@ -682,6 +690,7 @@ public class MidiAnalyzer {
 
 						}
 					}else if(chordsInBar.size() == 5){
+
 						int maxCount = 0;
 						Iterator itr = chordsInBar.iterator();
 						while(itr.hasNext()) {
@@ -754,6 +763,7 @@ public class MidiAnalyzer {
 								maxCount++;
 							}
 						}
+
 					}
 				}
 				chordsInBar.clear();
@@ -765,6 +775,7 @@ public class MidiAnalyzer {
 				halfBarList.add(new Chord(chord.getLabel(), 0.5f));
 				chordsInBar.clear();
 				durationCount = 0;
+
 			}
 			
 			
@@ -777,10 +788,14 @@ public class MidiAnalyzer {
 			Chord c = (Chord) itr.next();
 			if(c.getLabel() == null){
 				halfBarList.clear();
+
 			}
+
+
 		}
 		return halfBarList;
 	}
+
 
 
 
