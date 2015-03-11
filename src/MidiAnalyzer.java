@@ -40,7 +40,7 @@ import javax.sound.midi.*;
 public class MidiAnalyzer {
 
 	public static void main(String args[]) throws Exception{
-		File[] files =new File (System.getProperty("user.dir")+"/database/Intro/").listFiles(); 
+		File[] files =new File (System.getProperty("user.dir")+"/database/Chorus/").listFiles(); 
 
 		int count = 0;
 		int equalCount = 0;
@@ -54,8 +54,10 @@ public class MidiAnalyzer {
 				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Intro/Hooktheory-2015-02-18-03-54-00.mid")));//Paus in beginning!!
 				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Chorus/Hooktheory-2015-02-18-03-59-28.mid")));
 
+
 				InputStream is = new BufferedInputStream(new FileInputStream( new File(System.getProperty("user.dir")+"/database/Chorus/" + file.getName())));
 				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Automatisk-musik-komposition/database/Chorus/Hooktheory-2015-02-21-04-50-00.mid")));
+
 				
 
 				//InputStream is = new BufferedInputStream(new FileInputStream( new File(System.getProperty("user.dir")+"/database/Intro/" + file.getName())));
@@ -91,10 +93,12 @@ public class MidiAnalyzer {
 				//}//end for
 				//}//end for
 
+
 				File filen = new File(System.getProperty("user.dir")+"/better.txt");
 
 
 				//File filen = new File("database_intro.txt");
+
 
 				// if file doesnt exists, then create it
 				if (!filen.exists()) {
@@ -109,6 +113,7 @@ public class MidiAnalyzer {
 				//PrintWriter outFile = new PrintWriter(new FileWriter("database_intro.txt", true));
 
 
+
 				count++;
 
 				if(chordList.size() > melodyList.size()){
@@ -121,7 +126,18 @@ public class MidiAnalyzer {
 				}
 				System.out.println(count+": " + chordList.size() + "  " + melodyList.size());
 
-				if(chordList.size()==melodyList.size() && chordList.size() != 0){
+				boolean containsZeroDuration = false;
+				for(int i = 0; i < melodyList.size(); i++){
+					for(int j = 0; j < melodyList.get(i).size(); j++){
+						if(melodyList.get(i).get(j).getDuration() == 0.0f){
+							containsZeroDuration = true;
+						}
+						
+					}
+				}
+				
+				if(chordList.size()==melodyList.size() && chordList.size() != 0 && !containsZeroDuration){
+					
 					equalCount++;
 					for (int i=0;i<chordList.size();i++){
 						outFile.println("?"+chordList.get(i).getLabel());
