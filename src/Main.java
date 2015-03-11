@@ -33,7 +33,9 @@ public class Main {
 		cMax = mm.getCMax();
 		Tmn tmn = new Tmn(pMax, dMax, cMax, mm.getDurationConversionTable());
 		tmn.train(l);
-		
+
+		System.out.println("hej svej i main!!");
+
 		List<Frame> song = tmn.generateSong(frames, l);
 		try {
 			mm.createMidi(song);
