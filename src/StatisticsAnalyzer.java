@@ -39,50 +39,46 @@ import javax.sound.midi.*;
 public class StatisticsAnalyzer {
 
 	public static void main(String args[]) throws Exception{
-		File[] files =new File (System.getProperty("user.dir")+"/database/Chorus/").listFiles(); 
+		File[] files =new File (System.getProperty("user.dir")+"/database/Verseandchorus/").listFiles(); 
 
 		int count = 0;
 		int equalCount = 0;
 		ArrayList<Integer> mostUsedChords=new ArrayList<Integer>(); 
+		ArrayList<Integer> numberOfSongsWithChord = new ArrayList<Integer>();
+		ArrayList<Integer> chordProgressions = new ArrayList<Integer>();
 		
 		
 		String keys[] = {"C","F","G","Am","Dm","Em","Cm","D","E","G#","Gm","Fm","F#","A","B","Bm","C#","D#","A#","Cm#","Dm#","Fm#","Gm#","Am#","Cdim","Ddim","Edim","Fdim","Gdim","Adim","Bdim","C#dim","D#dim","F#dim","G#dim","A#dim","Caug","Daug","Eaug","Faug","Gaug","Aaug","Baug","C#aug","D#aug","F#aug","G#aug","A#aug","C7","D7","E7","F7","G7","A7","B7","C#7","D#7","F#7","G#7","A#7","Cm7","Dm7","Em7","Fm7","Gm7","Am7","Bm7","Cm#7","Dm#7","Fm#7","Gm#7","Am#7","Csus","Dsus","Esus","Fsus","Gsus","Asus","Bsus","C#sus","D#sus","F#sus","G#sus","A#sus"};
-		System.out.println(keys.length);
+		String progres[]=new String[(keys.length)*(keys.length)];
+		int p =0;
+		System.out.println((keys.length)*(keys.length));
+		for(String keyn : keys){
+			for(String key : keys){
+				progres[p] = keyn+"-"+key;
+				p++;
+			}	
+		}
+		System.out.println(Arrays.toString(progres));
+		
+		for(int o = 0;o<progres.length;o++){
+			chordProgressions.add(0);
+		}
 		for(int j=0;j<keys.length;j++){
 			mostUsedChords.add(0);
+			numberOfSongsWithChord.add(0);
 		}
 		for(File file : files){
-			System.out.println("NylŒt");
+			//System.out.println("NylŒt");
 			String ext1 = FilenameUtils.getExtension(file.getName());
 			if(ext1.equals("mid")){
-
+				count++;
 				Sequencer sequencer = MidiSystem.getSequencer();//Creates a sequencer
 				sequencer.open();// have to open the sequencer to be able to use sequences. Don't know why, it works without the first two lines.
-				//InputStream is = new BufferedInputStream(new FileInputStream(new File("D:\\Latarfranhook\\Verse\\Hooktheory-2015-02-21-01-37-31.mid")));
-				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Intro/Hooktheory-2015-02-18-03-54-00.mid")));//Paus in beginning!!
-				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Chorus/Hooktheory-2015-02-18-03-59-28.mid")));
-
-
-				InputStream is = new BufferedInputStream(new FileInputStream( new File(System.getProperty("user.dir")+"/database/Chorus/" + file.getName())));
-				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Automatisk-musik-komposition/database/Chorus/Hooktheory-2015-02-21-04-50-00.mid")));
-
 				
-
-				//InputStream is = new BufferedInputStream(new FileInputStream( new File(System.getProperty("user.dir")+"/database/Intro/" + file.getName())));
-
-				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Automatisk-musik-komposition/database/Chorus/Hooktheory-2015-02-21-04-50-00.mid")));
+				InputStream is = new BufferedInputStream(new FileInputStream( new File(System.getProperty("user.dir")+"/database/Verseandchorus/" + file.getName())));
 				
-
-
-				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Chorus/Hooktheory-2015-02-18-04-29-49.mid")));
-
-				//System.out.println("/Users/Albin/Desktop/Filerfranhook/Chorus/" + file.getName());
-				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/Albin/Desktop/songweknow/" + file.getName())));
-				//InputStream is = new BufferedInputStream(new FileInputStream(new File("/Users/Albin/Desktop/music.mid")));
 				Sequence sequence = MidiSystem.getSequence(is);//Creates a sequence which you can analyze.
 				float res = sequence.getResolution();
-				//System.out.println(res);
-				//System.out.println(sequence.getDivisionType());
 				Track[] tracks = sequence.getTracks();//Creates an array to be able to separate tracks.
 				int track0 = 0;
 				int track1 = 1;
@@ -90,18 +86,8 @@ public class StatisticsAnalyzer {
 				Track   chordtrack = tracks[track1];
 				List<ArrayList<FloatNote>> melodyList = findMelody(melodytrack, res);
 				ArrayList<Chord> chordList = findChords(chordtrack, res);
-				//System.out.println(test.size());
-				//System.out.println(test.get(22).size());
-				//for(int i=0; i<test.size(); i++ ){
-				//System.out.println("Package");
-				//for(int j=0; j<test.get(i).size(); j++){
-				//System.out.println(test.get(i).size());
-
-				//System.out.println(test.get(i).get(j));
-				//}//end for
-				//}//end for
-
-			
+		
+				ArrayList<String> chordsInSong = new ArrayList<String>();
 				
 				for(int i = 0; i<chordList.size();i++){
 					//System.out.println(chordList.get(i).getLabel());
@@ -113,13 +99,35 @@ public class StatisticsAnalyzer {
 							b++;
 							mostUsedChords.remove(a);
 							mostUsedChords.add(a,b);
-							
+							if(!chordsInSong.contains(chordList.get(i).getLabel())){
+								chordsInSong.add(chordList.get(i).getLabel());
+								int c = numberOfSongsWithChord.get(a);
+								c++;
+								numberOfSongsWithChord.remove(a);
+								numberOfSongsWithChord.add(a,c);
+							}
 						}
+						
 						a++;
 					}
 				}
 				
-				
+				for(int i = 0; i<chordList.size()-1;i++){
+					int a = 0;
+					
+					for(String prog : progres){
+						if(chordList.get(i).getLabel()!=null && (chordList.get(i).getLabel()+"-"+chordList.get(i+1).getLabel()).equals(prog)){
+							int b = chordProgressions.get(a);
+							b++;
+							chordProgressions.remove(a);
+							chordProgressions.add(a,b);
+						}
+					
+					a++;
+					}
+					
+					
+				}
 				
 				
 				
@@ -184,15 +192,59 @@ public class StatisticsAnalyzer {
 				 	*/
 
 				//outFile.close();
+				
 				sequencer.close();
 			}
-			for(int k=0;k<mostUsedChords.size();k++){
-				System.out.println(keys[k] + "   " + mostUsedChords.get(k));
-			}
+			//for(int k=0;k<mostUsedChords.size();k++){
+				//System.out.println(keys[k] + "   " + mostUsedChords.get(k));
+				//System.out.println(keys[k] + "   " + numberOfSongsWithChord.get(k));
+				
+				
+			//}
+			
+			//System.out.println(count);
+			
 		}
+		/**
+		File filen = new File(System.getProperty("user.dir")+"/statistikackordsfšljder.txt");
+
+
+		//File filen = new File("database_intro.txt");
+
+
+		// if file doesnt exists, then create it
+		if (!filen.exists()) {
+			filen.createNewFile();
+		}
+		
+		PrintWriter outFile = new PrintWriter(new FileWriter(System.getProperty("user.dir")+"/statistikackordsfšljder.txt", true));
+		*/
+		
+		File filen = new File(System.getProperty("user.dir")+"/statistikantalsangermedackord.txt");
+
+
+		//File filen = new File("database_intro.txt");
+
+
+		// if file doesnt exists, then create it
+		if (!filen.exists()) {
+			filen.createNewFile();
+		}
+		
+		PrintWriter outFile = new PrintWriter(new FileWriter(System.getProperty("user.dir")+"/statistikantalsangermedackord.txt", true));
+
+
+		
+		for(int t =0;t<numberOfSongsWithChord.size();t++){
+			outFile.println(keys[t]+","+numberOfSongsWithChord.get(t));
+			
+			//System.out.println(progres[t]+"     " + chordProgressions.get(t));
+		}
+		outFile.close();
 		//System.out.println((double)equalCount/count);
 		
 	}//end main
+	
 
 	public static float convertTicksToNoteLength(long tick1, long tick2, float res){
 		res=res*4;
