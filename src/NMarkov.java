@@ -14,7 +14,7 @@ public class NMarkov extends MelodyNotesGenerator{
 	
 	private final int n; //order n
 	private final int matrixSize;
-	
+	private double lastSongLengthError = 0; //How much longer the last generated song was compared to desired length
 	/**
 	 * @param pMax The number of pitches represented in the notes
 	 * @param dMax The number of durations represented in the notes
@@ -133,9 +133,9 @@ public class NMarkov extends MelodyNotesGenerator{
 			tot += (conversionTable.get(x.getDuration())); //TODO +1-1 ?
 		}
 		
-		if (tot > length) {
-			return generateSong(length, firstPitch, conversionTable);
-		}
+//		if (tot > length) {
+//			return generateSong(length, firstPitch, conversionTable);
+//		}
 		
 		while(tot < length) {
 			Note newNote = generateNote(prevs, rand);
@@ -145,12 +145,13 @@ public class NMarkov extends MelodyNotesGenerator{
 			
 			tot += (conversionTable.get(newNote.getDuration())); //TODO +1-1 ?
 		}
-		if (tot != length) {
-			return generateSong(length, firstPitch, conversionTable);
-		}else{
-			return newSong;
-		}
+		lastSongLengthError = tot - length;
+		return newSong;
 	}
+	public double lastSongLengthError() {
+		return lastSongLengthError;
+	}
+	
 	/**
 	 * 
 	 * @param length how many bars of melody is to be generated
@@ -164,26 +165,8 @@ public class NMarkov extends MelodyNotesGenerator{
 		List<MelodyNotesGenerator> generators = getGenerators();
 		int p = generators.get(0).generateNote(null, rand).getPitch();
 		return this.generateSong(length, p, conversionTable);
-//		LinkedList<Note> prevs = new LinkedList<Note>();
-//		for(int i = 0; i < n; i++) {
-//			prevs.add(generators.get(i).generateNote(prevs, rand));
-//		}
-//		
-//		//TODO int length needs to work as intended
-//		
-//		double tot = 0;
-//		
-//		while(tot < length) {
-//			Note newNote = generateNote(prevs, rand);
-//			newSong.add(newNote);
-//			prevs.addFirst(newNote);
-//			prevs.removeLast();
-//			
-//			tot += 1/((double)newNote.getDuration());
-//		}
-//		
-//			return newSong;
 	}
+	
 	public Note generateNote(List<Note> prevs, Random rand) {
 		if(prevs == null) {
 			prevs = new ArrayList<Note>();

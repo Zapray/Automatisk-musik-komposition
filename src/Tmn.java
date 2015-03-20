@@ -19,8 +19,10 @@ public class Tmn extends MelodyFrameGenerator{
 	//transitionMatrix for determining the next tone of the next melodyPackage
 	private SimpleMatrix nextToneMatrix;
 	private NMarkov chordsMarkov;
+	private double lastFrameLengthError = 0;
 	private static final int chordsOrder = 3;
 	private static final int MELODYORDER = 2;
+	private static final double FRAMELENGTH = 0.5;
 	/**
 	 * 
 	 * @param pMax the maximum allowed number of pitches
@@ -88,12 +90,18 @@ public class Tmn extends MelodyFrameGenerator{
 		prevs.add(new Note(1, prev.getChord()));
 		int chord = chordsMarkov.generateNote(prevs, rand).getPitch();
 		
-		int pitch = generatePitch(prev.getLastNote().getPitch(), chord ,rand);
+		int pitch;
+		if (lastFrameLengthError == 0) {
+			pitch = generatePitch(prev.getLastNote().getPitch(), chord ,rand);
+		} else {
+			pitch = prev.getLastNote().getPitch();
+		}
+		
 		
 		NMarkov melodyGen = new NMarkov(MELODYORDER, pMax, dMax);
 		melodyGen.train(filterData(chord, data));
-		List<Note> melodyPackage = melodyGen.generateSong(0.5, pitch, conversionTable); //halvtakter
-		//hopefully the garbage collector deals with the old melodyGen here
+		List<Note> melodyPackage = melodyGen.generateSong(FRAMELENGTH-lastFrameLengthError, pitch, conversionTable); //halvtakter
+		this.lastFrameLengthError = melodyGen.lastSongLengthError();
 		return new Frame(melodyPackage, chord);
 	}
 	
@@ -154,7 +162,9 @@ public class Tmn extends MelodyFrameGenerator{
 			Frame newFrame = generateFrame(prevFrame, data, rand);
 			prevFrame = newFrame;
 			song.add(newFrame);
+			System.gc();
 		}
+		lastFrameLengthError = 0;
 		return song;
 	}
 
