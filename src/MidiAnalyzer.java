@@ -40,7 +40,7 @@ import javax.sound.midi.*;
 public class MidiAnalyzer {
 
 	public static void main(String args[]) throws Exception{
-		File[] files =new File (System.getProperty("user.dir")+"/database/Intro/").listFiles(); 
+		File[] files =new File (System.getProperty("user.dir")+"/database/Chorus/").listFiles(); 
 
 		int count = 0;
 		int equalCount = 0;
@@ -91,7 +91,7 @@ public class MidiAnalyzer {
 				//}//end for
 				//}//end for
 
-				File filen = new File(System.getProperty("user.dir")+"/better.txt");
+				File filen = new File(System.getProperty("user.dir")+"/database_chorus.txt");
 
 
 				//File filen = new File("database_intro.txt");
@@ -103,7 +103,7 @@ public class MidiAnalyzer {
 
 
 
-				PrintWriter outFile = new PrintWriter(new FileWriter(System.getProperty("user.dir")+"/better.txt", true));
+				PrintWriter outFile = new PrintWriter(new FileWriter(System.getProperty("user.dir")+"/database_chorus.txt", true));
 
 
 				//PrintWriter outFile = new PrintWriter(new FileWriter("database_intro.txt", true));
@@ -251,11 +251,44 @@ public class MidiAnalyzer {
 		float combinedLength=0;
 		int where=0;
 		FloatNote floatNote;
+		float extraDuration=0;
 		//int nmbrOfPacks = 0;
-		for(int index = 0; index < notelength.size()-1; index++){
+		for(int index = 0; index < notelength.size(); index++){
 			combinedLength=combinedLength + (float)notelength.get(index);
-			//System.out.println(combinedLength);
-			if(combinedLength >= (float)0.5){
+			floatNote = new FloatNote((float)notelength.get(index), (float) note.get(index));
+			melody.add(floatNote);
+			if(combinedLength>=(float)0.5){
+				melodyPack.add(melody);
+				melody = new ArrayList<FloatNote>();
+				combinedLength=combinedLength-(float)0.5;
+				while(combinedLength>=(float)0.5){
+					floatNote = new FloatNote(combinedLength, (float) note.get(index));
+					melody.add(floatNote);
+					melodyPack.add(melody);
+					melody = new ArrayList<FloatNote>();
+					combinedLength=combinedLength-(float)0.5;
+				}//end while
+				if(combinedLength != (float)0){
+					floatNote = new FloatNote(combinedLength, (float) note.get(index));
+					melody.add(floatNote);
+					if(index==notelength.size()-1){
+						melodyPack.add(melody);
+					}
+				}
+				
+			}//end if
+						
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			/**if(combinedLength >= (float)0.5){
 				if(lastDuration != (float)0){
 					floatNote = new FloatNote(lastDuration, (float) note.get(where-1));
 					melody.add(floatNote);
@@ -263,8 +296,10 @@ public class MidiAnalyzer {
 				lastDuration = combinedLength - (float)0.5;
 				if(lastDuration>(float)0.5){
 					if(where-index==0){
-						while(lastDuration>=(float)0.5){
-							floatNote = new FloatNote((float)0.5, (float) note.get(index));
+						floatNote = new FloatNote((float) notelength.get(index), (float) note.get(index));
+						extraDuration=(float) notelength.get(index)-(float)0.5;
+						while(extraDuration>=(float)0.5){
+							floatNote = new FloatNote(extraDuration, (float) note.get(index));
 							melody.add(floatNote);
 							melodyPack.add(melody);
 							melody = new ArrayList<FloatNote>();
@@ -302,7 +337,7 @@ public class MidiAnalyzer {
 
 						}//End for
 
-						floatNote = new FloatNote( (float)notelength.get(index)-lastDuration, (float) note.get(index));
+						floatNote = new FloatNote( (float)notelength.get(index), (float) note.get(index));
 						melody.add(floatNote);
 
 					}else{
@@ -326,6 +361,7 @@ public class MidiAnalyzer {
 					//System.out.println(melodyPack.get(nmbrOfPacks-1).size());
 				}//end else
 			}//End if
+			*/
 
 
 
