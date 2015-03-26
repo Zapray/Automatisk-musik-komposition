@@ -29,7 +29,7 @@ public class DrumBeat {
 	private List<Long> tickList;
 	
 	public DrumBeat(int beat,int bars) throws Exception{
-		String filePath = "/BasicPop1.mid";	
+		String filePath = "/BasicPop4.mid";	
 		createDrumTrack(beat,bars,filePath);		
 	}
 	

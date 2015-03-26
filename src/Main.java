@@ -2,7 +2,7 @@ import java.util.List;
 
 
 public class Main {
-	private static int cMax, pMax, dMax, order = 2, frames = 32;
+	private static int cMax, pMax, dMax, order = 2, frames = 16;
 	private static double length = 0.5;
 	public static void main(String[] args) {
 		//You need to allow more memory in eclipse / java to run!
