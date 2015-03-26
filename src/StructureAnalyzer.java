@@ -193,4 +193,52 @@ public class StructureAnalyzer {
 				return true;
 			}else return false;	
 		}
+		private static boolean similarNotes(ArrayList<Note> list1, ArrayList<Note> list2){
+			int yes=0;
+			int no=0;
+			for(int i=0; i<list1.size(); i++){
+				if(list1.get(i) == list2.get(i)){
+					yes++;
+				}else{
+					no++;
+				}
+			}
+			if(yes/(yes+no)>0.8){
+				return true;
+			}else{
+				return false;
+			}
+		}
+		private static boolean similarDuration(ArrayList<Note> list1, ArrayList<Note> list2){
+			int yes=0;
+			int no=0;
+			for(int i=0; i<list1.size(); i++){
+				if(list1.get(i).getDuration() == list2.get(i).getDuration()){
+					yes++;
+				}else{
+					no++;
+				}
+			}
+			if(yes/(yes+no)>0.8){
+				return true;
+			}else{
+				return false;
+			}
+		}
+		private static boolean similarRelativePitch(ArrayList<Note> list1, ArrayList<Note> list2){
+			int yes=0;
+			int no=0;
+			for(int i=0; i<list1.size()-1; i++){
+				if(list1.get(i).getPitch()-list1.get(i+1).getPitch() == list2.get(i).getDuration()-list2.get(i+1).getDuration()){
+					yes++;
+				}else{
+					no++;
+				}
+			}
+			if(yes/(yes+no)>0.8){
+				return true;
+			}else{
+				return false;
+			}
+		}
 }
