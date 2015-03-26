@@ -25,19 +25,18 @@ import javax.sound.midi.Track;
 
 
 public class DrumBeat {
-	private List<MidiEvent> drumList;
+	private ArrayList<MidiEvent> drumList = new ArrayList<MidiEvent>();
 	private List<Long> tickList;
 	
 	public DrumBeat(int beat,int bars) throws Exception{
-		String filePath = System.getProperty("user.dir")+"/BasicPop1.mid";
-		
-		createDrumTrack(beat,bars,filePath);
-			
+		String filePath = "/BasicPop1.mid";	
+		createDrumTrack(beat,bars,filePath);		
 	}
 	
-	public List<MidiEvent> getDrumTrack(){
+	public List<MidiEvent> getDrumList(){
 		return drumList;
 	}
+	
 	public List<Long> getTickList(){
 		return tickList;
 	}
@@ -51,21 +50,45 @@ public class DrumBeat {
 		sequencer.open();
 		Sequence sequence = MidiSystem.getSequence(is);//Creates a sequence which you can analyze.
 		float res = sequence.getResolution();
+		System.out.println(res);
 		Track[] tracks = sequence.getTracks();
+		System.out.println(tracks.length);
 		Track drum = tracks[0];
 		
-		for(int nEvent = 0; nEvent < drum.size()-1; nEvent++){
-			MidiEvent event = drum.get(nEvent);
-			MidiMessage message = event.getMessage();
-			if(message instanceof ShortMessage){
-				drumList.add(event);
-				tickList.add(event.getTick());
-			}
-			
-			
-					
-		}
+		System.out.println(drum.size() + "   " + drumList.size());
+		//MidiEvent ehej = drum.get(40);
+		//MidiMessage mes = ehej.getMessage();
+		//System.out.println(mes);
+		int nbrOfItter=bars/4;
+		float ticksPerFourBars=res*16;
 		
+		
+		for(int j=0; j<nbrOfItter;j++){
+			//System.out.println(drum.size() + "   " + drumList.size());
+			for(int nEvent = 0; nEvent < drum.size()-1; nEvent++){
+				MidiEvent event = drum.get(nEvent);
+				MidiMessage message = event.getMessage();
+				//System.out.println(event);
+				if(message instanceof ShortMessage && event.getMessage()!=null && event!=null){
+					System.out.println(j);
+					//System.out.println(event.getTick());
+					MidiEvent eventj = new MidiEvent(event.getMessage(),event.getTick());
+					eventj.setTick((long) (j*ticksPerFourBars + event.getTick()));	
+					//System.out.println(event.getTick());
+					//System.out.println();
+					//System.out.println(event.getTick());
+					//ShortMessage shortMessage = (ShortMessage) message;
+					//System.out.println(event.getMessage() + "    " + shortMessage.getCommand() + "    " +shortMessage.getData1() + "    " + shortMessage.getData2());
+					//System.out.println("Loopen kšrs");
+					drumList.add(eventj);
+				}
+
+
+
+			}
+		}
+		System.out.println(drum.size() + "   " + drumList.size());
+		sequencer.close();
 		
 	
 	

@@ -277,7 +277,7 @@ public class MidiManager2 {
 	}
 
 	
-	public void createMidi(List<Frame> newFrameList) throws Exception{
+	public void createMidi(List<Frame> newFrameList,int nbrOfFrames) throws Exception{
 		 Sequence sequence;//need sequencer to create midi
          int resolution = 192;
 		 sequence=new Sequence(Sequence.PPQ,resolution); //Sets divisiontype and resolution. 
@@ -290,7 +290,7 @@ public class MidiManager2 {
          Track track = sequence.createTrack();
          
          
-         
+     
         
          
          //We start with creating the melodytrack
@@ -384,7 +384,23 @@ public class MidiManager2 {
         	 
         	 
          }
-         	
+         //Write the drumtrack
+         Track track3 = sequence.createTrack();
+         
+         DrumBeat drumbeat = new DrumBeat(1,nbrOfFrames/2);
+         ShortMessage sm = new ShortMessage( );
+         sm.setMessage(ShortMessage.PROGRAM_CHANGE, 9, 35, 0); //9 ==> is the channel 10.
+         track3.add(new MidiEvent(sm, 0));
+        
+         
+         
+     
+        	 for (int i=0;i<drumbeat.getDrumList().size();i++){ 
+        		 //drumbeat.getDrumList().get(i).setTick(ticksPerFourBars + drumbeat.getDrumList().get(i).getTick());
+        		 track3.add(drumbeat.getDrumList().get(i)); 	 
+        	 }
+         
+         
          
          
          MidiSystem.write(sequence, 1, outputFile);
@@ -422,29 +438,7 @@ public class MidiManager2 {
 		return cMax-1;
 	}
 	
-	public static void main(String[] args) throws Exception{
-		MidiManager2 mm = new MidiManager2("/Users/Albin/Desktop/test2.txt");
-		//MidiManager2 mm = new MidiManager2(System.getProperty("user.dir")+"/database/Chorus/Hooktheory-2015-02-26-08-00-10.mid");
-		List<ArrayList<Frame>> listOfFramesList = mm.getData();
-		ArrayList<Float> convertTablePitch = mm.getConvertTablePitch();
-		for(int i=0;i<listOfFramesList.size();i++){
-			for(int j=0; j<listOfFramesList.get(i).size();j++){
-				//System.out.println("Ackord:  " + listOfFramesList.get(i).get(j).getChord());
-				
-				for(int k = 0; k<listOfFramesList.get(i).get(j).getMelodyPackage().size();k++){
-					//System.out.println("Not:  " +convertTablePitch.get(listOfFramesList.get(i).get(j).getMelodyPackage().get(k).getPitch()));
-				}
-			}
-		
-		mm.createMidi(listOfFramesList.get(0));
-		
-		
-		
-		}
-		
-		
-		
-	}
+	
 	public List<Float> getDurationConversionTable() {
 		return convertTableDuration;
 	}
