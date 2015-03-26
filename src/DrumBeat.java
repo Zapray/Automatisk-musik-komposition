@@ -29,7 +29,7 @@ public class DrumBeat {
 	private List<Long> tickList;
 	
 	public DrumBeat(int beat,int bars) throws Exception{
-		String filePath = "/BasicPop4.mid";	
+		String filePath = "/BasicSlow1.mid";	
 		createDrumTrack(beat,bars,filePath);		
 	}
 	
@@ -50,12 +50,12 @@ public class DrumBeat {
 		sequencer.open();
 		Sequence sequence = MidiSystem.getSequence(is);//Creates a sequence which you can analyze.
 		float res = sequence.getResolution();
-		System.out.println(res);
+		//System.out.println(res);
 		Track[] tracks = sequence.getTracks();
-		System.out.println(tracks.length);
+		//System.out.println(tracks.length);
 		Track drum = tracks[0];
 		
-		System.out.println(drum.size() + "   " + drumList.size());
+		//System.out.println(drum.size() + "   " + drumList.size());
 		//MidiEvent ehej = drum.get(40);
 		//MidiMessage mes = ehej.getMessage();
 		//System.out.println(mes);
@@ -70,7 +70,7 @@ public class DrumBeat {
 				MidiMessage message = event.getMessage();
 				//System.out.println(event);
 				if(message instanceof ShortMessage && event.getMessage()!=null && event!=null){
-					System.out.println(j);
+					//System.out.println(j);
 					//System.out.println(event.getTick());
 					MidiEvent eventj = new MidiEvent(event.getMessage(),event.getTick());
 					eventj.setTick((long) (j*ticksPerFourBars + event.getTick()));	
@@ -87,7 +87,7 @@ public class DrumBeat {
 
 			}
 		}
-		System.out.println(drum.size() + "   " + drumList.size());
+		//System.out.println(drum.size() + "   " + drumList.size());
 		sequencer.close();
 		
 	
