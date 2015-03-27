@@ -5,20 +5,9 @@ import java.util.ArrayList;
 
 
 public class StructureAnalyzer {
-	//All the songs unconverted from textfile, only the pitch
-	private static ArrayList<Float> unconPitchList = new ArrayList<Float>();
-	//All the songs unconverted from textfile, only the duration
-	private static ArrayList<Float> unconDurationList = new ArrayList<Float>();
 
 	private static ArrayList<Float> pitchList = new ArrayList<Float>();
 	private static ArrayList<Float> durationList = new ArrayList<Float>();
-
-	private static ArrayList<Float> sectionA_pitch = new ArrayList<Float>();
-	private static ArrayList<Float> sectionA_duration = new ArrayList<Float>();
-	private static ArrayList<Float> sectionB_pitch = new ArrayList<Float>();
-	private static ArrayList<Float> sectionB_duration = new ArrayList<Float>();
-
-
 
 	public static void main(String[] args){
 		try{
@@ -26,8 +15,11 @@ public class StructureAnalyzer {
 			BufferedReader in =new BufferedReader(new FileReader(System.getProperty("user.dir")+"/Databases_parts/chorus.txt"));
 			//createUnconvertedArrays(in);
 			ArrayList<ArrayList<ArrayList<Float>>> data = parseTextFile(in);
-			float[] p =createPitchVector(16*4, data);
-			System.out.println("");
+			float[] p1 =createPitchVector(data.get(0));
+			float[] p2 =createPitchVector(data.get(1));
+
+			System.out.println(similarNotes(p1, p2));
+			//System.out.println(similarDuration(p1, p2));
 
 
 		}catch (IOException e) {
@@ -40,7 +32,8 @@ public class StructureAnalyzer {
 		Float duration;
 		int countBar = 0;
 		int countSong = 0;
-		int song = 6;
+		int song = 8;
+		int barsInSection = 8;
 
 		ArrayList<ArrayList<ArrayList<Float>>> data = new ArrayList();
 		ArrayList<ArrayList<Float>> section = new ArrayList();
@@ -53,12 +46,34 @@ public class StructureAnalyzer {
 					countBar++;
 				}else if(line.charAt(0) == '-'){
 					countSong++;
+					
+					countBar++;
+					if(countBar == barsInSection+1){
+						countBar = 0;
+						section.add(pitchList);
+						section.add(durationList);
+						data.add(section);
+						pitchList = new ArrayList();
+						durationList = new ArrayList();
+						section = new ArrayList();
+					}
 					//System.out.println(countSong + ": " + countBar);
 					countBar = 0;
 					if(countSong == song){
 						break;
 					}
 				}else if(countSong == song-1){
+					
+					if(countBar == barsInSection+1){
+						countBar = 1;
+						section.add(pitchList);
+						section.add(durationList);
+						data.add(section);
+						pitchList = new ArrayList();
+						durationList = new ArrayList();
+						section = new ArrayList();
+					}
+					
 					for(int i=0; i<line.length(); i++){
 
 						if(line.charAt(i)==','){
@@ -69,18 +84,7 @@ public class StructureAnalyzer {
 
 						}	
 					}
-					if(countBar == 8){
-						countBar = 0;
-						section.add(pitchList);
-						section.add(durationList);
-						data.add(section);
-						pitchList = new ArrayList();
-						durationList = new ArrayList();
-						section = new ArrayList();
-
-
-					}
-
+					
 				}
 
 				line=in.readLine();
@@ -112,15 +116,24 @@ public class StructureAnalyzer {
 		return t;
 	}
 
-	private static float[] createPitchVector(int L, ArrayList<ArrayList<ArrayList<Float>>> data){
+	
+	private static float[] createPitchVector(ArrayList<ArrayList<Float>> phrase){
 
+		ArrayList<Float> pitchList = phrase.get(0);
+		ArrayList<Float> durationList = phrase.get(1);
+		float l = 0;
+		for(int i = 0; i < durationList.size(); i++){
+			l = (float) (l + durationList.get(i));
+		}
+		int L = Math.round(l*16);
+		
 		float [] p = new float[L];
 		int numberOfPoints;
 		int countPoints = 0;
-		for(int i = 0; i < data.get(0).get(0).size(); i++){
+		for(int i = 0; i < pitchList.size(); i++){
 			
-			float pitch = data.get(0).get(0).get(i);
-			float time = data.get(0).get(1).get(i);
+			float pitch = pitchList.get(i);
+			float time = durationList.get(i);
 			
 			numberOfPoints = Math.round(time*16);
 			for(int j = countPoints; j < countPoints + numberOfPoints; j++){
@@ -130,65 +143,6 @@ public class StructureAnalyzer {
 		}
 	
 		return p;
-	}
-
-	private static void createUnconvertedArrays(BufferedReader  in){
-		int count = 0;
-
-		Float unconvertedNotePitch;
-		Float unconvertedNoteDuration;
-		try{
-			String line=in.readLine();
-			while(line !=null){	
-
-				if(line.charAt(0) == '?'){
-					count++;
-				}else if(line.charAt(0) == '-'){
-					boolean result = compareSections(sectionA_pitch, sectionA_duration, sectionB_pitch, sectionB_duration);
-					System.out.println(result);
-					break;
-				}else{
-					for(int i=0; i<line.length(); i++){
-
-						if(line.charAt(i)==','){
-							unconvertedNotePitch=Float.parseFloat(line.substring(0,i));
-							unconvertedNoteDuration=Float.parseFloat(line.substring(i+1,line.length()));
-							unconPitchList.add(unconvertedNotePitch);
-							unconDurationList.add(unconvertedNoteDuration);
-
-						}	
-					}
-					if(count == 8){
-						count = 0;
-						if(sectionA_pitch.isEmpty()){
-							sectionA_pitch = unconPitchList;
-							sectionA_duration = unconDurationList;
-						}else{
-							sectionB_pitch = unconPitchList;
-							sectionB_duration = unconDurationList;
-						}
-						unconPitchList.clear();
-						unconDurationList.clear();
-
-					}
-				}
-
-
-				line=in.readLine();
-			}
-
-
-		}catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (in != null)in.close();
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
-		}
-
-
 	}
 
 	private static boolean compareSections(ArrayList<Float> sectionA_pitch, ArrayList<Float> sectionA_duration, ArrayList<Float> sectionB_pitch, ArrayList<Float> sectionB_duration){
@@ -225,6 +179,8 @@ public class StructureAnalyzer {
 					no++;
 				}
 			}
+			float ratio = (float) yes/(yes+no);
+			System.out.println(ratio);
 			if(yes/(yes+no)>0.8){
 				return true;
 			}else{
