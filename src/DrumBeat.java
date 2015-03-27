@@ -29,7 +29,10 @@ public class DrumBeat {
 	private List<Long> tickList;
 	
 	public DrumBeat(int beat,int bars) throws Exception{
-		String filePath = "/BasicSlow1.mid";	
+		
+		File[] files =new File (System.getProperty("user.dir")+"/Trummor/").listFiles(); 
+		
+		String filePath = files[beat].getName();	
 		createDrumTrack(beat,bars,filePath);		
 	}
 	
@@ -42,7 +45,7 @@ public class DrumBeat {
 	}
 	
 	private void createDrumTrack(int beat,int bars,String filePath) throws Exception{
-		File file = new File(System.getProperty("user.dir")+"/Trummor" + filePath);
+		File file = new File(System.getProperty("user.dir")+"/Trummor/" + filePath);
 		
 		InputStream is = new BufferedInputStream(new FileInputStream(file));
 		

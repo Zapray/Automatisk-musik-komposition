@@ -341,9 +341,13 @@ public class MidiManager2 {
          MidiEvent NoteOff3;
          tickMeter=0;
          
+         ArrayList<String> chordsForBassLine = new ArrayList<String>();; 
+         
          for(int  i=0; i<newFrameList.size();i++ ){
         	 int nbrchord = newFrameList.get(i).getChord();
         	 String chord = convertTableChords.get(nbrchord);
+        	 chordsForBassLine.add(chord);
+        	 
         	 Chord ackord = new Chord(chord);
         	 //System.out.println(ackord.getNote1() +  "  " + ackord.getNote2() + "  "+ ackord.getNote3());
         	 
@@ -386,8 +390,12 @@ public class MidiManager2 {
          }
          //Write the drumtrack
          Track track3 = sequence.createTrack();
-         
-         DrumBeat drumbeat = new DrumBeat(1,nbrOfFrames/2);
+         Random rand = new Random();
+
+         // nextInt is normally exclusive of the top value,
+         // so add 1 to make it inclusive
+         int randomNum = rand.nextInt((11 - 1) + 1) + 1;
+         DrumBeat drumbeat = new DrumBeat(randomNum,nbrOfFrames/2);
          ShortMessage sm = new ShortMessage( );
          sm.setMessage(ShortMessage.PROGRAM_CHANGE, 9, 35, 0); //9 ==> is the channel 10.
          track3.add(new MidiEvent(sm, 0));
@@ -402,6 +410,15 @@ public class MidiManager2 {
          
          
          
+        //Write the bassline
+        Track track4 = sequence.createTrack();
+        
+        BassLine bass = new BassLine(chordsForBassLine);
+        	 
+        	 
+        	 
+        	 
+        	 
          
          MidiSystem.write(sequence, 1, outputFile);
          System.out.println("Song is created");
