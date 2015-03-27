@@ -414,7 +414,7 @@ public class MidiManager2 {
         Track track4 = sequence.createTrack();
         
         BassLine bass = new BassLine(chordsForBassLine);
-        	 
+        bass.printListOfTonics();
         	 
         	 
         	 

@@ -24,14 +24,45 @@ import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
 
 public class BassLine {
-
+	private ArrayList<String> listOfTonics = new ArrayList<String>();
+	private String notes[] = {"C","C#","D","D#","E","F","F#","G","G#","A","A#","B"};
 	
 	public BassLine(ArrayList<String> listOfChords){
-		
-		
+		createListOfTonics(listOfChords);
 		
 		
 		
 	}
+	
+	public void createListOfTonics(ArrayList<String> listOfChords){
+		
+		for(int i = 0;i<listOfChords.size();i++){
+			for(String note : notes){
+				if(listOfChords.get(i).length()>1){
+					if(listOfChords.get(i).substring(0,2) == note){
+						listOfTonics.add(listOfChords.get(i).substring(0,2));
+					}else if(listOfChords.get(i).substring(0, 1) == note){
+						listOfTonics.add(listOfChords.get(i).substring(0, 1));
+					}
+					
+				}else{
+					listOfTonics.add(listOfChords.get(i));	
+				}
+			}
+			
+			
+			
+		}
+		
+		
+		
+	}
+	public void printListOfTonics(){
+		for(int i=0; i<listOfTonics.size();i++){
+			System.out.println(listOfTonics.get(i));
+		}
+
+	}
+	
 	
 }
