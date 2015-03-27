@@ -403,7 +403,31 @@ public class MidiManager2 {
 		
 	}
 
+	public void analyzeSong(List<Frame> newFrameList){
+		int[] counter = new int[convertTableDuration.size()];
 		
+//		Looks at the durations in the song to decide if its fast or slow.
+		for(int i=0;i<newFrameList.size();i++){
+			List<Note>  melody= newFrameList.get(i).getMelodyPackage();
+			for(int j=0;j<melody.size();j++){
+			int a = melody.get(j).getDuration();
+			//			Starts with -2
+			counter[a]++;
+			}
+		}
+		float sum = 0;
+		//Count through the number of notes, which should be an index of how fast the song goes
+		for(int i=0;i<counter.length;i++){
+			if(convertTableDuration.get(i)<=(float)0.125){
+				sum+=counter[i];
+			}
+			else{
+				sum-=counter[i];
+			}
+		}
+		System.out.println(sum>20);
+	}
+	
 	public static long convertNoteLengthToTicks(float noteLength,int res) throws Exception{
         res=res*4;
         
@@ -423,7 +447,7 @@ public class MidiManager2 {
 	}
 	
 	public static void main(String[] args) throws Exception{
-		MidiManager2 mm = new MidiManager2("/Users/Albin/Desktop/test2.txt");
+		MidiManager2 mm = new MidiManager2(System.getProperty("user.dir")+"/database_verse.txt");
 		//MidiManager2 mm = new MidiManager2(System.getProperty("user.dir")+"/database/Chorus/Hooktheory-2015-02-26-08-00-10.mid");
 		List<ArrayList<Frame>> listOfFramesList = mm.getData();
 		ArrayList<Float> convertTablePitch = mm.getConvertTablePitch();

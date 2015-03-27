@@ -35,8 +35,10 @@ public class Main {
 		tmn.train(l);
 
 		System.out.println("hej svej i main!!");
-
+		
 		List<Frame> song = tmn.generateSong(frames, l);
+		mm.analyzeSong(song);
+		
 		try {
 			mm.createMidi(song);
 		} catch (Exception e) {
