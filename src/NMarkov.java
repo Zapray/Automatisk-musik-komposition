@@ -126,13 +126,15 @@ public class NMarkov extends MelodyNotesGenerator{
 		prevs.addFirst(firstNote);
 		newSong.add(firstNote);
 		tot += (conversionTable.get(firstNote.getDuration()));
+		if(tot == length)
+			return newSong;
+		
 		for(int i = 1; i < n; i++) {
 			Note x = generators.get(i).generateNote(prevs, rand);
 			prevs.addFirst(x); //ADDFirst?
 			newSong.add(x);
 			tot += (conversionTable.get(x.getDuration())); //TODO +1-1 ?
 		}
-		
 		if (tot > length) {
 			return generateSong(length, firstPitch, conversionTable);
 		}

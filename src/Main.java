@@ -26,7 +26,7 @@ public class Main {
 		}
 	}
 	public static void runTmn() {
-		MidiManager2 mm = new MidiManager2(System.getProperty("user.dir")+"/database_verse.txt");
+		MidiManager2 mm = new MidiManager2(System.getProperty("user.dir")+"/Databases_parts/verse.txt");
 		List<? extends List<Frame>> l = mm.getData();
 		pMax = mm.getPMax();
 		dMax = mm.getDMax();
@@ -40,7 +40,7 @@ public class Main {
 		mm.analyzeSong(song);
 		
 		try {
-			mm.createMidi(song);
+			mm.createMidi(song,frames);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
