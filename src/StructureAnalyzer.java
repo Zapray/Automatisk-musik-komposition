@@ -215,38 +215,62 @@ public class StructureAnalyzer {
 			return true;
 		}else return false;	
 	}
-	private static boolean similarNotes(ArrayList<Note> list1, ArrayList<Note> list2){
-		int yes=0;
-		int no=0;
-		for(int i=0; i<list1.size(); i++){
-			if(list1.get(i) == list2.get(i)){
-				yes++;
+	private static boolean similarNotes(float[] vector1, float[] vector2){
+			int yes=0;
+			int no=0;
+			for(int i=0; i<vector1.length; i++){
+				if(vector1[i] == vector2[i]){
+					yes++;
+				}else{
+					no++;
+				}
+			}
+			if(yes/(yes+no)>0.8){
+				return true;
 			}else{
-				no++;
+				return false;
 			}
 		}
-		if(yes/(yes+no)>0.8){
-			return true;
-		}else{
-			return false;
-		}
-	}
-	private static boolean similarDuration(ArrayList<Note> list1, ArrayList<Note> list2){
-		int yes=0;
-		int no=0;
-		for(int i=0; i<list1.size(); i++){
-			if(list1.get(i).getDuration() == list2.get(i).getDuration()){
-				yes++;
+		private static boolean similarDuration(float[] vector1, float[] vector2){
+			int yes=0;
+			int no=0;
+			int length1=0;
+			int length2=0;
+			float pastPitch1=-1;
+			float pastPitch2=-1;
+			for(int i=0; i<vector1.length; i++){
+				if(vector1[i]!=pastPitch1 && vector2[i]!=pastPitch2){
+					pastPitch1=vector1[i];
+					pastPitch2=vector2[i];
+					length1++;
+					length2++;
+					i++;
+					while(vector1[i]==pastPitch1){
+						pastPitch1=vector1[i];
+						pastPitch2=vector2[i];
+						length1++;
+						if(vector2[i]==pastPitch2){
+							length2++;
+						}
+						i++;
+					}
+					if(length1 == length2){
+						yes++;
+					}else{
+						no++;
+					}
+					i--;
+				}
+				pastPitch1=vector1[i];
+				pastPitch2=vector2[i];
+			}
+			if(yes/(yes+no)>0.8){
+				return true;
 			}else{
-				no++;
+				return false;
 			}
 		}
-		if(yes/(yes+no)>0.8){
-			return true;
-		}else{
-			return false;
-		}
-	}
+
 	private static boolean similarRelativePitch(ArrayList<Note> list1, ArrayList<Note> list2){
 		int yes=0;
 		int no=0;
