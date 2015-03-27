@@ -34,10 +34,10 @@ public class Main {
 		Tmn tmn = new Tmn(pMax, dMax, cMax, mm.getDurationConversionTable());
 		tmn.train(l);
 
-		System.out.println("hej svej i main!!");
+//		System.out.println("hej svej i main!!");
 		
 		List<Frame> song = tmn.generateSong(frames, l);
-		mm.analyzeSong(song);
+		System.out.println(mm.analyzeSong(song));
 		
 		try {
 			mm.createMidi(song,frames);

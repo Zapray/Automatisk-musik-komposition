@@ -390,11 +390,11 @@ public class MidiManager2 {
          }
          //Write the drumtrack
          Track track3 = sequence.createTrack();
-         Random rand = new Random();
+         
 
          // nextInt is normally exclusive of the top value,
          // so add 1 to make it inclusive
-         int randomNum = rand.nextInt((11 - 1) + 1) + 1;
+         int randomNum = analyzeSong(newFrameList);
          DrumBeat drumbeat = new DrumBeat(randomNum,nbrOfFrames/2);
          ShortMessage sm = new ShortMessage( );
          sm.setMessage(ShortMessage.PROGRAM_CHANGE, 9, 35, 0); //9 ==> is the channel 10.
@@ -436,9 +436,9 @@ public class MidiManager2 {
 		
 	}
 
-	public void analyzeSong(List<Frame> newFrameList){
+	public int analyzeSong(List<Frame> newFrameList){
 		int[] counter = new int[convertTableDuration.size()];
-		
+		Random rand = new Random();
 //		Looks at the durations in the song to decide if its fast or slow.
 		for(int i=0;i<newFrameList.size();i++){
 			List<Note>  melody= newFrameList.get(i).getMelodyPackage();
@@ -458,7 +458,13 @@ public class MidiManager2 {
 				sum-=counter[i];
 			}
 		}
-		System.out.println(sum>20);
+		
+		if(sum>20){
+			return (int) rand.nextInt(5)+1; 
+		}
+		else{
+			return rand.nextInt(5)+6;
+		}
 	}
 	
 	public static long convertNoteLengthToTicks(float noteLength,int res) throws Exception{
