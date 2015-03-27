@@ -165,7 +165,7 @@ public class StructureAnalyzer {
 				}
 			}
 		}
-		if(yes/(no + yes) > 0.8){
+		if((float)yes/(no + yes) > 0.5){
 			return true;
 		}else return false;	
 	}
@@ -181,7 +181,7 @@ public class StructureAnalyzer {
 			}
 			float ratio = (float) yes/(yes+no);
 			System.out.println(ratio);
-			if(yes/(yes+no)>0.8){
+			if((float)yes/(yes+no)>0.5){
 				return true;
 			}else{
 				return false;
@@ -220,7 +220,7 @@ public class StructureAnalyzer {
 				pastPitch1=vector1[i];
 				pastPitch2=vector2[i];
 			}
-			if(yes/(yes+no)>0.8){
+			if((float)yes/(yes+no)>0.5){
 				return true;
 			}else{
 				return false;
@@ -237,7 +237,7 @@ public class StructureAnalyzer {
 				no++;
 			}
 		}
-		if(yes/(yes+no)>0.8){
+		if((float)yes/(yes+no)>0.5){
 			return true;
 		}else{
 			return false;

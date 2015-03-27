@@ -94,7 +94,7 @@ public class MidiAnalyzer {
 				//}//end for
 
 
-				File filen = new File(System.getProperty("user.dir")+"/better.txt");
+				File filen = new File(System.getProperty("user.dir")+"/database_chorus.txt");
 
 
 				//File filen = new File("database_intro.txt");
@@ -107,7 +107,7 @@ public class MidiAnalyzer {
 
 
 
-				PrintWriter outFile = new PrintWriter(new FileWriter(System.getProperty("user.dir")+"/better.txt", true));
+				PrintWriter outFile = new PrintWriter(new FileWriter(System.getProperty("user.dir")+"/database_chorus.txt", true));
 
 
 				//PrintWriter outFile = new PrintWriter(new FileWriter("database_intro.txt", true));
@@ -261,93 +261,122 @@ public class MidiAnalyzer {
 			}//End if
 
 		}//End for
-		float lastDuration=0;
+		
 		ArrayList<FloatNote> melody = new ArrayList<FloatNote>();
-		List<ArrayList<FloatNote>> melodyPack = new ArrayList<ArrayList<FloatNote>>();
-		float combinedLength=0;
-		int where=0;
-		FloatNote floatNote;
-		//int nmbrOfPacks = 0;
-		for(int index = 0; index < notelength.size()-1; index++){
-			combinedLength=combinedLength + (float)notelength.get(index);
-			//System.out.println(combinedLength);
-			if(combinedLength >= (float)0.5){
-				if(lastDuration != (float)0){
-					floatNote = new FloatNote(lastDuration, (float) note.get(where-1));
-					melody.add(floatNote);
-				}
-				lastDuration = combinedLength - (float)0.5;
-				if(lastDuration>(float)0.5){
-					if(where-index==0){
-						while(lastDuration>=(float)0.5){
-							floatNote = new FloatNote((float)0.5, (float) note.get(index));
-							melody.add(floatNote);
-							melodyPack.add(melody);
-							melody = new ArrayList<FloatNote>();
-							lastDuration = lastDuration - (float)0.5;
-						}//end while
-						where = index+1;
-						combinedLength=lastDuration;
+				List<ArrayList<FloatNote>> melodyPack = new ArrayList<ArrayList<FloatNote>>();
+				float combinedLength=0;
+				FloatNote floatNote;
+				for(int index = 0; index < notelength.size(); index++){
+					combinedLength=combinedLength + (float)notelength.get(index);
+					if(combinedLength>=0.5){
+						floatNote = new FloatNote((float)notelength.get(index)-(combinedLength-(float)0.5), (float) note.get(index));
 					}else{
-						for(int i = where; i < index; i++){
-							floatNote = new FloatNote((float) notelength.get(i), (float) note.get(i));
-							melody.add(floatNote);
-
-						}//End for
-						floatNote = new FloatNote( (float)notelength.get(index)-lastDuration, (float) note.get(index));
-						melody.add(floatNote);
+						floatNote = new FloatNote((float)notelength.get(index), (float) note.get(index));
+					}
+					melody.add(floatNote);
+					if(combinedLength>=(float)0.5){
 						melodyPack.add(melody);
 						melody = new ArrayList<FloatNote>();
-						//lastDuration = lastDuration - (float)0.5;
-						while(lastDuration>=(float)0.5){
+						combinedLength=combinedLength-(float)0.5;
+						while(combinedLength>=(float)0.5){
 							floatNote = new FloatNote((float)0.5, (float) note.get(index));
 							melody.add(floatNote);
 							melodyPack.add(melody);
 							melody = new ArrayList<FloatNote>();
-							lastDuration = lastDuration - (float)0.5;
-
+							combinedLength=combinedLength-(float)0.5;
 						}//end while
-						where = index+1;
-						combinedLength=lastDuration;
-					}//end else
-				}else{
-					if(lastDuration != (float)0){
-						for(int i = where; i < index; i++){
-							floatNote = new FloatNote((float) notelength.get(i), (float) note.get(i));
+						if(combinedLength != (float)0){		
+							floatNote = new FloatNote(combinedLength, (float) note.get(index));
 							melody.add(floatNote);
+							if(index==notelength.size()-1){
+								melodyPack.add(melody);
+							}
+						}
+						
+					}//end if
+				}//End for
+//		float lastDuration=0;
+//		ArrayList<FloatNote> melody = new ArrayList<FloatNote>();
+//		List<ArrayList<FloatNote>> melodyPack = new ArrayList<ArrayList<FloatNote>>();
+//		float combinedLength=0;
+//		int where=0;
+//		FloatNote floatNote;
+//		//int nmbrOfPacks = 0;
+//		for(int index = 0; index < notelength.size()-1; index++){
+//			combinedLength=combinedLength + (float)notelength.get(index);
+//			//System.out.println(combinedLength);
+//			if(combinedLength >= (float)0.5){
+//				if(lastDuration != (float)0){
+//					floatNote = new FloatNote(lastDuration, (float) note.get(where-1));
+//					melody.add(floatNote);
+//				}
+//				lastDuration = combinedLength - (float)0.5;
+//				if(lastDuration>(float)0.5){
+//					if(where-index==0){
+//						while(lastDuration>=(float)0.5){
+//							floatNote = new FloatNote((float)0.5, (float) note.get(index));
+//							melody.add(floatNote);
+//							melodyPack.add(melody);
+//							melody = new ArrayList<FloatNote>();
+//							lastDuration = lastDuration - (float)0.5;
+//						}//end while
+//						where = index+1;
+//						combinedLength=lastDuration;
+//					}else{
+//						for(int i = where; i < index; i++){
+//							floatNote = new FloatNote((float) notelength.get(i), (float) note.get(i));
+//							melody.add(floatNote);
+//
+//						}//End for
+//						floatNote = new FloatNote( (float)notelength.get(index)-lastDuration, (float) note.get(index));
+//						melody.add(floatNote);
+//						melodyPack.add(melody);
+//						melody = new ArrayList<FloatNote>();
+//						//lastDuration = lastDuration - (float)0.5;
+//						while(lastDuration>=(float)0.5){
+//							floatNote = new FloatNote((float)0.5, (float) note.get(index));
+//							melody.add(floatNote);
+//							melodyPack.add(melody);
+//							melody = new ArrayList<FloatNote>();
+//							lastDuration = lastDuration - (float)0.5;
+//
+//						}//end while
+//						where = index+1;
+//						combinedLength=lastDuration;
+//					}//end else
+//				}else{
+//					if(lastDuration != (float)0){
+//						for(int i = where; i < index; i++){
+//							floatNote = new FloatNote((float) notelength.get(i), (float) note.get(i));
+//							melody.add(floatNote);
+//
+//						}//End for
+//
+//						floatNote = new FloatNote( (float)notelength.get(index)-lastDuration, (float) note.get(index));
+//						melody.add(floatNote);
+//
+//					}else{
+//
+//						for(int i = where; i < index+1; i++){
+//							floatNote = new FloatNote((float) notelength.get(i), (float) note.get(i));
+//							melody.add(floatNote);
+//
+//						}//End for
+//
+//
+//					}//end else
+//					//nmbrOfPacks++;
+//					melodyPack.add(melody);
+//					//System.out.println(melodyPack.get(nmbrOfPacks-1).size());
+//					melody = new ArrayList<FloatNote>();
+//					where = index+1;
+//					combinedLength=lastDuration;
+//
+//					//System.out.println(melodyPack.size());
+//					//System.out.println(melodyPack.get(nmbrOfPacks-1).size());
+//				}//end else
+//			}//End if
 
-						}//End for
-
-						floatNote = new FloatNote( (float)notelength.get(index)-lastDuration, (float) note.get(index));
-						melody.add(floatNote);
-
-					}else{
-
-						for(int i = where; i < index+1; i++){
-							floatNote = new FloatNote((float) notelength.get(i), (float) note.get(i));
-							melody.add(floatNote);
-
-						}//End for
-
-
-					}//end else
-					//nmbrOfPacks++;
-					melodyPack.add(melody);
-					//System.out.println(melodyPack.get(nmbrOfPacks-1).size());
-					melody = new ArrayList<FloatNote>();
-					where = index+1;
-					combinedLength=lastDuration;
-
-					//System.out.println(melodyPack.size());
-					//System.out.println(melodyPack.get(nmbrOfPacks-1).size());
-				}//end else
-			}//End if
-
-
-
-
-
-		}//End for
 		return melodyPack;
 
 	}// End MelodyAnalyzer
