@@ -38,7 +38,7 @@ public class NMarkov extends MelodyNotesGenerator{
 	 * @return an integer representing what number the note combination represents
 	 * @throws IllegalArgumentException
 	 */
-	private int getRowPos(List<Note> notes) throws IllegalArgumentException{
+	private int getRowPos(List<Note> notes) throws IllegalArgumentException {
 		
 		//testloop
 		for(Note n : notes) {

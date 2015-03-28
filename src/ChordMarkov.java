@@ -14,9 +14,9 @@ public class ChordMarkov {
 		ArrayList<ArrayList<Note>> songList = new ArrayList<ArrayList<Note>>();
 		
 		
-		
+		ArrayList<Note> noteList;
 		for(int i = 0; i < data.size(); i++) {
-			ArrayList<Note> noteList = new ArrayList<Note>();
+			noteList = new ArrayList<Note>();
 			for(int j = 0; j < data.get(i).size(); j+=2) {
 				if( j+1 >= data.get(i).size()) {
 					noteList.add(new Note(1, data.get(i).get(j).getChord()));
@@ -27,6 +27,7 @@ public class ChordMarkov {
 					noteList.add(new Note(1, data.get(i).get(j+1).getChord()));
 				}
 			}
+			songList.add(noteList);
 		}
 		return songList;
 	}
@@ -47,18 +48,17 @@ public class ChordMarkov {
 	}
 	public static void main(String[] args) {
 		MidiManager2 mm = new MidiManager2(System.getProperty("user.dir")+"/database_verse.txt");
-		List<? extends List<Frame>> l = mm.getData();
+		List<? extends List<Frame>> data = mm.getData();
 		int cMax = mm.getCMax();
-		ChordMarkov m = new ChordMarkov(2, cMax, l);
+		ChordMarkov m = new ChordMarkov(2, cMax, data);
 
-		System.out.println("hej svej i main!!");
+		System.out.println("chordMarkov:");
 
 		List<Integer> chords = m.generateChordProg(4);
 		List<String>  realChords = new ArrayList<String>();
 		for(int i = 0; i<chords.size();i++){
-			realChords.add(mm.getConvertTableChords().get(chords.get(i)));
-		}
-		
-		System.out.println(chords);
+			realChords.add(mm.getConvertTableChords().get(chords.get(i)-1));
+		} 
+		System.out.println(realChords);
 	}
 }
