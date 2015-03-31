@@ -169,7 +169,7 @@ public class StructureAnalyzer {
 			return true;
 		}else return false;	
 	}
-	private static boolean similarNotes(float[] vector1, float[] vector2){
+	private static boolean similarNotes(float[] vector1, float[] vector2){ //Compares two vectors if they have a percent of similarity in notes above 50%
 			int yes=0;
 			int no=0;
 			for(int i=0; i<vector1.length; i++){
@@ -187,7 +187,7 @@ public class StructureAnalyzer {
 				return false;
 			}
 		}
-		private static boolean similarDuration(float[] vector1, float[] vector2){
+		private static boolean similarDuration(float[] vector1, float[] vector2){ //Compares two vectors if they have a percent of similarity in duration above 50%
 			int yes=0;
 			int no=0;
 			int length1=0;
@@ -227,11 +227,11 @@ public class StructureAnalyzer {
 			}
 		}
 
-	private static boolean similarRelativePitch(ArrayList<Note> list1, ArrayList<Note> list2){
+	private static boolean similarRelativePitch(float[] vector1, float[] vector2){ // Compares two vectors if they have the same relative pitch
 		int yes=0;
 		int no=0;
-		for(int i=0; i<list1.size()-1; i++){
-			if(list1.get(i).getPitch()-list1.get(i+1).getPitch() == list2.get(i).getDuration()-list2.get(i+1).getDuration()){
+		for(int i=0; i<vector1.length-1; i++){
+			if(vector1[i]-vector1[i] == vector2[i]-vector2[i+1]){
 				yes++;
 			}else{
 				no++;
@@ -242,5 +242,23 @@ public class StructureAnalyzer {
 		}else{
 			return false;
 		}
+	}	
+
+	private static boolean scaledDuration(float[] tiny, float[] bigger){ //Compares one vector with a longer vector if they have the same pitches but a different scale of duration
+		int yes=0;
+		int no=0;
+		int count1=0;
+		int count2=0;
+		float[] tinyBigger = new float[bigger.length];
+		for(int i=0; i<tiny.length; i++){
+			count1++;
+			if(tiny[i]!=tiny[i+1]){
+				for(int j=count2; j<count2+(count1*2);j++){
+					tinyBigger[j] = tiny[i];
+				}
+			}
+			
+		} 
+		return similarNotes(tinyBigger, bigger);
 	}
 }

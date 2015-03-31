@@ -28,7 +28,7 @@ public class MidiAnalysator {
 
 	public static void main(String args[])throws Exception{
 
-		File[] files =new File ("/Users/Albin/Desktop/songweknow/").listFiles(); 
+		File[] files =new File (System.getProperty("user.dir")+"/database/Chorus/").listFiles(); 
 
 		for (File file : files){
 			String ext1 = FilenameUtils.getExtension(file.getName());
@@ -47,13 +47,13 @@ public class MidiAnalysator {
 				Sequencer sequencer = MidiSystem.getSequencer();//Creates a sequencer
 				sequencer.open();// have to open the sequencer to be able to use sequences. Don't know why, it works without the first two lines.
 				//InputStream is = new BufferedInputStream(new FileInputStream(new File("D:\\MidiMusic\\Hooktheory-2015-02-04-01-25-10.mid")));
-				System.out.println("/Users/Albin/Desktop/Filerfranhook/Chorus/" + file.getName());
-				InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/Albin/Desktop/songweknow/" + file.getName())));
+				//System.out.println("/Users/Albin/Desktop/Filerfranhook/Chorus/" + file.getName());
+				InputStream is = new BufferedInputStream(new FileInputStream( new File(System.getProperty("user.dir")+"/database/Chorus/" + file.getName())));
 				//InputStream is = new BufferedInputStream(new FileInputStream(new File("/Users/Albin/Desktop/music.mid")));
 				Sequence sequence = MidiSystem.getSequence(is);//Creates a sequence which you can analyze.
 				float res = sequence.getResolution();
-				System.out.println(res);
-				System.out.println(sequence.getDivisionType());
+				//System.out.println(res);
+				//System.out.println(sequence.getDivisionType());
 				Track[] tracks = sequence.getTracks();//Creates an array to be able to separate tracks.
 
 				int melodytrack = 0;
@@ -127,14 +127,14 @@ public class MidiAnalysator {
 					}
 
 				}
-				File filen = new File("/Users/Albin/Desktop/testdoc.txt");
+				File filen = new File(System.getProperty("user.dir")+"/notes_chorus.txt");
 				// if file doesnt exists, then create it
 				if (!filen.exists()) {
 					filen.createNewFile();
 				}
 
 
-				PrintWriter outFile = new PrintWriter(new FileWriter("/Users/Albin/Desktop/testdoc.txt", true));
+				PrintWriter outFile = new PrintWriter(new FileWriter(System.getProperty("user.dir")+"/notes_chorus.txt", true));
 
 
 				for (int i=0;i<counter1;i++){
