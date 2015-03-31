@@ -349,7 +349,7 @@ public class MidiManager2 {
          for(int  i=0; i<newFrameList.size();i++ ){
         	 int nbrchord = newFrameList.get(i).getChord();
         	 String chord = convertTableChords.get(nbrchord);
-        	
+        	 chordsForBassLine.add(chord);
         	 
         	 Chord ackord = new Chord(chord);
         	 //System.out.println(ackord.getNote1() +  "  " + ackord.getNote2() + "  "+ ackord.getNote3());
@@ -398,8 +398,8 @@ public class MidiManager2 {
          BassLine bass = new BassLine(chordsForBassLine);
       
          ShortMessage sm = new ShortMessage( );
-         sm.setMessage(ShortMessage.PROGRAM_CHANGE, 3, 34, 0); //9 ==> is the channel 10.
-        
+         sm.setMessage(ShortMessage.PROGRAM_CHANGE, 0, 34, 0); //9 ==> is the channel 10.
+         bass.printBassLine();
          track4.add(new MidiEvent(sm, 0));
          for (int i=0;i<bass.getBassLine().size();i++){ 
          	track4.add(bass.getBassLine().get(i)); 	 
