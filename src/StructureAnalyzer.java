@@ -26,7 +26,86 @@ public class StructureAnalyzer {
 			e.printStackTrace();
 		}
 	}
+	private static void analyzeMotifs(BufferedReader in){
+		Float pitch;
+		Float duration;
+		int countBar = 0;
+		int countSection = 0;
+		//int song = 8;
+		float[] p1 =new float[16];
+		float[] p2 =new float[16];
+		
+		int barsInSection = 8;
+		ArrayList<ArrayList<ArrayList<Float>>> data = new ArrayList<ArrayList<ArrayList<Float>>>();
+		ArrayList<ArrayList<Float>> section = new ArrayList<ArrayList<Float>>();
+		ArrayList<float[]> vectors = new ArrayList<float[]>(); 
+		try{
+			String line=in.readLine();
+			while(line !=null){	
 
+				if(line.charAt(0) == '?'){
+					countBar++;
+				}else if(line.charAt(0) == '-'){
+					if(countBar==barsInSection+1){
+						section.add(pitchList);
+						section.add(durationList);
+						data.add(section);
+						pitchList = new ArrayList<Float>();
+						durationList = new ArrayList<Float>();
+						section = new ArrayList<ArrayList<Float>>();
+						countSection++;
+					}
+					for(int i=0; i<countSection; i++){
+						vectors.add(createPitchVector(data.get(i)));
+					}
+					for(int j=0; j<16;j++){
+						p1[j]=vectors.get(0)[j];
+						p2[j]=vectors.get(0)[j+16];
+					}
+					if(similarNotes(p1, p2)){
+						
+					}
+					
+					
+					
+					countBar=0;
+				}else{
+					for(int i=0; i<line.length(); i++){
+
+						if(line.charAt(i)==','){
+							pitch= Float.parseFloat(line.substring(0,i));
+							duration =Float.parseFloat(line.substring(i+1,line.length()));
+							pitchList.add(pitch);
+							durationList.add(duration);
+							
+						}	
+					}
+				}
+				if(countBar==barsInSection+1){
+					section.add(pitchList);
+					section.add(durationList);
+					data.add(section);
+					pitchList = new ArrayList<Float>();
+					durationList = new ArrayList<Float>();
+					section = new ArrayList<ArrayList<Float>>();
+					countBar=1;
+					countSection++;
+				}
+				line=in.readLine();
+			}
+
+		}catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (in != null)in.close();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+
+		
+	}
 	private static ArrayList<ArrayList<ArrayList<Float>>> parseTextFile(BufferedReader  in){
 		Float pitch;
 		Float duration;
