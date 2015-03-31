@@ -32,8 +32,8 @@ public class BassLine {
 	public BassLine(ArrayList<String> listOfChords) throws Exception{
 		
 		createListOfTonics(listOfChords);
-		createQuarterNoteBaseLine();
-		
+		//createEightNoteBaseLine();
+		createQuarterNoteBassLine();
 	}
 	public ArrayList<MidiEvent> getBassLine(){
 		
@@ -52,7 +52,7 @@ public class BassLine {
 		return 0;
 	}
 
-	private void createQuarterNoteBaseLine() throws Exception {
+	private void createEightNoteBaseLine() throws Exception {
 		int tick =resolution/2;
 		int tickMeter=0;
 		for(int i=0;i<listOfTonics.size();i++){
@@ -70,7 +70,28 @@ public class BassLine {
 		}
 		
 	}
+	private void createQuarterNoteBassLine() throws Exception{
+		int tick =resolution;
+		int tickMeter=0;
+		for(int i=0;i<listOfTonics.size();i++){
+			for(int j=0;j<2;j++){
+				ShortMessage	shortMessage1 = new ShortMessage();
+				shortMessage1.setMessage(ShortMessage.NOTE_ON,0,convertLabelToNote(listOfTonics.get(i)), 114 );
+				MidiEvent NoteOn=new MidiEvent(shortMessage1,tickMeter);
+				bassLine.add(NoteOn);
+				ShortMessage	shortMessage2 = new ShortMessage();
+				tickMeter=tickMeter + tick;	
+				shortMessage2.setMessage(ShortMessage.NOTE_OFF,0,convertLabelToNote(listOfTonics.get(i)), 0 );
+				MidiEvent NoteOff=new MidiEvent(shortMessage2,tickMeter);
+				bassLine.add(NoteOff);
+			}
+		}
+		
+		
+		
+	}
 
+	
 	
 	public void printBassLine(){
 		for(int i=0;i<bassLine.size();i++){

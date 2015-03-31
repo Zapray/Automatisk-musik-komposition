@@ -391,16 +391,15 @@ public class MidiManager2 {
         	 
         	 
          }
-         System.out.println();
+       
          //Write the bassline
          Track track4 = sequence.createTrack();
          
          BassLine bass = new BassLine(chordsForBassLine);
       
          ShortMessage sm = new ShortMessage( );
-         sm.setMessage(ShortMessage.PROGRAM_CHANGE, 0, 34, 0); //9 ==> is the channel 10.
+         sm.setMessage(ShortMessage.PROGRAM_CHANGE, 3, 34, 0); //9 ==> is the channel 10.
         
-         
          track4.add(new MidiEvent(sm, 0));
          for (int i=0;i<bass.getBassLine().size();i++){ 
          	track4.add(bass.getBassLine().get(i)); 	 
@@ -415,7 +414,7 @@ public class MidiManager2 {
          // so add 1 to make it inclusive
          int randomNum = analyzeSong(newFrameList);
          DrumBeat drumbeat = new DrumBeat(randomNum,nbrOfFrames/2);
-         sm = new ShortMessage( );
+         sm = new ShortMessage();
          sm.setMessage(ShortMessage.PROGRAM_CHANGE, 9, 35, 0); //9 ==> is the channel 10.
          track3.add(new MidiEvent(sm, 0));
         
