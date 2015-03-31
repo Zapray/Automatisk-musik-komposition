@@ -258,6 +258,8 @@ public class StructureAnalyzer {
 				for(int j=count2; j<count2+(count1*2);j++){
 					tinyBigger[j] = tiny[i];
 				}
+				count2=count1*2+count2;
+				count1=0;
 			}
 			
 		} 
