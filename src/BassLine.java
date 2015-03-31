@@ -34,6 +34,9 @@ public class BassLine {
 		createListOfTonics(listOfChords);
 		//createEightNoteBaseLine();
 		createQuarterNoteBassLine();
+		//createHalfNoteBassLine();
+		//createQuarterEightNoteBassLine();
+		//createBerlinNightBassLine();
 	}
 	public ArrayList<MidiEvent> getBassLine(){
 		
@@ -90,7 +93,102 @@ public class BassLine {
 		
 		
 	}
-
+	private void createHalfNoteBassLine() throws Exception{
+		int tick =2*resolution;
+		int tickMeter=0;
+		for(int i=0;i<listOfTonics.size();i++){
+			for(int j=0;j<1;j++){
+				ShortMessage	shortMessage1 = new ShortMessage();
+				shortMessage1.setMessage(ShortMessage.NOTE_ON,0,convertLabelToNote(listOfTonics.get(i)), 114 );
+				MidiEvent NoteOn=new MidiEvent(shortMessage1,tickMeter);
+				bassLine.add(NoteOn);
+				ShortMessage	shortMessage2 = new ShortMessage();
+				tickMeter=tickMeter + tick;	
+				shortMessage2.setMessage(ShortMessage.NOTE_OFF,0,convertLabelToNote(listOfTonics.get(i)), 0 );
+				MidiEvent NoteOff=new MidiEvent(shortMessage2,tickMeter);
+				bassLine.add(NoteOff);
+			}
+		}
+		
+		
+		
+	}
+	private void createQuarterEightNoteBassLine() throws Exception{
+		int tick1= 288;
+		int tick2 = 96;
+		int tickMeter=0;
+		for(int i=0;i<listOfTonics.size();i++){
+			for(int j=0;j<1;j++){
+				ShortMessage	shortMessage1 = new ShortMessage();
+				shortMessage1.setMessage(ShortMessage.NOTE_ON,0,convertLabelToNote(listOfTonics.get(i)), 114 );
+				MidiEvent NoteOn=new MidiEvent(shortMessage1,tickMeter);
+				bassLine.add(NoteOn);
+				ShortMessage	shortMessage2 = new ShortMessage();
+				tickMeter=tickMeter + tick1;	
+				shortMessage2.setMessage(ShortMessage.NOTE_OFF,0,convertLabelToNote(listOfTonics.get(i)), 0 );
+				MidiEvent NoteOff=new MidiEvent(shortMessage2,tickMeter);
+				bassLine.add(NoteOff);
+				shortMessage1 = new ShortMessage();
+				shortMessage1.setMessage(ShortMessage.NOTE_ON,0,convertLabelToNote(listOfTonics.get(i)), 114 );
+				NoteOn=new MidiEvent(shortMessage1,tickMeter);
+				bassLine.add(NoteOn);
+				shortMessage2 = new ShortMessage();
+				tickMeter=tickMeter + tick2;	
+				shortMessage2.setMessage(ShortMessage.NOTE_OFF,0,convertLabelToNote(listOfTonics.get(i)), 0 );
+				NoteOff=new MidiEvent(shortMessage2,tickMeter);
+				bassLine.add(NoteOff);
+				
+			}
+		}	
+	}
+	
+	private void createBerlinNightBassLine() throws Exception{
+		int tick1= resolution/2;
+		int tickMeter=0;
+		for(int i=0;i<listOfTonics.size();i=i+2){
+			for(int j=0;j<4;j++){
+				ShortMessage shortMessage1 = new ShortMessage();
+				shortMessage1.setMessage(ShortMessage.NOTE_ON,0,convertLabelToNote(listOfTonics.get(i)), 114 );
+				MidiEvent NoteOn=new MidiEvent(shortMessage1,tickMeter);
+				bassLine.add(NoteOn);
+				ShortMessage	shortMessage2 = new ShortMessage();
+				tickMeter=tickMeter + tick1;	
+				shortMessage2.setMessage(ShortMessage.NOTE_OFF,0,convertLabelToNote(listOfTonics.get(i)), 0 );
+				MidiEvent NoteOff=new MidiEvent(shortMessage2,tickMeter);
+				bassLine.add(NoteOff);	
+			}
+			for(int j=0;j<2;j++){
+				ShortMessage shortMessage1 = new ShortMessage();
+				shortMessage1.setMessage(ShortMessage.NOTE_ON,0,convertLabelToNote(listOfTonics.get(i))+5, 114 );
+				MidiEvent NoteOn=new MidiEvent(shortMessage1,tickMeter);
+				bassLine.add(NoteOn);
+				ShortMessage	shortMessage2 = new ShortMessage();
+				tickMeter=tickMeter + tick1;	
+				shortMessage2.setMessage(ShortMessage.NOTE_OFF,0,convertLabelToNote(listOfTonics.get(i))+5, 0 );
+				MidiEvent NoteOff=new MidiEvent(shortMessage2,tickMeter);
+				bassLine.add(NoteOff);	
+			
+			}
+			for(int j=0;j<2;j++){
+				ShortMessage shortMessage1 = new ShortMessage();
+				shortMessage1.setMessage(ShortMessage.NOTE_ON,0,convertLabelToNote(listOfTonics.get(i))+7, 114 );
+				MidiEvent NoteOn=new MidiEvent(shortMessage1,tickMeter);
+				bassLine.add(NoteOn);
+				ShortMessage	shortMessage2 = new ShortMessage();
+				tickMeter=tickMeter + tick1;	
+				shortMessage2.setMessage(ShortMessage.NOTE_OFF,0,convertLabelToNote(listOfTonics.get(i))+7, 0 );
+				MidiEvent NoteOff=new MidiEvent(shortMessage2,tickMeter);
+				bassLine.add(NoteOff);	
+			
+			}
+		}	
+		
+		
+	}
+	
+	
+	
+	
 	
 	
 	public void printBassLine(){

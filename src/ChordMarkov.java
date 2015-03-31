@@ -47,7 +47,7 @@ public class ChordMarkov {
 		
 	}
 	public static void main(String[] args) {
-		MidiManager2 mm = new MidiManager2(System.getProperty("user.dir")+"/database_verse.txt");
+		MidiManager2 mm = new MidiManager2(System.getProperty("user.dir")+"/Databases_parts/verse.txt");
 		List<? extends List<Frame>> data = mm.getData();
 		int cMax = mm.getCMax();
 		ChordMarkov m = new ChordMarkov(2, cMax, data);
