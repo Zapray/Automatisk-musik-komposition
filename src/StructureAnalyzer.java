@@ -181,7 +181,9 @@ public class StructureAnalyzer {
 			}
 			float ratio = (float) yes/(yes+no);
 			System.out.println(ratio);
+
 			if((float)yes/(yes+no)>0.5){
+
 				return true;
 			}else{
 				return false;
