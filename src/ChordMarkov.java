@@ -57,7 +57,7 @@ public class ChordMarkov {
 		List<Integer> chords = m.generateChordProg(4);
 		List<String>  realChords = new ArrayList<String>();
 		for(int i = 0; i<chords.size();i++){
-			realChords.add(mm.getConvertTableChords().get(chords.get(i)-1));
+			realChords.add(mm.getConvertTableChords().get(chords.get(i)));
 		} 
 		System.out.println(realChords);
 	}
