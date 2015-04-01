@@ -1,6 +1,9 @@
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 
@@ -9,24 +12,24 @@ public class StructureAnalyzer {
 	private static ArrayList<Float> pitchList = new ArrayList<Float>();
 	private static ArrayList<Float> durationList = new ArrayList<Float>();
 
-	public static void main(String[] args){
+	public static void main(String[] args) throws Exception{
 		try{
 			
 			BufferedReader in =new BufferedReader(new FileReader(System.getProperty("user.dir")+"/Databases_parts/chorus.txt"));
 			//createUnconvertedArrays(in);
-			ArrayList<ArrayList<ArrayList<Float>>> data = parseTextFile(in);
-			float[] p1 =createPitchVector(data.get(0));
-			float[] p2 =createPitchVector(data.get(1));
+			//ArrayList<ArrayList<ArrayList<Float>>> data = parseTextFile(in);
+			//float[] p1 =createPitchVector(data.get(0));
+			//float[] p2 =createPitchVector(data.get(1));
 
-			System.out.println(similarNotes(p1, p2));
+			//System.out.println(similarNotes(p1, p2));
 			//System.out.println(similarDuration(p1, p2));
-
+			analyzeMotifs(in);
 
 		}catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	private static void analyzeMotifs(BufferedReader in){
+	private static void analyzeMotifs(BufferedReader in) throws Exception{
 		Float pitch;
 		Float duration;
 		int countBar = 0;
@@ -34,17 +37,28 @@ public class StructureAnalyzer {
 		//int song = 8;
 		float[] p1 =new float[16];
 		float[] p2 =new float[16];
+		float[] p3 =new float[16];
+		float[] p4 =new float[16];
 		
 		int barsInSection = 8;
 		ArrayList<ArrayList<ArrayList<Float>>> data = new ArrayList<ArrayList<ArrayList<Float>>>();
 		ArrayList<ArrayList<Float>> section = new ArrayList<ArrayList<Float>>();
-		ArrayList<float[]> vectors = new ArrayList<float[]>(); 
+		//ArrayList<float[]> vectors = new ArrayList<float[]>(); 
+		ArrayList<float[]> oneBars = new ArrayList<float[]>();
+		File filen = new File(System.getProperty("user.dir")+"/Crazy.txt");
+
+		if(!filen.exists()) {
+			filen.createNewFile();
+		}
+		PrintWriter outFile = new PrintWriter(new FileWriter(System.getProperty("user.dir")+"/Crazy.txt", true));
 		try{
+			
 			String line=in.readLine();
 			while(line !=null){	
 
 				if(line.charAt(0) == '?'){
 					countBar++;
+					System.out.println("Bar:"+countBar);
 				}else if(line.charAt(0) == '-'){
 					if(countBar==barsInSection+1){
 						section.add(pitchList);
@@ -54,21 +68,43 @@ public class StructureAnalyzer {
 						durationList = new ArrayList<Float>();
 						section = new ArrayList<ArrayList<Float>>();
 						countSection++;
+						System.out.println("Section:"+countSection);
 					}
 					for(int i=0; i<countSection; i++){
-						vectors.add(createPitchVector(data.get(i)));
+						for(int j=0; j<16;j++){
+							p1[j]=createPitchVector(data.get(i))[j];
+							p2[j]=createPitchVector(data.get(i))[j+16];
+							p3[j]=createPitchVector(data.get(i))[j+32];
+							p4[j]=createPitchVector(data.get(i))[j+48];
+						}
+						oneBars.add(p1);
+						oneBars.add(p2);
+						oneBars.add(p3);
+						oneBars.add(p4);
+						p1 =new float[16];
+						p2 =new float[16];
+						p3 =new float[16];
+						p4 =new float[16];
 					}
-					for(int j=0; j<16;j++){
-						p1[j]=vectors.get(0)[j];
-						p2[j]=vectors.get(0)[j+16];
+					for(int i=0; i<countSection*4; i++){
+						for(int j=i+1; j<countSection*4; j++){
+							if(similarNotes(oneBars.get(i), oneBars.get(j))){
+								
+								outFile.print("Rep:"+i+" "+j+',');
+							}else if(similarRelativePitch(oneBars.get(i), oneBars.get(j))){
+								outFile.print("Pit:"+i+" "+j+',');
+							}else if(similarDuration(oneBars.get(i), oneBars.get(j))){
+								outFile.print("Dur:"+i+" "+j+',');
+							}
+							
+						}
 					}
-					if(similarNotes(p1, p2)){
-						
-					}
-					
-					
-					
+					outFile.println();
+					outFile.println('-');
 					countBar=0;
+					countSection=0;
+					oneBars=new ArrayList<float[]>();
+					data=new ArrayList<ArrayList<ArrayList<Float>>>();
 				}else{
 					for(int i=0; i<line.length(); i++){
 
@@ -90,20 +126,29 @@ public class StructureAnalyzer {
 					section = new ArrayList<ArrayList<Float>>();
 					countBar=1;
 					countSection++;
+					System.out.println("Section:"+countSection);
 				}
 				line=in.readLine();
+				
 			}
+			System.out.print("Done");
 
 		}catch (IOException e) {
 			e.printStackTrace();
 		} finally {
 			try {
-				if (in != null)in.close();
+				if (in != null){
+					in.close();
+					
+				}
+				if(outFile != null){
+					outFile.close();
+				}
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			}
 		}
-
+		
 		
 	}
 	private static ArrayList<ArrayList<ArrayList<Float>>> parseTextFile(BufferedReader  in){
@@ -258,10 +303,10 @@ public class StructureAnalyzer {
 					no++;
 				}
 			}
-			float ratio = (float) yes/(yes+no);
-			System.out.println(ratio);
+//			float ratio = (float) yes/(yes+no);
+//			System.out.println(ratio);
 
-			if((float)yes/(yes+no)>0.5){
+			if((float)yes/(yes+no)>0.8){
 
 				return true;
 			}else{
@@ -282,14 +327,20 @@ public class StructureAnalyzer {
 					length1++;
 					length2++;
 					i++;
+					if(i==vector1.length){
+						break;
+					}
 					while(vector1[i]==pastPitch1){
 						pastPitch1=vector1[i];
-						pastPitch2=vector2[i];
 						length1++;
 						if(vector2[i]==pastPitch2){
+							pastPitch2=vector2[i];
 							length2++;
 						}
 						i++;
+						if(i==vector1.length){
+							break;
+						}
 					}
 					if(length1 == length2){
 						yes++;
@@ -301,7 +352,9 @@ public class StructureAnalyzer {
 				pastPitch1=vector1[i];
 				pastPitch2=vector2[i];
 			}
-			if((float)yes/(yes+no)>0.5){
+//			float ratio = (float) yes/(yes+no);
+//			System.out.println(ratio);
+			if((float)yes/(yes+no)>0.8){
 				return true;
 			}else{
 				return false;
@@ -312,13 +365,13 @@ public class StructureAnalyzer {
 		int yes=0;
 		int no=0;
 		for(int i=0; i<vector1.length-1; i++){
-			if(vector1[i]-vector1[i] == vector2[i]-vector2[i+1]){
+			if(Math.abs((vector1[i]-vector1[i+1])-(vector2[i]-vector2[i+1]))<=1 ){
 				yes++;
 			}else{
 				no++;
 			}
 		}
-		if((float)yes/(yes+no)>0.5){
+		if((float)yes/(yes+no)>0.8){
 			return true;
 		}else{
 			return false;
