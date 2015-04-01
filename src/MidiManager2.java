@@ -399,7 +399,6 @@ public class MidiManager2 {
       
          ShortMessage sm = new ShortMessage( );
          sm.setMessage(ShortMessage.PROGRAM_CHANGE, 0, 34, 0); //9 ==> is the channel 10.
-         bass.printBassLine();
          track4.add(new MidiEvent(sm, 0));
          for (int i=0;i<bass.getBassLine().size();i++){ 
          	track4.add(bass.getBassLine().get(i)); 	 

@@ -8,7 +8,7 @@ public class ChordMarkov {
 		markovChain = new NMarkov(order, nrOfChords, 1);
 		markovChain.train(filterOneChordPerBar(data));
 	}
-	private List<? extends List<Note>> filterOneChordPerBar(
+	private static List<? extends List<Note>> filterOneChordPerBar(
 			List<? extends List<Frame>> data) {
 		
 		ArrayList<ArrayList<Note>> songList = new ArrayList<ArrayList<Note>>();
@@ -17,14 +17,14 @@ public class ChordMarkov {
 		ArrayList<Note> noteList;
 		for(int i = 0; i < data.size(); i++) {
 			noteList = new ArrayList<Note>();
-			for(int j = 0; j < data.get(i).size(); j+=2) {
+			for(int j = 0; j < data.get(i).size(); j++) {
 				if( j+1 >= data.get(i).size()) {
 					noteList.add(new Note(1, data.get(i).get(j).getChord()));
 				}else if (data.get(i).get(j).getChord() == data.get(i).get(j+1).getChord()) {
 					noteList.add(new Note(1, data.get(i).get(j).getChord()));
+					j++;
 				}else {
 					noteList.add(new Note(1, data.get(i).get(j).getChord()));
-					noteList.add(new Note(1, data.get(i).get(j+1).getChord()));
 				}
 			}
 			songList.add(noteList);
@@ -47,7 +47,8 @@ public class ChordMarkov {
 		
 	}
 	public static void main(String[] args) {
-		MidiManager2 mm = new MidiManager2(System.getProperty("user.dir")+"/database_verse.txt");
+		
+		MidiManager2 mm = new MidiManager2(System.getProperty("user.dir")+"/Databases_parts/verse.txt");
 		List<? extends List<Frame>> data = mm.getData();
 		int cMax = mm.getCMax();
 		ChordMarkov m = new ChordMarkov(2, cMax, data);
@@ -55,9 +56,10 @@ public class ChordMarkov {
 		System.out.println("chordMarkov:");
 
 		List<Integer> chords = m.generateChordProg(4);
+		
 		List<String>  realChords = new ArrayList<String>();
 		for(int i = 0; i<chords.size();i++){
-			realChords.add(mm.getConvertTableChords().get(chords.get(i)-1));
+			realChords.add(mm.getConvertTableChords().get(chords.get(i)));
 		} 
 		System.out.println(realChords);
 	}

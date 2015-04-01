@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -41,7 +42,7 @@ public class MidiAnalyzer {
 
 	public static void main(String args[]) throws Exception{
 		File[] files =new File (System.getProperty("user.dir")+"/database/Chorus/").listFiles(); 
-
+		Arrays.sort(files);
 		int count = 0;
 		int equalCount = 0;
 		for(File file : files){
@@ -94,7 +95,7 @@ public class MidiAnalyzer {
 				//}//end for
 
 
-				File filen = new File(System.getProperty("user.dir")+"/database_chorus.txt");
+				File filen = new File(System.getProperty("user.dir")+"/PersDatabas/database_chorus.txt");
 
 
 				//File filen = new File("database_intro.txt");
@@ -107,7 +108,7 @@ public class MidiAnalyzer {
 
 
 
-				PrintWriter outFile = new PrintWriter(new FileWriter(System.getProperty("user.dir")+"/database_chorus.txt", true));
+				PrintWriter outFile = new PrintWriter(new FileWriter(System.getProperty("user.dir")+"/PersDatabas/database_chorus.txt", true));
 
 
 				//PrintWriter outFile = new PrintWriter(new FileWriter("database_intro.txt", true));
@@ -190,14 +191,17 @@ public class MidiAnalyzer {
 		//long spectick=1;
 		ArrayList<Integer> note= new ArrayList<Integer>(0);
 		ArrayList<Float> notelength= new ArrayList<Float>(0);
+		
 		//ArrayList halfbars= new ArrayList(0);
 		//int counter1=0;
 		//int counter2=0;
 		//boolean foundNote = false;
 		boolean startOfSong = true;
 
-
-
+		/*
+		 * Integers needed for octavating songs
+		 */
+	
 		//float halfbar = 0;
 		//float notel = 0;
 
@@ -235,10 +239,10 @@ public class MidiAnalyzer {
 					note.add(shortMessage.getData1());
 					//dataarray[counter1][0]=shortMessage.getData1();
 					tick=event.getTick();
-					//System.out.println("Detta Šr en note on");
+					//System.out.println("Detta ï¿½r en note on");
 					//System.out.println(tick);
 				}else if(shortMessage.getCommand() == ShortMessage.NOTE_OFF){
-					//System.out.println("Detta Šr en note off");
+					//System.out.println("Detta ï¿½r en note off");
 					notelength.add(convertTicksToNoteLength(tick, event.getTick(), res));
 					//dataarray[counter1][1]=convertTicksToNoteLength(tick, event.getTick(), res);
 					//counter1 +=1;  
@@ -261,6 +265,48 @@ public class MidiAnalyzer {
 			}//End if
 
 		}//End for
+		
+		//Method to octavate scores
+		int lowerLimit = 300;
+		int topLimit = 300;
+		boolean optimal=true;
+		while(optimal){
+			int tempLow=0;
+			int tempTop=0;
+			
+			//Find how many are over and under
+			for(int i=0;i<note.size();i++){
+				if(note.get(i)<60 && note.get(i)!=0){
+					tempLow++;
+				}
+				else if(note.get(i)>84 && note.get(i)!=0){
+					tempTop++;
+				}
+			}
+			//Octave
+			if(tempTop==0 && tempLow==0){
+				optimal=false;
+			}
+			if(tempTop+tempLow>=lowerLimit+topLimit){
+				note=octavate((int)-Math.signum(lowerLimit-topLimit), note);
+				optimal=false;
+			}
+			else if(tempTop>=1 || tempLow>=1){
+			note=octavate((int)Math.signum(tempLow-tempTop), note);
+			}
+
+//			else if(lowerLimit>tempTop){
+//				note=octavate(1, note);
+//			}else if(topLimit>tempLow){
+//				note=octavate(-1, note);
+//			}
+			lowerLimit=new Integer(tempLow);
+			topLimit=new Integer(tempTop);
+		}//end While
+		if(note.contains(48)){
+			System.out.println("FEL FÃ–R FAAAAAAAAAN!");
+		}
+		//TODO: GÃ¶r en massa roliga saker!!!
 		
 		ArrayList<FloatNote> melody = new ArrayList<FloatNote>();
 				List<ArrayList<FloatNote>> melodyPack = new ArrayList<ArrayList<FloatNote>>();
@@ -380,7 +426,18 @@ public class MidiAnalyzer {
 		return melodyPack;
 
 	}// End MelodyAnalyzer
-
+	
+	
+	//Octavte songs
+	public static ArrayList<Integer> octavate(int oct,ArrayList<Integer> notes){
+		for(int i=0;i<notes.size();i++){
+			if(notes.get(i)!=0){
+				notes.set(i, notes.get(i)+oct*12);
+			}
+		}
+		return notes;
+	}
+	
 	public static ArrayList<Chord> findChords(Track track, float res){
 
 		ArrayList<Chord> chordList = createChordList(track, res);

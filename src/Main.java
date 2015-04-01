@@ -11,7 +11,7 @@ public class Main {
 	}
 	public static void runNMarkov() {
 
-		MidiManager mm = new MidiManager(System.getProperty("user.dir")+"/databas.txt");
+		MidiManager mm = new MidiManager(System.getProperty("user.dir")+"/PersDatabas/database_chorus.txt");
 		List<? extends List<Note>> l = mm.getData();
 		pMax = mm.getPMax();
 		dMax = mm.getDMax();
@@ -26,7 +26,7 @@ public class Main {
 		}
 	}
 	public static void runTmn() {
-		MidiManager2 mm = new MidiManager2(System.getProperty("user.dir")+"/Databases_parts/verse.txt");
+		MidiManager2 mm = new MidiManager2(System.getProperty("user.dir")+"/databases_parts/chorus.txt");
 		List<? extends List<Frame>> l = mm.getData();
 		pMax = mm.getPMax();
 		dMax = mm.getDMax();
