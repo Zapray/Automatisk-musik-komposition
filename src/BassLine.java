@@ -32,8 +32,8 @@ public class BassLine {
 	public BassLine(ArrayList<String> listOfChords) throws Exception{
 		
 		createListOfTonics(listOfChords);
-		//createEightNoteBaseLine();
-		createQuarterNoteBassLine();
+		createEightNoteBaseLine();
+		//createQuarterNoteBassLine();
 		//createHalfNoteBassLine();
 		//createQuarterEightNoteBassLine();
 		//createBerlinNightBassLine();
