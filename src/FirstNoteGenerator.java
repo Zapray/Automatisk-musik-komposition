@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -15,11 +16,30 @@ public class FirstNoteGenerator extends MelodyNotesGenerator{
 		double roll = rand.nextDouble();
 		int i = 0;
 		double accum = 0;
-		while(accum <= roll) {
+		
+		for(; i < notes.length; i++) {
 			accum+=notes[i];
-			i++;
+			if(accum >= roll) {
+				break;
+			}
 		}
+		
+		
+//		while(accum <= roll) {
+//			accum+=notes[i];
+//			i++;
+//		}
 		return getNote(i);
+				
+//		for(; i < transitionMatrix.numCols()-1; i++) {
+//			accum+=transitionMatrix.get(getRowPos(prevs), i);
+//			if(accum >= roll) {
+//				break;
+//			}
+//		}
+//		
+//		return getNote(i);
+		
 
 	}
 
@@ -46,4 +66,26 @@ public class FirstNoteGenerator extends MelodyNotesGenerator{
 		}
 		return null;
 	}
+	public static void main(String[] args) {
+		FirstNoteGenerator n = new FirstNoteGenerator(3, 1);
+		ArrayList<ArrayList<Note>> data = new ArrayList<ArrayList<Note>>();
+		ArrayList<Note> list = new ArrayList<Note>();
+		list.add(new Note(1,2));
+		list.add(new Note(1,3));
+		list.add(new Note(1,3));
+		list.add(new Note(1,2));
+		list.add(new Note(1,2));
+		data.add(list);
+		
+		ArrayList<Note> list2 = new ArrayList<Note>();
+		list2.add(new Note(1,2));
+		list2.add(new Note(1,3));
+		list2.add(new Note(1,3));
+		list2.add(new Note(1,2));
+		list2.add(new Note(1,2));
+		data.add(list);
+		
+		n.train(data);
+		System.out.println(n.generateNote(null, new Random()));
+		}
 }
