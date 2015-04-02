@@ -359,16 +359,19 @@ public class StructureAnalyzer {
 					}
 					
 				}
+				if(length1 == length2){
+					yes++;
+				}else{
+					no++;
+				}
+				i--;
 			}
-			if(length1 == length2){
-				yes++;
-			}else{
-				no++;
-			}
-			i--;
-
+			pastPitch1=vector1[i];
+			pastPitch2=vector2[i];
 		}
-		if((float)yes/(yes+no)>0.5){
+		float ratio = (float) yes/(yes+no);
+		System.out.println(ratio);
+		if(ratio>0.5){
 			return true;
 		}else{
 			return false;
