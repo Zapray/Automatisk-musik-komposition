@@ -37,7 +37,9 @@ public class StructureAnalyzer {
 
 			//System.out.println(similarNotes(p1, p2));
 			//System.out.println(similarDuration(p1, p2));
+
 			analyzeMotifs(in);
+
 
 		}catch (IOException e) {
 			e.printStackTrace();
@@ -458,15 +460,14 @@ public class StructureAnalyzer {
 				p2[p2.length - 1 - i] = tmp;
 			}
 		}else{ // MOTIV 5
-			int smaller = 12;
-			double [] tmp2 = {52.0, 52.0, 52.0,	52.0, 52.0,	54.0, 54.0,	54.0, 54.0, 54.0, 54.0, 54.0, 54.0, 54.0, 54.0, 54.0, 54.0, 65.0, 65.0, 65.0, 65.0, 65.0, 65.0, 65.0, 65.0, 69.0, 69.0, 69.0, 69.0, 69.0, 69.0, 69.0, 69.0, 72.0, 72.0, 72.0, 72.0, 72.0, 72.0, 74.0, 74.0, 74.0, 74.0, 74.0, 74.0, 76.0, 76.0, 76.0, 76.0, 76.0, 76.0, 76.0, 76.0, 76.0, 76.0, 76.0, 78.0, 78.0, 78.0, 78.0, 78.0, 78.0, 78.0, 78.0};
-			float[] tmp3 = new float[tmp2.length-smaller];
-			for (int i = 0 ; i < tmp3.length; i++)
+			double [] tiny = {52.0, 52.0, 52.0,	52.0, 52.0,	52.0, 54.0, 54.0, 54.0, 54.0, 54.0, 54.0, 65.0, 65.0, 65.0, 65.0, 65.0, 65.0, 69.0, 69.0, 69.0, 69.0, 69.0, 69.0, 72.0, 72.0, 72.0, 72.0, 72.0, 72.0, 74.0, 74.0, 74.0, 74.0, 74.0, 74.0, 76.0, 76.0, 76.0, 76.0, 76.0, 76.0, 78.0, 78.0, 78.0, 78.0, 78.0, 78.0};
+			float[] tmp2 = new float[tiny.length];
+			for (int i = 0 ; i < tmp2.length; i++)
 			{
-				tmp3[i] = (float) tmp2[i];
+				tmp2[i] = (float) tiny[i];
 			}
-			p2 = tmp3;
-			//scaledDuration(p2, p1);
+			p2 = tmp2;
+			scaledDuration(p2, p1);
 		}
 
 
