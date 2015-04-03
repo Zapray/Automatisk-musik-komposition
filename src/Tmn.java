@@ -21,6 +21,7 @@ public class Tmn extends MelodyFrameGenerator{
 	private NMarkov chordsMarkov;
 	private static final int chordsOrder = 3;
 	private static final int MELODYORDER = 2;
+	private static List<? extends List<Frame>> data;
 	/**
 	 * 
 	 * @param pMax the maximum allowed number of pitches
@@ -38,6 +39,7 @@ public class Tmn extends MelodyFrameGenerator{
 
 	@Override
 	public void train(List<? extends List<Frame>> data) {
+		this.data = data;
 		chordsMarkov.train(getChordData(data));
 		Frame prevFrame;
 		
@@ -83,7 +85,7 @@ public class Tmn extends MelodyFrameGenerator{
 		return chordData;
 	}
 
-	public Frame generateFrame(Frame prev, List<? extends List<Frame>> data, Random rand) {
+	public Frame generateFrame(Frame prev, Random rand) {
 		ArrayList<Note> prevs = new ArrayList<Note>();
 		prevs.add(new Note(1, prev.getChord()));
 		int chord = chordsMarkov.generateNote(prevs, rand).getPitch();
@@ -114,9 +116,9 @@ public class Tmn extends MelodyFrameGenerator{
 		}	
 		return notes.get(0).getPitch()+sum1+sum2-1;
 	}
-	public int getFirstPitch(List<List<Note>> data, Random rand) {
+	public int getFirstPitch(List<List<Note>> chordSpecificData, Random rand) {
 		FirstNoteGenerator fng = new FirstNoteGenerator(dMax, pMax);
-		fng.train(data);
+		fng.train(chordSpecificData);
 		return fng.generateNote(null, rand).getPitch();
 	}
 	
@@ -136,7 +138,7 @@ public class Tmn extends MelodyFrameGenerator{
 	}
 
 	@Override
-	public List<Frame> generateSong(int frames, List<? extends List<Frame>> data) {
+	public List<Frame> generateSong(int frames) {
 		
 		List<Frame> song = new ArrayList<Frame>();
 		Random rand = new Random();
@@ -151,7 +153,7 @@ public class Tmn extends MelodyFrameGenerator{
 		Frame prevFrame = new Frame(firstNoteList, prevChord);
 		
 		for(int i = 0; i < frames; i++) {
-			Frame newFrame = generateFrame(prevFrame, data, rand);
+			Frame newFrame = generateFrame(prevFrame, rand);
 			prevFrame = newFrame;
 			song.add(newFrame);
 		}
