@@ -4,74 +4,50 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.*;
 import java.lang.*;
 
 
 public class StructureAnalyzer {
 
-	private static ArrayList<Float> pitchList = new ArrayList<Float>();
-	private static ArrayList<Float> durationList = new ArrayList<Float>();
+	private ArrayList<ArrayList<ArrayList<Float>>> data = new ArrayList<ArrayList<ArrayList<Float>>>();
+	private ArrayList<float[]> oneBars = new ArrayList<float[]>();
+	private ArrayList<Float> pitchList = new ArrayList<Float>();
+	private ArrayList<Float> durationList = new ArrayList<Float>();
+	private int countSection = 0;
+	private String textFile = "/Databases_parts/chorus.txt";
+	private String outputTextFile = "/Crazy.txt";
 
 	public static void main(String[] args) throws Exception{
-		try{
 
-			BufferedReader in =new BufferedReader(new FileReader(System.getProperty("user.dir")+"/Databases_parts/chorus.txt"));
-			//createUnconvertedArrays(in);
-
-
-			//ArrayList<ArrayList<ArrayList<Float>>> data = parseTextFile(in);
-			//ArrayList<ArrayList<Float>> section1 = data.get(0);
-			//ArrayList<ArrayList<Float>> section2 = data.get(1);
-
-			//testMethods(1);
-			//testMethods(2);
-			//testMethods(3);
-			//testMethods(4);
-			//testMethods(5);
-
-			//float[] p1 =createPitchVector((!section1.get(0).isEmpty() ? section1:section2));
-			//float[] p2 =createPitchVector(!section1.get(0).isEmpty() ? section2:data.get(2));
+		StructureAnalyzer sa = new StructureAnalyzer();
+		sa.parseData();
 
 
-			//System.out.println(similarNotes(p1, p2));
-			//System.out.println(similarDuration(p1, p2));
+		//			sa.testMethods(1);
+		//			sa.testMethods(2);
+		//			sa.testMethods(3);
+		//			sa.testMethods(4);
+		//			sa.testMethods(5);
 
-			analyzeMotifs(in);
-
-
-		}catch (IOException e) {
-			e.printStackTrace();
-		}
+		//Temporary solution for bug (empty first section in some songs)
+		//float[] p1 =createPitchVector((!section1.get(0).isEmpty() ? section1:section2));
+		//float[] p2 =createPitchVector(!section1.get(0).isEmpty() ? section2:data.get(2));
 	}
-	private static void analyzeMotifs(BufferedReader in) throws Exception{
+
+	private void parseData() throws Exception{
 		Float pitch;
 		Float duration;
 		int countBar = 0;
-		int countSection = 0;
 		//int song = 8;
-		float[] p1 =new float[16];
-		float[] p2 =new float[16];
-		float[] p3 =new float[16];
-		float[] p4 =new float[16];
-		
 		int barsInSection = 8;
-		ArrayList<ArrayList<ArrayList<Float>>> data = new ArrayList<ArrayList<ArrayList<Float>>>();
 		ArrayList<ArrayList<Float>> section = new ArrayList<ArrayList<Float>>();
 		//ArrayList<float[]> vectors = new ArrayList<float[]>(); 
-		ArrayList<float[]> oneBars = new ArrayList<float[]>();
-		File filen = new File(System.getProperty("user.dir")+"/Crazy.txt");
+		BufferedReader in =new BufferedReader(new FileReader(System.getProperty("user.dir")+ textFile));
 
-		if(!filen.exists()) {
-			filen.createNewFile();
-		}
-		PrintWriter outFile = new PrintWriter(new FileWriter(System.getProperty("user.dir")+"/Crazy.txt", true));
 		try{
-			
 			String line=in.readLine();
 			while(line !=null){	
-
 				if(line.charAt(0) == '?'){
 					countBar++;
 					System.out.println("Bar:"+countBar);
@@ -86,41 +62,14 @@ public class StructureAnalyzer {
 						countSection++;
 						System.out.println("Section:"+countSection);
 					}
-					for(int i=0; i<countSection; i++){
-						for(int j=0; j<16;j++){
-							p1[j]=createPitchVector(data.get(i))[j];
-							p2[j]=createPitchVector(data.get(i))[j+16];
-							p3[j]=createPitchVector(data.get(i))[j+32];
-							p4[j]=createPitchVector(data.get(i))[j+48];
-						}
-						oneBars.add(p1);
-						oneBars.add(p2);
-						oneBars.add(p3);
-						oneBars.add(p4);
-						p1 =new float[16];
-						p2 =new float[16];
-						p3 =new float[16];
-						p4 =new float[16];
-					}
-					for(int i=0; i<countSection*4; i++){
-						for(int j=i+1; j<countSection*4; j++){
-							if(similarNotes(oneBars.get(i), oneBars.get(j))){
-								
-								outFile.print("Rep:"+i+" "+j+',');
-							}else if(similarRelativePitch(oneBars.get(i), oneBars.get(j))){
-								outFile.print("Pit:"+i+" "+j+',');
-							}else if(similarDuration(oneBars.get(i), oneBars.get(j))){
-								outFile.print("Dur:"+i+" "+j+',');
-							}
-							
-						}
-					}
-					outFile.println();
-					outFile.println('-');
+
+					analyzeMotifs();
+
 					countBar=0;
 					countSection=0;
 					oneBars=new ArrayList<float[]>();
 					data=new ArrayList<ArrayList<ArrayList<Float>>>();
+
 				}else{
 					for(int i=0; i<line.length(); i++){
 
@@ -129,7 +78,7 @@ public class StructureAnalyzer {
 							duration =Float.parseFloat(line.substring(i+1,line.length()));
 							pitchList.add(pitch);
 							durationList.add(duration);
-							
+
 						}	
 					}
 				}
@@ -145,7 +94,7 @@ public class StructureAnalyzer {
 					System.out.println("Section:"+countSection);
 				}
 				line=in.readLine();
-				
+
 			}
 			System.out.print("Done");
 
@@ -155,110 +104,65 @@ public class StructureAnalyzer {
 			try {
 				if (in != null){
 					in.close();
-					
 				}
-				if(outFile != null){
-					outFile.close();
-				}
+
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			}
 		}
-		
-		
 	}
-	private static ArrayList<ArrayList<ArrayList<Float>>> parseTextFile(BufferedReader  in){
-		Float pitch;
-		Float duration;
-		int countBar = 0;
-		int countSong = 0;
-		int song = 49;
-		int barsInSection = 8;
 
-		ArrayList<ArrayList<ArrayList<Float>>> data = new ArrayList();
-		ArrayList<ArrayList<Float>> section = new ArrayList();
-
+	private void analyzeMotifs() throws Exception{
+		float[] p1 =new float[16];
+		float[] p2 =new float[16];
+		float[] p3 =new float[16];
+		float[] p4 =new float[16];
+		PrintWriter outFile = new PrintWriter(new FileWriter(System.getProperty("user.dir")+ outputTextFile, true));
+		File filen = new File(System.getProperty("user.dir")+"/Crazy.txt");
+		if(!filen.exists()) {
+			filen.createNewFile();
+		}
 		try{
-			String line=in.readLine();
-			while(line !=null){	
+			for(int i=0; i<countSection; i++){
+				for(int j=0; j<16;j++){
+					p1[j]=createPitchVector(data.get(i))[j];
+					p2[j]=createPitchVector(data.get(i))[j+16];
+					p3[j]=createPitchVector(data.get(i))[j+32];
+					p4[j]=createPitchVector(data.get(i))[j+48];
+				}
+				oneBars.add(p1);
+				oneBars.add(p2);
+				oneBars.add(p3);
+				oneBars.add(p4);
+				p1 =new float[16];
+				p2 =new float[16];
+				p3 =new float[16];
+				p4 =new float[16];
+			}
+			for(int i=0; i<countSection*4; i++){
+				for(int j=i+1; j<countSection*4; j++){
+					if(similarNotes(oneBars.get(i), oneBars.get(j))){
 
-				if(line.charAt(0) == '?'){
-					countBar++;
-				}else if(line.charAt(0) == '-'){
-					countSong++;
-
-					countBar++;
-					if(countBar == barsInSection+1){
-						countBar = 0;
-						section.add(pitchList);
-						section.add(durationList);
-						data.add(section);
-						pitchList = new ArrayList();
-						durationList = new ArrayList();
-						section = new ArrayList();
-					}
-					//System.out.println(countSong + ": " + countBar);
-					countBar = 0;
-					if(countSong == song){
-						break;
-					}
-				}else if(countSong == song-1){
-
-					if(countBar == barsInSection+1){
-						countBar = 1;
-						section.add(pitchList);
-						section.add(durationList);
-						data.add(section);
-						pitchList = new ArrayList();
-						durationList = new ArrayList();
-						section = new ArrayList();
-					}
-
-					for(int i=0; i<line.length(); i++){
-
-						if(line.charAt(i)==','){
-							pitch= Float.parseFloat(line.substring(0,i));
-							duration =Float.parseFloat(line.substring(i+1,line.length()));
-							pitchList.add(pitch);
-							durationList.add(duration);
-
-						}	
+						outFile.print("Rep:"+i+" "+j+',');
+					}else if(similarRelativePitch(oneBars.get(i), oneBars.get(j))){
+						outFile.print("Pit:"+i+" "+j+',');
+					}else if(similarDuration(oneBars.get(i), oneBars.get(j))){
+						outFile.print("Dur:"+i+" "+j+',');
 					}
 
 				}
-
-				line=in.readLine();
 			}
-
-
-		}catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (in != null)in.close();
-			} catch (IOException ex) {
-				ex.printStackTrace();
+			outFile.println();
+			outFile.println('-');
+		} finally{
+			if(outFile != null){
+				outFile.close();
 			}
 		}
 
-
-		return data;
-
-
 	}
 
-	//Unnecessary
-	private static float[] createTimeVector(int L){
-		float [] t = new float[L];
-
-		for(int i = 0; i < t.length; i++){
-			t[i+1] = (float) (t[i] + 1.0/16);
-		}
-		return t;
-	}
-
-
-	private static float[] createPitchVector(ArrayList<ArrayList<Float>> phrase){
+	private float[] createPitchVector(ArrayList<ArrayList<Float>> phrase){
 
 		ArrayList<Float> pitchList = phrase.get(0);
 		ArrayList<Float> durationList = phrase.get(1);
@@ -286,31 +190,7 @@ public class StructureAnalyzer {
 		return p;
 	}
 
-	private static boolean compareSections(ArrayList<Float> sectionA_pitch, ArrayList<Float> sectionA_duration, ArrayList<Float> sectionB_pitch, ArrayList<Float> sectionB_duration){
-		int yes = 0;
-		int no = 0;
-		if(sectionA_pitch.equals(sectionB_pitch) && sectionA_duration.equals(sectionB_duration)){
-			return true;
-		}else{
-			for(int i = 0; i < sectionA_pitch.size(); i++){
-
-				if(sectionA_pitch.get(i) == sectionB_pitch.get(i)){
-					yes++;
-				}else{
-					no++;
-				}
-				if(sectionA_duration.get(i) == sectionB_duration.get(i)){
-					yes++;
-				}else{
-					no++;
-				}
-			}
-		}
-		if((float)yes/(no + yes) > 0.5){
-			return true;
-		}else return false;	
-	}
-	private static boolean similarNotes(float[] vector1, float[] vector2){ //Compares two vectors if they have a percent of similarity in notes above 50%
+	private boolean similarNotes(float[] vector1, float[] vector2){ //Compares two vectors if they have a percent of similarity in notes above 50%
 		int yes=0;
 		int no=0;
 		for(int i=0; i<vector1.length; i++){
@@ -331,7 +211,7 @@ public class StructureAnalyzer {
 		}
 	}
 
-	private static boolean similarDuration(float[] vector1, float[] vector2){ //Compares two vectors if they have a percent of similarity in duration above 50%
+	private boolean similarDuration(float[] vector1, float[] vector2){ //Compares two vectors if they have a percent of similarity in duration above 50%
 		int yes=0;
 		int no=0;
 		int length1=0;
@@ -359,7 +239,7 @@ public class StructureAnalyzer {
 					if(i==vector1.length){
 						break;
 					}
-					
+
 				}
 				if(length1 == length2){
 					yes++;
@@ -379,11 +259,8 @@ public class StructureAnalyzer {
 			return false;
 		}
 	}
-	
 
-
-
-	private static boolean similarRelativePitch(float[] vector1, float[] vector2){ // Compares two vectors if they have the same relative pitch
+	private boolean similarRelativePitch(float[] vector1, float[] vector2){ // Compares two vectors if they have the same relative pitch
 		int yes=0;
 		int no=0;
 		for(int i=0; i<vector1.length-1; i++){
@@ -402,7 +279,7 @@ public class StructureAnalyzer {
 		}
 	}	
 
-	private static boolean scaledDuration(float[] tiny, float[] bigger){ //Compares one vector with a longer vector if they have the same pitches but a different scale of duration
+	private boolean scaledDuration(float[] tiny, float[] bigger){ //Compares one vector with a longer vector if they have the same pitches but a different scale of duration
 		int yes=0;
 		int no=0;
 		int count1=0;
@@ -410,7 +287,11 @@ public class StructureAnalyzer {
 		float[] tinyBigger = new float[bigger.length];
 		for(int i=0; i<tiny.length; i++){
 			count1++;
-			if(tiny[i]!=tiny[i+1]){
+			if(i == tiny.length-1){ //Last note
+				for(int j=count2; j<count2+(count1*2);j++){
+					tinyBigger[j] = tiny[i];
+				}
+			}else if(tiny[i]!=tiny[i+1]){
 				for(int j=count2; j<count2+(count1*2);j++){
 					tinyBigger[j] = tiny[i];
 				}
@@ -418,11 +299,12 @@ public class StructureAnalyzer {
 				count1=0;
 			}
 
+
 		} 
 		return similarNotes(tinyBigger, bigger);
 	}
 
-	private static void testMethods(int motive){
+	private void testMethods(int motive){
 
 		double [] tmp1 = {52.0, 52.0, 52.0, 52.0, 52.0, 52.0, 52.0, 52.0, 54.0, 54.0, 54.0, 54.0, 54.0, 54.0, 54.0, 54.0, 65.0, 65.0, 65.0, 65.0, 65.0, 65.0, 65.0, 65.0, 69.0, 69.0, 69.0, 69.0, 69.0, 69.0, 69.0, 69.0, 72.0, 72.0, 72.0, 72.0, 72.0, 72.0, 72.0, 72.0, 74.0, 74.0, 74.0, 74.0, 74.0, 74.0, 74.0, 74.0, 76.0, 76.0, 76.0, 76.0, 76.0, 76.0, 76.0, 76.0, 78.0, 78.0, 78.0, 78.0, 78.0, 78.0, 78.0, 78.0};
 		float[] p1 = new float[tmp1.length];
@@ -436,11 +318,15 @@ public class StructureAnalyzer {
 		//MOTIVES
 		if(motive == 1){	// MOTIV 1
 			p2 = p1.clone();
+			System.out.println("similarNotes: ");
 			similarNotes(p1, p2);
+			System.out.println("similarDuration: ");
+			similarDuration(p1, p2);
 		}else if(motive == 2){ // MOTIV 2
 			for(int i = 0; i < p1.length; i++){
 				p2[i] = p1[i] + 8;
 			}
+			System.out.println("similarRelativePitch: ");
 			similarRelativePitch(p1, p2);
 		}else if(motive == 3){ // MOTIV 3
 
@@ -463,13 +349,14 @@ public class StructureAnalyzer {
 				p2[p2.length - 1 - i] = tmp;
 			}
 		}else{ // MOTIV 5
-			double [] tiny = {52.0, 52.0, 52.0,	52.0, 52.0,	52.0, 54.0, 54.0, 54.0, 54.0, 54.0, 54.0, 65.0, 65.0, 65.0, 65.0, 65.0, 65.0, 69.0, 69.0, 69.0, 69.0, 69.0, 69.0, 72.0, 72.0, 72.0, 72.0, 72.0, 72.0, 74.0, 74.0, 74.0, 74.0, 74.0, 74.0, 76.0, 76.0, 76.0, 76.0, 76.0, 76.0, 78.0, 78.0, 78.0, 78.0, 78.0, 78.0};
+			double [] tiny = {52.0, 52.0, 52.0,	52.0, 54.0, 54.0, 54.0, 54.0, 65.0, 65.0, 65.0, 65.0, 69.0, 69.0, 69.0, 69.0, 72.0, 72.0, 72.0, 72.0, 74.0, 74.0, 74.0, 74.0, 76.0, 76.0, 76.0, 76.0, 78.0, 78.0, 78.0, 78.0};
 			float[] tmp2 = new float[tiny.length];
 			for (int i = 0 ; i < tmp2.length; i++)
 			{
 				tmp2[i] = (float) tiny[i];
 			}
 			p2 = tmp2;
+			System.out.println("scaledDuration: ");
 			scaledDuration(p2, p1);
 		}
 
