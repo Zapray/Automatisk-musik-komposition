@@ -334,7 +334,7 @@ public class MidiManager2 {
          Track track2 = sequence.createTrack();
            
          
-         tick = convertNoteLengthToTicks((float)0.5, resolution);      			//varible for converting to ticks
+         //tick = convertNoteLengthToTicks((float)0.5, resolution);      			//varible for converting to ticks
     									//varible for keeping track of what tick the song is on
          MidiEvent NoteOn1;	
          MidiEvent NoteOn2;	
@@ -344,14 +344,22 @@ public class MidiManager2 {
          MidiEvent NoteOff3;
          tickMeter=0;
          
-         ArrayList<String> chordsForBassLine = new ArrayList<String>();; 
-         
-         for(int  i=0; i<newFrameList.size();i++ ){
-        	 int nbrchord = newFrameList.get(i).getChord();
+         ArrayList<String> chordsForBassLine = new ArrayList<String>(); 
+         ArrayList<Chord> chordsForPianoRythm = new ArrayList<Chord>();
+         for(int p = 0; p<newFrameList.size();p++){
+        	 int nbrchord = newFrameList.get(p).getChord();
         	 String chord = convertTableChords.get(nbrchord);
+        	 Chord ackord = new Chord(chord,(float)0.5);
+        	 chordsForPianoRythm.add(ackord);
         	 chordsForBassLine.add(chord);
+         }
+         
+         PianoRythm pianoRythm = new PianoRythm(chordsForPianoRythm,"chorus");
+         chordsForPianoRythm = pianoRythm.getFixedRythm();
+         
+         for(int  i=0; i<chordsForPianoRythm.size();i++ ){
         	 
-        	 Chord ackord = new Chord(chord);
+        	 Chord ackord = chordsForPianoRythm.get(i);
         	 //System.out.println(ackord.getNote1() +  "  " + ackord.getNote2() + "  "+ ackord.getNote3());
         	 
         	 
@@ -372,7 +380,7 @@ public class MidiManager2 {
       		ShortMessage	shortMessage5 = new ShortMessage();
       		ShortMessage	shortMessage6 = new ShortMessage();
       		
-      		tickMeter=tickMeter + tick;	
+      		tickMeter=tickMeter + convertNoteLengthToTicks(ackord.getDuration(), resolution);	
       		shortMessage4.setMessage(ShortMessage.NOTE_OFF,0,ackord.getNote1(), 0 );
       		shortMessage5.setMessage(ShortMessage.NOTE_OFF,0,ackord.getNote2(), 0 );
       		shortMessage6.setMessage(ShortMessage.NOTE_OFF,0,ackord.getNote3(), 0 );

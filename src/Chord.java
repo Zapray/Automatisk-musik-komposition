@@ -109,6 +109,18 @@ public class Chord {
 		
 		this.label = label;
 		this.duration = duration;
+		createChordTable();
+		for(String key : keys){
+			if(key.equals(label)){
+				List<String> allnotes = chordTable.get(key);
+				note1 = letter2note(allnotes.get(0));
+				note2 = letter2note(allnotes.get(1));
+				note3 = letter2note(allnotes.get(2));
+				
+				
+			}
+			
+		}
 		
 	}
 	public float getDuration(){
@@ -136,6 +148,10 @@ public class Chord {
 		return note3;
 		
 	}
+	public void setDuration(float durr){
+		this.duration=durr;
+	}
+	
 	
 	public int letter2note(String note){
 		for(int i = 0 ; i < notes.length;i++ ){
