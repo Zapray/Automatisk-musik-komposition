@@ -24,7 +24,7 @@ public class BassAnalyzer{
 	
 	public static void main(String[] args)throws Exception{
 		
-	InputStream is = new BufferedInputStream(new FileInputStream(new File("/Users/Albin/Desktop/since-u-been-gone.mid")));
+	InputStream is = new BufferedInputStream(new FileInputStream(new File("/Users/Albin/Documents/Chalmers/Kandidatarbete/Midifiler/Backstreet Boys - Larger Than Life.mid")));
 	//InputStream is = new BufferedInputStream(new FileInputStream(new File(System.getProperty("user.dir")+"/songs/TestSong.mid")));
 	Sequencer sequencer = MidiSystem.getSequencer();//Creates a sequencer
 	sequencer.open();
@@ -91,8 +91,12 @@ public class BassAnalyzer{
 					}else if(shortMessage.getCommand() == ShortMessage.NOTE_OFF){
 						notelength.add(convertTicksToNoteLength(tick, event.getTick(), res));
 						counter1 +=1;  
-
-						if(event.getTick()!=event2.getTick()&& nEvent!=basstrack.size()-2){
+						
+						if(event.getTick()!=event2.getTick() && convertTicksToNoteLength(event.getTick(), event2.getTick(), res) > convertTicksToNoteLength(tick, event.getTick(), res)&& nEvent!=basstrack.size()-2 ){
+							notelength.remove(notelength.size()-1);
+							notelength.add(convertTicksToNoteLength(tick,event2.getTick(),res));
+							
+						}else if(event.getTick()!=event2.getTick()&& nEvent!=basstrack.size()-2){
 							notelength.add(convertTicksToNoteLength(event.getTick(), event2.getTick(), res));
 							note.add(0);
 
@@ -138,7 +142,11 @@ public class BassAnalyzer{
 				}else if(shortMessage.getCommand() == ShortMessage.NOTE_ON && shortMessage.getData2()==0){
 					notelength.add(convertTicksToNoteLength(tick, event.getTick(), res));
 					counter1 +=1;  
-					if(event.getTick()!=event2.getTick()&& nEvent!=basstrack.size()-2){
+					
+					if(event.getTick()!=event2.getTick() && convertTicksToNoteLength(event.getTick(), event2.getTick(), res) > convertTicksToNoteLength(tick, event.getTick(), res)&& nEvent!=basstrack.size()-2 ){
+						notelength.remove(notelength.size()-1);
+						notelength.add(convertTicksToNoteLength(tick,event2.getTick(),res));
+					}else if(event.getTick()!=event2.getTick()&& nEvent!=basstrack.size()-2){
 						notelength.add(convertTicksToNoteLength(event.getTick(), event2.getTick(), res));
 						note.add(0);
 
@@ -256,7 +264,7 @@ public class BassAnalyzer{
 	public static float convertTicksToNoteLength(long tick1, long tick2, float res){
 		res=res*4;
 		
-		System.out.println("TickNoteOn: " + tick1 + "  "+ "TickNoteOff: " + tick2 + "  " +"Duration:  " + (tick2-tick1)/res);
+		//System.out.println("TickNoteOn: " + tick1 + "  "+ "TickNoteOff: " + tick2 + "  " +"Duration:  " + (tick2-tick1)/res);
 		return (tick2-tick1)/res;
 
 	}//end convertTicksToNoteLength
