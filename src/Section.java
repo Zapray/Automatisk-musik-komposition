@@ -1,3 +1,5 @@
+import java.util.List;
+
 
 /////////////////////////////////////////////////////////////////////
 // Denna klass representerar en section 
@@ -18,6 +20,8 @@ public class Section {
 	int sectionID, identicalSectionID;
 	int [] phraseLengths; 
 	
+	private List<Motive> motives;
+	
 	/////////////////
 	// Konstruktor //
 	/////////////////
@@ -27,6 +31,25 @@ public class Section {
 		this.sectionID = sectionID;
 		this.identicalSectionID = identicalSectionID;
 		this.phraseLengths = phraseLengths;
+	}
+	
+	public Section(List<Motive> motives) //Add whatever you need to this constructor, kom ihåg att phraselengths finns i motives 'Motive.bar'.
+	{
+		this.motives = motives;
+	}
+	public List<Motive> getMotives() {
+		return motives;
+	}
+	/**
+	 * 
+	 * @return how long the Section is in bars
+	 */
+	public int getLength() {
+		int length = 0;
+		for(Motive m : motives) {
+			length+=m.bars;
+		}
+		return length;
 	}
 	
 }

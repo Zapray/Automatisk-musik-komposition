@@ -85,10 +85,10 @@ public class Tmn extends MelodyFrameGenerator{
 		return chordData;
 	}
 
-	public Frame generateFrame(Frame prev, Random rand) {
+	public Frame generateFrame(Frame prev, Random rand, int chord) {
 		ArrayList<Note> prevs = new ArrayList<Note>();
 		prevs.add(new Note(1, prev.getChord()));
-		int chord = chordsMarkov.generateNote(prevs, rand).getPitch();
+		//int chord = chordsMarkov.generateNote(prevs, rand).getPitch();
 		
 		int pitch = generatePitch(prev.getLastNote().getPitch(), chord ,rand);
 		
@@ -139,10 +139,44 @@ public class Tmn extends MelodyFrameGenerator{
 
 	@Override
 	public List<Frame> generateSong(int frames) {
+		List<Float> convTable = new ArrayList<Float>();
+		for(int i = 0; i <cMax; i++) {
+			convTable.add(0.5f); //1 or 0.5 ? O.o
+		}
+		List<Note> chordProg = chordsMarkov.generateSong(frames, convTable);
+		List<Integer> chords = new ArrayList<Integer>();
+		for(int i = 0; i < chordProg.size(); i++) {
+			chords.add(chordProg.get(i).getPitch());
+		}
+		return generateSong(chords);
+		
+		
+//		List<Frame> song = new ArrayList<Frame>();
+//		Random rand = new Random();
+//		int prevChord = chordsMarkov.generateNote(null, rand).getPitch();
+//		
+//		FirstNoteGenerator fng = new FirstNoteGenerator(pMax, dMax);
+//		fng.train(filterData(prevChord, data));
+//		Note firstNote = fng.generateNote(null, rand);
+//		
+//		ArrayList<Note> firstNoteList = new ArrayList<Note>();
+//		firstNoteList.add(firstNote);
+//		Frame prevFrame = new Frame(firstNoteList, prevChord);
+//		
+//		for(int i = 0; i < frames; i++) {
+//			Frame newFrame = generateFrame(prevFrame, rand);
+//			prevFrame = newFrame;
+//			song.add(newFrame);
+//		}
+//		return song;
+	}
+
+	@Override
+	public List<Frame> generateSong(List<Integer> chords) {
 		
 		List<Frame> song = new ArrayList<Frame>();
 		Random rand = new Random();
-		int prevChord = chordsMarkov.generateNote(null, rand).getPitch();
+		int prevChord = chords.get(0);
 		
 		FirstNoteGenerator fng = new FirstNoteGenerator(pMax, dMax);
 		fng.train(filterData(prevChord, data));
@@ -152,8 +186,8 @@ public class Tmn extends MelodyFrameGenerator{
 		firstNoteList.add(firstNote);
 		Frame prevFrame = new Frame(firstNoteList, prevChord);
 		
-		for(int i = 0; i < frames; i++) {
-			Frame newFrame = generateFrame(prevFrame, rand);
+		for(int i = 0; i < chords.size(); i++) {
+			Frame newFrame = generateFrame(prevFrame, rand, chords.get(i));
 			prevFrame = newFrame;
 			song.add(newFrame);
 		}
@@ -171,4 +205,5 @@ public class Tmn extends MelodyFrameGenerator{
 		}
 		return newData;
 	}
+
 }

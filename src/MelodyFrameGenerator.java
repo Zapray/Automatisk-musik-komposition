@@ -10,5 +10,6 @@ public abstract class MelodyFrameGenerator extends MelodyGenerator {
 	public abstract void train(List<? extends List<Frame>> data);
 	
 	public abstract List<Frame> generateSong(int length);
+	public abstract List<Frame> generateSong(List<Integer> subChords);
 
 }

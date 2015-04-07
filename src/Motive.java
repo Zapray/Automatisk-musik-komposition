@@ -11,7 +11,7 @@ public class Motive {
 		this.bars = bars;
 	}
 	
-	private Motive exampleMot() { //SICK EXAMPLE YO
-		return new Motive(MotiveVariation.NEW, 2, 3);
+	public static Motive exampleMot() { //SICK EXAMPLE YO
+		return new Motive(MotiveVariation.NEW, 1, 4);
 	}
 }
