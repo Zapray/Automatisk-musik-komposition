@@ -164,12 +164,14 @@ public class StructureAnalyzer {
 
 	private void analyzeMotifs() throws Exception{
 
-		PrintWriter outFile = new PrintWriter(new FileWriter(System.getProperty("user.dir")+ outputTextFile, true));
+		
 		File filen = new File(System.getProperty("user.dir")+"/Crazy.txt");
 		if(!filen.exists()) {
 			filen.createNewFile();
 		}
+		PrintWriter outFile = new PrintWriter(new FileWriter(System.getProperty("user.dir")+ outputTextFile, true));
 		try{
+			
 			//**********************PLOT**************************//
 			if(isPlottingOn){
 				//BUG: Durations does not add up to 4 (for one section) for some songs!! FIX!
@@ -223,14 +225,20 @@ public class StructureAnalyzer {
 					//*******************SECTIONS********************//
 					int firstSection = first+1;
 					int secondSection = second+1;
-					String hej = patternMatrix[0][0];
+					//String hej = patternMatrix[0][0];
 					compareBars(data.get(first), data.get(second), firstSection, secondSection);
-
+					
 				}
 			}
-
-
-			outFile.println();
+			for(int row = 0; row < patternMatrix.length; row++){
+				for(int col = 0; col < patternMatrix[row].length; col++){
+					outFile.print(patternMatrix[row][col]);
+					if(col<3){
+						outFile.print(',');
+					}
+				}
+				outFile.println();
+			}
 			outFile.println('-');
 		} finally{
 			if(outFile != null){
@@ -286,8 +294,8 @@ public class StructureAnalyzer {
 					
 					int firstBar = first+1;
 					int secondBar = second+1;
-					System.out.print("Sections: " + firstSection + " and "+ secondSection + "       ");
-					System.out.println("Equal bars: " + firstBar + " and " + secondBar);
+					//System.out.print("Sections: " + firstSection + " and "+ secondSection + "       ");
+					//System.out.println("Equal bars: " + firstBar + " and " + secondBar);
 
 					if(firstBar <=4 && secondBar<=4){
 						//Check to see if matrix entry is empty or not (initialize or copy value)
@@ -322,13 +330,26 @@ public class StructureAnalyzer {
 				}
 			}
 		}
+		countEquals++;
+		for(int row = 0; row < patternMatrix.length; row++){
+			for(int col = 0; col < patternMatrix[row].length; col++){
+				if(patternMatrix[row][col]==null){
+					patternMatrix[row][col]=countEquals+"0";
+					countEquals++;
+				}
+				
+			}
+		}
 		oneBars=new ArrayList<float[]>();
 	}
 
 	private String getMotive(float[] phrase1, float[] phrase2){
 
-		if(similarNotes(phrase1, phrase2)){
+		if(similarNotes(phrase1, phrase2,(float)0.9)){
 			return "1";
+		}
+		if(similarNotes(phrase1, phrase2,(float)0.6)){
+			return "2";
 		}
 //		else if(similarRelativePitch(phrase1, phrase2)){ //FUNKAR EJ
 //			return "2";
@@ -398,7 +419,7 @@ public class StructureAnalyzer {
 		return p;
 	}
 
-	private boolean similarNotes(float[] vector1, float[] vector2){ //Compares two vectors if they have a percent of similarity in notes above 50%
+	private boolean similarNotes(float[] vector1, float[] vector2, float n){ //Compares two vectors if they have a percent of similarity in notes above 50%
 		int yes=0;
 		int no=0;
 		for(int i=0; i<vector1.length; i++){
@@ -412,7 +433,7 @@ public class StructureAnalyzer {
 		float ratio = (float) yes/(yes+no);
 		//System.out.println(ratio);
 
-		if(ratio>=0.5){
+		if(ratio>=n){
 			return true;
 		}else{
 			return false;
@@ -461,7 +482,7 @@ public class StructureAnalyzer {
 		}
 		float ratio = (float) yes/(yes+no);
 		//System.out.println(ratio);
-		if(ratio>=0.5){
+		if(ratio>=0.8){
 			return true;
 		}else{
 			return false;
@@ -509,7 +530,7 @@ public class StructureAnalyzer {
 
 
 		} 
-		return similarNotes(tinyBigger, bigger);
+		return similarNotes(tinyBigger, bigger,(float)0.8);
 	}
 
 	private void testMethods(int motive){
@@ -527,7 +548,7 @@ public class StructureAnalyzer {
 		if(motive == 1){	// MOTIV 1
 			p2 = p1.clone();
 			System.out.println("similarNotes: ");
-			similarNotes(p1, p2);
+			similarNotes(p1, p2,(float)0.8);
 			System.out.println("similarDuration: ");
 			similarDuration(p1, p2);
 		}else if(motive == 2){ // MOTIV 2
