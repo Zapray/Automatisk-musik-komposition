@@ -355,6 +355,10 @@ public class MidiManager2 {
          }
          
          PianoRythm pianoRythm = new PianoRythm(chordsForPianoRythm,"chorus");
+         
+         /**
+          * Remove Pianorythm. Comment out next phrase. 
+          */  
          chordsForPianoRythm = pianoRythm.getFixedRythm();
          
          for(int  i=0; i<chordsForPianoRythm.size();i++ ){
