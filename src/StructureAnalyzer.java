@@ -56,7 +56,8 @@ public class StructureAnalyzer {
 		}
 
 		parseData();
-		printMatrix(patternMatrix);
+		
+		//printMatrix(patternMatrix);
 
 		//		testMethods(1);
 		//		testMethods(2);
@@ -108,6 +109,7 @@ public class StructureAnalyzer {
 
 					if(data.size() > 1 && isDurationFour){
 						analyzeMotifs();
+						otherTextFileThingy(patternMatrix);
 					}
 					countBar=0;
 					countSection=0;
@@ -140,7 +142,7 @@ public class StructureAnalyzer {
 					section = new ArrayList<ArrayList<Float>>();
 					countBar=1;
 					countSection++;
-					System.out.println("Section:"+countSection);
+					//System.out.println("Section:"+countSection);
 					//System.out.println("Bar:"+countBar);
 				}
 				line=in.readLine();
@@ -161,11 +163,32 @@ public class StructureAnalyzer {
 			}
 		}
 	}
+	private void otherTextFileThingy(String [][] matrix){
+		
+		int count = 1;
+		for(int row = 0; row < matrix.length; row++){
+			System.out.println();
+			for(int col = 0; col < matrix[row].length-1; col++){
+				
+				if(patternMatrix[row][col].charAt(0) != patternMatrix[row][col+1].charAt(0)){
+					count++;
+					if(col == 3 ){
+						System.out.print(count + "  "); count = 1;
+					}
+				}else{
+					System.out.print(count + "  "); count = 1;
+				}
+				
+			}
+			
+		}
+	}
 
 	private void analyzeMotifs() throws Exception{
 
 		
-		File filen = new File(System.getProperty("user.dir")+"/Crazy.txt");
+		File filen = new File(System.getProperty("user.dir")+outputTextFile);
+
 		if(!filen.exists()) {
 			filen.createNewFile();
 		}
