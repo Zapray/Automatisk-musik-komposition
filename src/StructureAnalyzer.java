@@ -379,7 +379,7 @@ public class StructureAnalyzer {
 
 	private String getMotive(float[] phrase1, float[] phrase2){
 
-		if(similarNotes(phrase1, phrase2,(float)0.62)){
+		if(similarNotes(phrase1, phrase2,(float)0.9)){
 			return "1";
 		}
 		else if(similarNotes(phrase1, phrase2,(float)0.6)){
@@ -526,7 +526,9 @@ public class StructureAnalyzer {
 		int yes=0;
 		int no=0;
 		for(int i=0; i<vector1.length-1; i++){
-			if(Math.abs((vector1[i]-vector1[i+1])-(vector2[i]-vector2[i+1]))<=1 && (((vector1[i]-vector1[i+1])<0 && (vector2[i]-vector2[i+1]<0)) || ((vector1[i]-vector1[i+1])>0 && (vector2[i]-vector2[i+1]>0))) ){
+			boolean samePolarity = ((vector1[i]-vector1[i+1])<0 && (vector2[i]-vector2[i+1]<0)) || ((vector1[i]-vector1[i+1])>0 && (vector2[i]-vector2[i+1]>0));
+			
+			if(Math.abs((vector1[i]-vector1[i+1])-(vector2[i]-vector2[i+1]))<=1 && samePolarity ){
 				yes++;
 			}else{
 				no++;
