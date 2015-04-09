@@ -516,7 +516,7 @@ public class StructureAnalyzer {
 		int yes=0;
 		int no=0;
 		for(int i=0; i<vector1.length-1; i++){
-			if(Math.abs((vector1[i]-vector1[i+1])-(vector2[i]-vector2[i+1]))<=1 ){
+			if(Math.abs((vector1[i]-vector1[i+1])-(vector2[i]-vector2[i+1]))<=1 && (((vector1[i]-vector1[i+1])<0 && (vector2[i]-vector2[i+1]<0)) || ((vector1[i]-vector1[i+1])>0 && (vector2[i]-vector2[i+1]>0))) ){
 				yes++;
 			}else{
 				no++;
