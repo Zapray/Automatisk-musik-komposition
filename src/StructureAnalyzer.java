@@ -442,7 +442,7 @@ public class StructureAnalyzer {
 		return p;
 	}
 
-	private boolean similarNotes(float[] vector1, float[] vector2, float n){ //Compares two vectors if they have a percent of similarity in notes above 50%
+	private boolean similarNotes(float[] vector1, float[] vector2, float n){ //Compares two vectors if they have a percent of similarity in notes above a percentage n
 		int yes=0;
 		int no=0;
 		for(int i=0; i<vector1.length; i++){
@@ -481,10 +481,8 @@ public class StructureAnalyzer {
 					break;
 				}
 				while(vector1[i]==pastPitch1){
-					pastPitch1=vector1[i];
 					length1++;
 					if(vector2[i]==pastPitch2){
-						pastPitch2=vector2[i];
 						length2++;
 					}
 					i++;
@@ -530,6 +528,15 @@ public class StructureAnalyzer {
 			return false;
 		}
 	}	
+	private boolean reflectedPitch(float[] vector1, float[] vector2){
+		float[] vectorExtra = vector1;
+		for(int i=0; i<vector1.length; i++){
+			for(int j=vector1.length-1; j>=0; j--){
+				vector1[i]=vectorExtra[j];
+			}
+		}
+		return similarNotes(vector1, vector2, (float)0.8);
+	}
 
 	private boolean scaledDuration(float[] tiny, float[] bigger){ //Compares one vector with a longer vector if they have the same pitches but a different scale of duration
 		int yes=0;
