@@ -526,9 +526,11 @@ public class StructureAnalyzer {
 		int yes=0;
 		int no=0;
 		for(int i=0; i<vector1.length-1; i++){
-			boolean samePolarity = ((vector1[i]-vector1[i+1])<0 && (vector2[i]-vector2[i+1]<0)) || ((vector1[i]-vector1[i+1])>0 && (vector2[i]-vector2[i+1]>0));
-			
-			if(Math.abs((vector1[i]-vector1[i+1])-(vector2[i]-vector2[i+1]))<=1 && samePolarity ){
+			boolean isNegative = ((vector1[i]-vector1[i+1])<0 && (vector2[i]-vector2[i+1]<0));
+			boolean isPositive = ((vector1[i]-vector1[i+1])>0 && (vector2[i]-vector2[i+1]>0));
+			if(Math.abs((vector1[i]-vector1[i+1])-(vector2[i]-vector2[i+1]))<=1 && isPositive){
+				yes++;
+			}else if(Math.abs((vector1[i]-vector1[i+1])-(vector2[i]-vector2[i+1]))<=1 && isNegative){
 				yes++;
 			}else{
 				no++;
