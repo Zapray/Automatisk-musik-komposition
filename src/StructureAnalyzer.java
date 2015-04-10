@@ -18,7 +18,7 @@ import matlabcontrol.extensions.MatlabTypeConverter;
 
 public class StructureAnalyzer {
 
-	private boolean isPlottingOn = true; //Set to true if you wish to plot the section while debugging
+	private boolean isPlottingOn = false; //Set to true if you wish to plot the section while debugging
 	private ArrayList<ArrayList<ArrayList<Float>>> data = new ArrayList<ArrayList<ArrayList<Float>>>();
 	private ArrayList<float[]> oneBars = new ArrayList<float[]>();
 	private ArrayList<float[]> sections = new ArrayList<float[]>();
@@ -57,11 +57,11 @@ public class StructureAnalyzer {
 
 		//printMatrix(patternMatrix);
 
-		//		testMethods(1);
-		//		testMethods(2);
-		//		testMethods(3);
-		//		testMethods(4);
-		//		testMethods(5);
+//				testMethods(1);
+//				testMethods(2);
+//				testMethods(3);
+//				testMethods(4);
+//				testMethods(5);
 
 		if(isPlottingOn){
 			proxy.disconnect();
@@ -164,26 +164,7 @@ public class StructureAnalyzer {
 		}
 	}
 
-	private void otherTextFileThingy(String [][] matrix){
-
-		int count = 1;
-		for(int row = 0; row < matrix.length; row++){
-			System.out.println();
-			for(int col = 0; col < matrix[row].length-1; col++){
-
-				if(patternMatrix[row][col].charAt(0) != patternMatrix[row][col+1].charAt(0)){
-					count++;
-					if(col == 3 ){
-						System.out.print(count + "  "); count = 1;
-					}
-				}else{
-					System.out.print(count + "  "); count = 1;
-				}
-
-			}
-
-		}
-	}
+	
 
 	private void analyzeMotifs() throws Exception{
 
@@ -284,6 +265,9 @@ public class StructureAnalyzer {
 
 		for(int j=0; j<16;j++){
 			//Bars in sections
+			if(firstSection == 1 && secondSection == 3 ){
+				System.out.println();
+			}
 			p1[j]=createPitchVector(section1)[j];
 			p2[j]=createPitchVector(section1)[j+16];
 			p3[j]=createPitchVector(section1)[j+32];
@@ -313,11 +297,18 @@ public class StructureAnalyzer {
 
 		for(int first=0; first<8; first++){
 			for(int second=first+1; second<8; second++){
+				if(firstSection == 1 && secondSection == 4 && first == 0 && second == 4){
+					System.out.println();
+				}
+				if(countSong == 25){
+					System.out.println();
+				}
 				String motive = getMotive(oneBars.get(first), oneBars.get(second));
 				if(motive != "0"){
 
 					int firstBar = first+1;
 					int secondBar = second+1;
+					System.out.println(firstSection + "  " + secondSection + "  " +  firstBar + "  " + secondBar);
 					//System.out.print("Sections: " + firstSection + " and "+ secondSection + "       ");
 					//System.out.println("Equal bars: " + firstBar + " and " + secondBar);
 
@@ -382,28 +373,51 @@ public class StructureAnalyzer {
 	private String getMotive(float[] phrase1, float[] phrase2){
 
 
-//		if(similarNotes(phrase1, phrase2,(float)0.9)){
-//			return "1";
-//		}
-//		else if(similarNotes(phrase1, phrase2,(float)0.6)){
-//			return "2";
-//		}
-		if(similarRelativePitch(phrase1, phrase2)){ //FUNKAR EJ
-			return "3";
-
+		if(similarNotes(phrase1, phrase2,(float)0.9)){
+			return "1";
 		}
-//		else if(similarDuration(phrase1, phrase2)){
-//			return "4";
-//		}
-//		else if(reflectedPitch(phrase1, phrase2)){
-//			return "5";
-//		}
+		else if(similarNotes(phrase1, phrase2,(float)0.6)){
+			return "2";
+		}
+		else if(similarRelativePitch(phrase1, phrase2)){ //FUNKAR EJ
+			return "3";
+		}
+		else if(similarDuration(phrase1, phrase2)){
+			return "4";
+		}
+		else if(reflectedPitch(phrase1, phrase2)){
+			return "5";
+		}
+		else if(reflectedVertically(phrase1, phrase2)){
+			return "6";
+		}
 		else{
 			return "0";
 		}
 
 	}
 
+	private void otherTextFileThingy(String [][] matrix){
+
+		int count = 1;
+		for(int row = 0; row < matrix.length; row++){
+			System.out.println();
+			for(int col = 0; col < matrix[row].length-1; col++){
+
+				if(patternMatrix[row][col].charAt(0) != patternMatrix[row][col+1].charAt(0)){
+					count++;
+					if(col == 3 ){
+						System.out.print(count + "  "); count = 1;
+					}
+				}else{
+					System.out.print(count + "  "); count = 1;
+				}
+
+			}
+
+		}
+	}
+	
 	private void printMatrix(String [][] matrix){
 		for(int row = 0; row < matrix.length; row++){
 			for(int col = 0; col < matrix[row].length; col++){
@@ -473,7 +487,7 @@ public class StructureAnalyzer {
 
 		}
 		float ratio = (float) yes/(yes+no);
-		//System.out.println(ratio);
+		System.out.println(ratio);
 
 		if(ratio>=n){
 			return true;
@@ -555,15 +569,34 @@ public class StructureAnalyzer {
 		}
 	}	
 	private boolean reflectedPitch(float[] vector1, float[] vector2){
-		float[] vectorExtra = vector1;
-		for(int i=0; i<vector1.length; i++){
-			for(int j=vector1.length-1; j>=0; j--){
-				vector1[i]=vectorExtra[j];
-			}
+
+		float [] reflVector = new float[vector1.length];
+		reflVector = vector1.clone();
+		for (int i = 0; i < reflVector.length / 2; i++) {
+			float tmp = reflVector[i];
+			reflVector[i] = reflVector[reflVector.length - 1 - i];
+			reflVector[reflVector.length - 1 - i] = tmp;
 		}
-		return similarNotes(vector1, vector2, (float)0.8);
+		
+		return similarNotes(reflVector, vector2, (float)0.8);
 	}
 
+	private boolean reflectedVertically(float[] vector1, float[] vector2){
+		float [] reflVector = new float[vector1.length];
+		reflVector = vector1.clone();
+		float maxValue = vector1[0]; 
+		for(int i=1;i < vector1.length;i++){ 
+			if(vector1[i] > maxValue){ 
+				maxValue = vector1[i]; 
+			} 
+		}
+		for(int i = 0; i < vector1.length; i++){
+			reflVector[i] = maxValue - vector1[i];
+		}
+		
+		return(similarRelativePitch(reflVector, vector2));
+	}
+	
 	private boolean scaledDuration(float[] tiny, float[] bigger){ //Compares one vector with a longer vector if they have the same pitches but a different scale of duration
 		int yes=0;
 		int no=0;
@@ -624,7 +657,8 @@ public class StructureAnalyzer {
 			for(int i = 0; i < p1.length; i++){
 				p2[i] = maxValue - p1[i];
 			}
-			System.out.println();
+			System.out.println("reflectedVertically: ");
+			reflectedVertically(p1, p2);
 
 		}else if(motive == 4){ // MOTIV 4
 			p2 = p1.clone();
@@ -633,6 +667,9 @@ public class StructureAnalyzer {
 				p2[i] = p2[p2.length - 1 - i];
 				p2[p2.length - 1 - i] = tmp;
 			}
+			System.out.println("reflectedPitch: ");
+			reflectedPitch(p1,p2);
+			
 		}else{ // MOTIV 5
 			double [] tiny = {52.0, 52.0, 52.0,	52.0, 54.0, 54.0, 54.0, 54.0, 65.0, 65.0, 65.0, 65.0, 69.0, 69.0, 69.0, 69.0, 72.0, 72.0, 72.0, 72.0, 74.0, 74.0, 74.0, 74.0, 76.0, 76.0, 76.0, 76.0, 78.0, 78.0, 78.0, 78.0};
 			float[] tmp2 = new float[tiny.length];
