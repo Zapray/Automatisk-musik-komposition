@@ -108,6 +108,7 @@ public class StructureAnalyzer {
 
 					if(data.size() > 1 && isDurationFour){
 						analyzeMotifs();
+						printMatrix(patternMatrix);
 						//otherTextFileThingy(patternMatrix);
 					}
 					countBar=0;
@@ -119,7 +120,7 @@ public class StructureAnalyzer {
 					pitchList = new ArrayList<Float>();
 					durationList = new ArrayList<Float>();
 					section = new ArrayList<ArrayList<Float>>();
-					printMatrix(patternMatrix);
+					
 					System.out.println("***********************SONG: " + countSong + "******************************");
 				}else{
 					for(int i=0; i<line.length(); i++){
