@@ -18,7 +18,7 @@ import matlabcontrol.extensions.MatlabTypeConverter;
 
 public class StructureAnalyzer {
 
-	private boolean isPlottingOn = false; //Set to true if you wish to plot the section while debugging
+	private boolean isPlottingOn = true; //Set to true if you wish to plot the section while debugging
 	private ArrayList<ArrayList<ArrayList<Float>>> data = new ArrayList<ArrayList<ArrayList<Float>>>();
 	private ArrayList<float[]> oneBars = new ArrayList<float[]>();
 	private ArrayList<float[]> sections = new ArrayList<float[]>();
@@ -309,7 +309,7 @@ public class StructureAnalyzer {
 
 					int firstBar = first+1;
 					int secondBar = second+1;
-					System.out.println(firstSection + "  " + secondSection + "  " +  firstBar + "  " + secondBar);
+					//System.out.println(firstSection + "  " + secondSection + "  " +  firstBar + "  " + secondBar);
 					//System.out.print("Sections: " + firstSection + " and "+ secondSection + "       ");
 					//System.out.println("Equal bars: " + firstBar + " and " + secondBar);
 
@@ -488,7 +488,7 @@ public class StructureAnalyzer {
 
 		}
 		float ratio = (float) yes/(yes+no);
-		System.out.println(ratio);
+		//System.out.println(ratio);
 
 		if(ratio>=n){
 			return true;
@@ -545,9 +545,9 @@ public class StructureAnalyzer {
 	}
 
 	private boolean similarRelativePitch(float[] vector1, float[] vector2){ // Compares two vectors if they have the same relative pitch
-		if(countSong==25){
-			System.out.print("");
-		}
+		//if(countSong==25){
+		//	System.out.print("");
+		//}
 		int yes=0;
 		int no=0;
 		for(int i=0; i<vector1.length-1; i++){
