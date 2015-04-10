@@ -18,7 +18,7 @@ import matlabcontrol.extensions.MatlabTypeConverter;
 
 public class StructureAnalyzer {
 
-	private boolean isPlottingOn = false; //Set to true if you wish to plot the section while debugging
+	private boolean isPlottingOn = true; //Set to true if you wish to plot the section while debugging
 	private ArrayList<ArrayList<ArrayList<Float>>> data = new ArrayList<ArrayList<ArrayList<Float>>>();
 	private ArrayList<float[]> oneBars = new ArrayList<float[]>();
 	private ArrayList<float[]> sections = new ArrayList<float[]>();
@@ -109,6 +109,7 @@ public class StructureAnalyzer {
 					if(data.size() > 1 && isDurationFour){
 						analyzeMotifs();
 						printMatrix(patternMatrix);
+						System.out.println();
 						//otherTextFileThingy(patternMatrix);
 					}
 					countBar=0;
@@ -309,7 +310,7 @@ public class StructureAnalyzer {
 
 					int firstBar = first+1;
 					int secondBar = second+1;
-					System.out.println(firstSection + "  " + secondSection + "  " +  firstBar + "  " + secondBar);
+					//System.out.println(firstSection + "  " + secondSection + "  " +  firstBar + "  " + secondBar);
 					//System.out.print("Sections: " + firstSection + " and "+ secondSection + "       ");
 					//System.out.println("Equal bars: " + firstBar + " and " + secondBar);
 
@@ -488,7 +489,7 @@ public class StructureAnalyzer {
 
 		}
 		float ratio = (float) yes/(yes+no);
-		System.out.println(ratio);
+		//System.out.println(ratio);
 
 		if(ratio>=n){
 			return true;
@@ -562,7 +563,7 @@ public class StructureAnalyzer {
 			}
 		}
 		float ratio = (float)yes/(yes+no);
-		System.out.println(ratio);
+		//System.out.println(ratio);
 		if(ratio>=0.5){
 			return true;
 		}else{
