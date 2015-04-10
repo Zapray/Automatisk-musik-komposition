@@ -530,9 +530,9 @@ public class StructureAnalyzer {
 	}
 
 	private boolean similarRelativePitch(float[] vector1, float[] vector2){ // Compares two vectors if they have the same relative pitch
-		//if(countSong==25){
-		//	System.out.print("");
-		//}
+		if(countSong==25){
+			System.out.print("");
+		}
 		int yes=0;
 		int no=0;
 		for(int i=0; i<vector1.length-1; i++){
@@ -547,8 +547,8 @@ public class StructureAnalyzer {
 			}
 		}
 		float ratio = (float)yes/(yes+no);
-		System.out.println(ratio);
-		if(ratio>=0.5){
+		//System.out.println(ratio);
+		if(ratio>=0.8){
 			return true;
 		}else{
 			return false;
