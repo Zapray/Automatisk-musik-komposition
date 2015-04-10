@@ -298,11 +298,8 @@ public class StructureAnalyzer {
 
 		for(int first=0; first<8; first++){
 			for(int second=first+1; second<8; second++){
-				if(firstSection == 1 && secondSection == 4 && first == 0 && second == 4){
-					System.out.println();
-				}
-				if(countSong == 25){
-					System.out.println();
+				if(countSong==8 && first == 0 && second == 5){
+					System.out.print("");
 				}
 				String motive = getMotive(oneBars.get(first), oneBars.get(second));
 				if(motive != "0"){
@@ -545,24 +542,25 @@ public class StructureAnalyzer {
 	}
 
 	private boolean similarRelativePitch(float[] vector1, float[] vector2){ // Compares two vectors if they have the same relative pitch
-		//if(countSong==25){
-		//	System.out.print("");
-		//}
+		
 		int yes=0;
 		int no=0;
 		for(int i=0; i<vector1.length-1; i++){
-			boolean isNegative = ((vector1[i]-vector1[i+1])<=0 && (vector2[i]-vector2[i+1]<=0));
-			boolean isPositive = ((vector1[i]-vector1[i+1])>=0 && (vector2[i]-vector2[i+1]>=0));
+			boolean isNegative = ((vector1[i]-vector1[i+1])<0 && (vector2[i]-vector2[i+1]<0));
+			boolean isPositive = ((vector1[i]-vector1[i+1])>0 && (vector2[i]-vector2[i+1]>0));
+			boolean isZero = ((vector1[i]-vector1[i+1])==0 && (vector2[i]-vector2[i+1]==0));
 			if(Math.abs((vector1[i]-vector1[i+1])-(vector2[i]-vector2[i+1]))<=1 && isPositive){
 				yes++;
 			}else if(Math.abs((vector1[i]-vector1[i+1])-(vector2[i]-vector2[i+1]))<=1 && isNegative){
+				yes++;
+			}else if(isZero){
 				yes++;
 			}else{
 				no++;
 			}
 		}
 		float ratio = (float)yes/(yes+no);
-		//System.out.println(ratio);
+		System.out.println(ratio);
 		if(ratio>=0.8){
 			return true;
 		}else{
