@@ -320,12 +320,24 @@ public class StructureAnalyzer {
 							countEquals++;
 							patternMatrix[firstSection-1][first] = Integer.toString(countEquals) + "0";
 							if(patternMatrix[firstSection-1][first].charAt(1) < motive.charAt(0) && patternMatrix[firstSection-1][second] != null){
-
+								//Do nothing
 							}else{
 								patternMatrix[firstSection-1][second] = patternMatrix[firstSection-1][first].charAt(0) + motive;
 							}
 						}else{
-							patternMatrix[firstSection-1][second] = patternMatrix[firstSection-1][first].charAt(0) + motive;
+							if(patternMatrix[secondSection-1][first] != null && patternMatrix[secondSection-1][first].charAt(1) > motive.charAt(0)){
+								countEquals++;
+								patternMatrix[secondSection-1][first] = Integer.toString(countEquals) + "0";
+								patternMatrix[firstSection-1][second] = patternMatrix[firstSection-1][first].charAt(0) + motive;
+								
+							}else if(patternMatrix[secondSection-1][second] != null 
+									&& patternMatrix[secondSection-1][second].charAt(1) < motive.charAt(0)){
+								//Do nothing
+							}
+							else{
+								patternMatrix[firstSection-1][second] = patternMatrix[firstSection-1][first].charAt(0) + motive;
+							}
+							
 						}
 					}else if(firstBar <= 4 && secondBar > 4){
 						//Check to see if matrix entry is empty or not (initialize or copy value)
@@ -333,13 +345,24 @@ public class StructureAnalyzer {
 							countEquals++;
 							patternMatrix[firstSection-1][first] = Integer.toString(countEquals) + "0";
 							if(patternMatrix[firstSection-1][first].charAt(1) < motive.charAt(0) && patternMatrix[secondSection-1][second-4] != null){
-
+								//Do nothing
 							}else{
 								patternMatrix[secondSection-1][second-4] = patternMatrix[firstSection-1][first].charAt(0) + motive;
 							}
 
 						}else {
-							patternMatrix[secondSection-1][second-4] = patternMatrix[firstSection-1][first].charAt(0) + motive;
+							if(patternMatrix[secondSection-1][first] != null && patternMatrix[secondSection-1][first].charAt(1) > motive.charAt(0)){
+								countEquals++;
+								patternMatrix[secondSection-1][first] = Integer.toString(countEquals) + "0";
+								patternMatrix[secondSection-1][second-4] = patternMatrix[firstSection-1][first].charAt(0) + motive;
+							}else if(patternMatrix[secondSection-1][second-4] != null 
+									&& patternMatrix[secondSection-1][second-4].charAt(1) < motive.charAt(0)){
+								//Do nothing
+							}
+							else{
+								patternMatrix[secondSection-1][second-4] = patternMatrix[firstSection-1][first].charAt(0) + motive;
+							}
+							
 						}
 					}else{
 						//Check to see if matrix entry is empty or not (initialize or copy value)
@@ -347,12 +370,24 @@ public class StructureAnalyzer {
 							countEquals++;
 							patternMatrix[secondSection-1][first-4] = Integer.toString(countEquals) + "0";
 							if(patternMatrix[secondSection-1][first-4].charAt(1) < motive.charAt(0) && patternMatrix[secondSection-1][second-4] != null){
-
+								//Do nothing
 							}else{
 								patternMatrix[secondSection-1][second-4] = patternMatrix[secondSection-1][first-4].charAt(0) + motive;
 							}
 						}else {
-							patternMatrix[secondSection-1][second-4] = patternMatrix[secondSection-1][first-4].charAt(0) + motive;
+							if(patternMatrix[secondSection-1][first-4] != null 
+									&& patternMatrix[secondSection-1][first-4].charAt(1) > motive.charAt(0)){
+								countEquals++;
+								patternMatrix[secondSection-1][first-4] = Integer.toString(countEquals) + "0";
+								patternMatrix[secondSection-1][second-4] = patternMatrix[secondSection-1][first-4].charAt(0) + motive;
+							}else if(patternMatrix[secondSection-1][second-4] != null 
+									&& patternMatrix[secondSection-1][second-4].charAt(1) < motive.charAt(0)){
+								//Do nothing
+							}else{
+								patternMatrix[secondSection-1][second-4] = patternMatrix[secondSection-1][first-4].charAt(0) + motive;
+							}
+							
+							
 						}
 					}
 
