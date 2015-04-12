@@ -17,26 +17,24 @@ import java.util.List;
 //////////////////////////////////////////////////////////////////////
 public class Section {
 
-	int sectionID, identicalSectionID;
-	int [] phraseLengths; 
-	
+	int sectionID;
+	Boolean isNew;
 	private List<Motive> motives;
 	
-	/////////////////
-	// Konstruktor //
-	/////////////////
-	public Section(int sectionID, int identicalSectionID, 
-				   int [] phraseLengths)
-	{
-		this.sectionID = sectionID;
-		this.identicalSectionID = identicalSectionID;
-		this.phraseLengths = phraseLengths;
-	}
-	
-	public Section(List<Motive> motives) //Add whatever you need to this constructor, kom ihåg att phraselengths finns i motives 'Motive.bar'.
+	/**
+	 * 
+	 * @param motives the list of motives making up the phrase
+	 * @param sectionID A unique ID for a particular section
+	 * @param isNew whether this section has occured before '
+	 * (in which case it will share the same sectionID as the idential one)
+	 */
+	public Section(List<Motive> motives, int sectionID, Boolean isNew)
 	{
 		this.motives = motives;
+		this.sectionID = sectionID;
+		this.isNew = isNew;
 	}
+	
 	public List<Motive> getMotives() {
 		return motives;
 	}

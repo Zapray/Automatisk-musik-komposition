@@ -22,29 +22,39 @@ public class MotiveGenerator {
 	 * @return
 	 */
 	public List<Frame> generateSong(MelodyFrameGenerator tmn, List<Section> sections, List<Integer> chords) {
-		HashMap<Integer, List<Frame>> newMotives = new HashMap<Integer, List<Frame>>();
-		ArrayList<Frame> song = new ArrayList<Frame>(); 
 		
+		
+		HashMap<Integer, List<Frame>> sectionMap = new HashMap<Integer, List<Frame>>(); 
+		ArrayList<Frame> song = new ArrayList<Frame>(); 
+
 		for(Section section : sections) {
-			List<Motive> motives = section.getMotives();
-			List<Integer> typeIndexes = new ArrayList<Integer>();
-			for(Motive motive : motives) {
-				switch (motive.variation) {
-					case NEW:
-						List<Integer> subChords = new ArrayList<Integer>();
-						for(int i = 0; i < motive.bars; i++) {
-							subChords.add(chords.remove(i));
-						}
-						//TODO double the amount of chords?
-						newMotives.put(motive.index, tmn.generateSong(subChords));
-						song.addAll(newMotives.get(motive.index));
-						break;
-					case REPEAT:
-						song.addAll(newMotives.get(motive.index));
-						break;
-					//Add more cases for the new motives here
+			if(!section.isNew) {
+				song.addAll(sectionMap.get(section.sectionID));
+			}else {
+				HashMap<Integer, List<Frame>> newMotives = new HashMap<Integer, List<Frame>>();
+				ArrayList<Frame> songSection = new ArrayList<Frame>();
+				List<Integer> typeIndexes = new ArrayList<Integer>();
+				for(Motive motive : section.getMotives()) {
+					switch (motive.variation) {
+						case NEW:
+							List<Integer> subChords = new ArrayList<Integer>();
+							for(int i = 0; i < motive.bars; i++) {
+								subChords.add(chords.remove(i));
+							}
+							//TODO double the amount of chords?
+							newMotives.put(motive.index, tmn.generateSong(subChords));
+							songSection.addAll(newMotives.get(motive.index));
+							break;
+						case REPEAT:
+							songSection.addAll(newMotives.get(motive.index));
+							break;
+						//Add more cases for the new motives here
+					}
 				}
+				song.addAll(songSection);
+				sectionMap.put(section.sectionID, songSection);
 			}
+			//
 		}
 		return song;
 	}

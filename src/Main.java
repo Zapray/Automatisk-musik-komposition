@@ -72,8 +72,16 @@ public class Main {
 		mvl.add(new Motive(MotiveVariation.NEW, 2, 1));
 		mvl.add(new Motive(MotiveVariation.NEW, 3, 1));
 		mvl.add(new Motive(MotiveVariation.REPEAT, 2, 1));
+		List<Motive> mvl2= new ArrayList<Motive>();
+		mvl2.add(Motive.exampleMot()); // temporary structure
+		mvl2.add(new Motive(MotiveVariation.REPEAT, 1, 4));
+		mvl2.add(new Motive(MotiveVariation.NEW, 2, 1));
+		mvl2.add(new Motive(MotiveVariation.NEW, 3, 1));
+		mvl2.add(new Motive(MotiveVariation.REPEAT, 2, 1));
 		
-		sections.add(new Section(mvl));
+		sections.add(new Section(mvl, 1, true));
+		sections.add(new Section(mvl, 1, false));
+		sections.add(new Section(mvl2, 2, true));
 		
 		MotiveGenerator mg = new MotiveGenerator();
 		ChordMarkov markov = new ChordMarkov(CHORDORDER, cMax, l);
