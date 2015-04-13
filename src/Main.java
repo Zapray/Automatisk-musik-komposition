@@ -79,6 +79,8 @@ public class Main {
 		mvl2.add(new Motive(MotiveVariation.NEW, 3, 1));
 		mvl2.add(new Motive(MotiveVariation.REPEAT, 2, 1));
 		
+		//TODO drums seem to stop after a while?
+		
 		sections.add(new Section(mvl, 1, true));
 		sections.add(new Section(mvl, 1, false));
 		sections.add(new Section(mvl2, 2, true));
@@ -87,7 +89,7 @@ public class Main {
 		ChordMarkov markov = new ChordMarkov(CHORDORDER, cMax, l);
 		int nrOfChords = 0;
 		for(Section section : sections) {
-			nrOfChords = section.getLength()*2;
+			nrOfChords = section.getLength();
 		}
 				
 		List<Frame> song = mg.generateSong(tmn, sections, markov.generateChordProg(nrOfChords));

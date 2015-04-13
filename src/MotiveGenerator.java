@@ -23,7 +23,7 @@ public class MotiveGenerator {
 	 */
 	public List<Frame> generateSong(MelodyFrameGenerator tmn, List<Section> sections, List<Integer> chords) {
 		
-		
+		chords = doubleChords(chords);
 		HashMap<Integer, List<Frame>> sectionMap = new HashMap<Integer, List<Frame>>(); 
 		ArrayList<Frame> song = new ArrayList<Frame>(); 
 
@@ -57,5 +57,14 @@ public class MotiveGenerator {
 			//
 		}
 		return song;
+	}
+	private static List<Integer> doubleChords(List<Integer> pre) {
+		List<Integer> post = new ArrayList<Integer>();
+		for(Integer i: pre) {
+			post.add(new Integer(i));
+			post.add(new Integer(i));
+		}
+		return post;
+		
 	}
 }
