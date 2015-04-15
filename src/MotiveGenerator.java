@@ -26,7 +26,7 @@ public class MotiveGenerator {
 		
 		chords = doubleChords(chords);
 		HashMap<Integer, List<Frame>> sectionMap = new HashMap<Integer, List<Frame>>(); 
-		ArrayList<Frame> song = new ArrayList<Frame>(); 
+		LinkedList<Frame> song = new LinkedList<Frame>(); 
 		Frame prevFrame = null;
 		for(Section section : sections) {
 			if(!section.isNew) {
@@ -52,10 +52,10 @@ public class MotiveGenerator {
 						//Add more cases for the new motives here
 					}
 				}
-				prevFrame = songSection.peekLast();
 				song.addAll(songSection);
 				sectionMap.put(section.sectionID, songSection);
 			}
+			prevFrame = song.peekLast();
 			//
 		}
 		return song;
