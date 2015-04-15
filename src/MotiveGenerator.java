@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -26,14 +27,15 @@ public class MotiveGenerator {
 		chords = doubleChords(chords);
 		HashMap<Integer, List<Frame>> sectionMap = new HashMap<Integer, List<Frame>>(); 
 		ArrayList<Frame> song = new ArrayList<Frame>(); 
-
+		Frame prevFrame = null;
 		for(Section section : sections) {
 			if(!section.isNew) {
 				song.addAll(sectionMap.get(section.sectionID));
 			}else {
 				HashMap<Integer, List<Frame>> newMotives = new HashMap<Integer, List<Frame>>();
-				ArrayList<Frame> songSection = new ArrayList<Frame>();
+				LinkedList<Frame> songSection = new LinkedList<Frame>();
 				List<Integer> typeIndexes = new ArrayList<Integer>();
+				
 				for(Motive motive : section.getMotives()) {
 					switch (motive.variation) {
 						case NEW:
@@ -41,8 +43,7 @@ public class MotiveGenerator {
 							for(int i = 0; i < motive.bars; i++) {
 								subChords.add(chords.remove(i));
 							}
-							//TODO double the amount of chords?
-							newMotives.put(motive.index, tmn.generateSong(subChords));
+							newMotives.put(motive.index, tmn.generateSong(subChords, prevFrame));
 							songSection.addAll(newMotives.get(motive.index));
 							break;
 						case REPEAT:
@@ -51,6 +52,7 @@ public class MotiveGenerator {
 						//Add more cases for the new motives here
 					}
 				}
+				prevFrame = songSection.peekLast();
 				song.addAll(songSection);
 				sectionMap.put(section.sectionID, songSection);
 			}
