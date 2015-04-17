@@ -28,15 +28,23 @@ public class BassLine {
 	private String notes[] = {"C","C#","D","D#","E","F","F#","G","G#","A","A#","B"};
 	private int resolution =192;
 	private ArrayList<MidiEvent> bassLine = new ArrayList<MidiEvent>();
+	private ArrayList<Float> listOfDurations = new ArrayList<Float>();
 	
-	public BassLine(ArrayList<String> listOfChords) throws Exception{
+	public BassLine(ArrayList<Chord> chords) throws Exception{
+		ArrayList<String> listOfChords = new ArrayList<String>(); 
+		
+		for(int i=0;i<chords.size();i++){
+			listOfChords.add(chords.get(i).getLabel());	
+			listOfDurations.add(chords.get(i).getDuration());
+		}
 		
 		createListOfTonics(listOfChords);
 		//createEightNoteBaseLine();
 		//createQuarterNoteBassLine();
-		createHalfNoteBassLine();
+		//createHalfNoteBassLine();
 		//createQuarterEightNoteBassLine();
 		//createBerlinNightBassLine();
+		createPianorythmBassLine();
 	}
 	public ArrayList<MidiEvent> getBassLine(){
 		
@@ -185,7 +193,26 @@ public class BassLine {
 		
 		
 	}
-	
+	private void createPianorythmBassLine() throws Exception{
+		int tick = 0;
+		int tickMeter = 0;
+		for(int i = 0; i<listOfTonics.size();i++){
+			ShortMessage shortMessage1 = new ShortMessage();
+			shortMessage1.setMessage(ShortMessage.NOTE_ON,0,convertLabelToNote(listOfTonics.get(i)), 114 );
+			MidiEvent NoteOn=new MidiEvent(shortMessage1,tickMeter);
+			bassLine.add(NoteOn);
+			ShortMessage	shortMessage2 = new ShortMessage();
+			tickMeter=(int) (tickMeter + convertNoteLengthToTicks(listOfDurations.get(i), resolution));	
+			shortMessage2.setMessage(ShortMessage.NOTE_OFF,0,convertLabelToNote(listOfTonics.get(i)), 0 );
+			MidiEvent NoteOff=new MidiEvent(shortMessage2,tickMeter);
+			bassLine.add(NoteOff);	
+			
+			
+		}
+		
+		
+		
+	}
 	
 	
 	
@@ -230,6 +257,11 @@ public class BassLine {
 		}
 
 	}
-	
+	public static long convertNoteLengthToTicks(float noteLength,int res) throws Exception{
+        res=res*4;
+        
+        return (long) (res*noteLength);
+  
+	}//end convertNoteLengthToTicks
 	
 }

@@ -395,11 +395,7 @@ public class MidiManager2 {
       		track2.add(NoteOff2);
       		NoteOff3=new MidiEvent(shortMessage6,tickMeter);
       		track2.add(NoteOff3);
-      		
-      		
-      		
-  			
-      		
+      			
         	 
         	 
          }
@@ -407,7 +403,7 @@ public class MidiManager2 {
          //Write the bassline
          Track track4 = sequence.createTrack();
          
-         BassLine bass = new BassLine(chordsForBassLine);
+         BassLine bass = new BassLine(chordsForPianoRythm);
       
          ShortMessage sm = new ShortMessage( );
          sm.setMessage(ShortMessage.PROGRAM_CHANGE, 0, 34, 0); //9 ==> is the channel 10.
