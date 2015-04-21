@@ -3,7 +3,7 @@ import java.util.List;
 
 
 public class Main {
-	private static int cMax, pMax, dMax, order = 2, frames = 8;
+	private static int cMax, pMax, dMax, order = 2, frames = 24;
 	private static double length = 0.5;
 	private final static int CHORDORDER = 2;
 	public static void main(String[] args) {

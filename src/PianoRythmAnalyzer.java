@@ -41,7 +41,7 @@ import javax.sound.midi.*;
 public class PianoRythmAnalyzer {
 
 	public static void main(String args[]) throws Exception{
-		File[] files =new File (System.getProperty("user.dir")+"/database/Chorus/").listFiles(); 
+		File[] files =new File (System.getProperty("user.dir")+"/database/Pre-chorus/").listFiles(); 
 		Arrays.sort(files);
 		int count = 0;
 		int equalCount = 0;
@@ -52,7 +52,7 @@ public class PianoRythmAnalyzer {
 				
 				Sequencer sequencer = MidiSystem.getSequencer();//Creates a sequencer
 				sequencer.open();// have to open the sequencer to be able to use sequences. Don't know why, it works without the first two lines.
-				InputStream is = new BufferedInputStream(new FileInputStream( new File(System.getProperty("user.dir")+"/database/Chorus/" + file.getName())));
+				InputStream is = new BufferedInputStream(new FileInputStream( new File(System.getProperty("user.dir")+"/database/Pre-chorus/" + file.getName())));
 				Sequence sequence = MidiSystem.getSequence(is);//Creates a sequence which you can analyze.
 				float res = sequence.getResolution();
 				Track[] tracks = sequence.getTracks();//Creates an array to be able to separate tracks.
@@ -79,7 +79,7 @@ public class PianoRythmAnalyzer {
 				
 				
 				if(durationen > 4 && fyrtakt){
-				File filen = new File(System.getProperty("user.dir")+"/pianorythm_chorus.txt");
+				File filen = new File(System.getProperty("user.dir")+"/pianorythm_Prechorus.txt");
 				
 
 				if (!filen.exists()) {
@@ -87,7 +87,7 @@ public class PianoRythmAnalyzer {
 				}
 
 
-				PrintWriter outFile = new PrintWriter(new FileWriter(System.getProperty("user.dir")+"/pianorythm_chorus.txt", true));
+				PrintWriter outFile = new PrintWriter(new FileWriter(System.getProperty("user.dir")+"/pianorythm_Prechorus.txt", true));
 
 				float durationcounter = 0;
 				int indexcounter = 0;
