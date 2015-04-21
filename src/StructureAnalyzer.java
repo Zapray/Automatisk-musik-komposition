@@ -18,7 +18,7 @@ import matlabcontrol.extensions.MatlabTypeConverter;
 
 public class StructureAnalyzer {
 
-	private boolean isPlottingOn = true; //Set to true if you wish to plot the section while debugging
+	private boolean isPlottingOn = false; //Set to true if you wish to plot the section while debugging
 	private ArrayList<ArrayList<ArrayList<Float>>> data = new ArrayList<ArrayList<ArrayList<Float>>>();
 	private ArrayList<float[]> oneBars = new ArrayList<float[]>();
 	private ArrayList<float[]> sections = new ArrayList<float[]>();
@@ -29,7 +29,7 @@ public class StructureAnalyzer {
 	private int countSection = 0;
 	private int countSong = 0;
 	private String textFile = "/Databases_parts/chorus.txt";
-	private String outputTextFile = "/Crazy.txt";
+	private String outputTextFile = "/chorusMotifs.txt";
 	private MatlabProxy proxy;
 
 	public static void main(String[] args) throws Exception{
@@ -299,16 +299,14 @@ public class StructureAnalyzer {
 
 		for(int first=0; first<8; first++){
 			for(int second=first+1; second<8; second++){
-				if(countSong==8 && first == 0 && second == 5){
-					System.out.print("");
-				}
+				
 				String motive = getMotive(oneBars.get(first), oneBars.get(second));
 				if(motive != "0"){
 
 					int firstBar = first+1;
 					int secondBar = second+1;
-					//System.out.println(firstSection + "  " + secondSection + "  " +  firstBar + "  " + secondBar);
-					//System.out.print("Sections: " + firstSection + " and "+ secondSection + "       ");
+					System.out.println(firstSection + "  " + secondSection + "  " +  firstBar + "  " + secondBar);
+					System.out.print("Sections: " + firstSection + " and "+ secondSection + "       ");
 					//System.out.println("Equal bars: " + firstBar + " and " + secondBar);
 
 					if(firstBar <=4 && secondBar<=4){
@@ -391,40 +389,43 @@ public class StructureAnalyzer {
 				}
 			}
 		}
-		//		countEquals++;
-		//		for(int row = 0; row < patternMatrix.length; row++){
-		//			for(int col = 0; col < patternMatrix[row].length; col++){
-		//				if(patternMatrix[row][col]==null){
-		//					patternMatrix[row][col]=countEquals+"0";
-		//					countEquals++;
-		//				}
-		//				
-		//			}
-		//		}
+				//countEquals++;
+				for(int row = 0; row < patternMatrix.length; row++){
+					for(int col = 0; col < patternMatrix[row].length; col++){
+						if(patternMatrix[row][col]==null){
+							patternMatrix[row][col]="00";
+							//countEquals++;
+						}
+						
+					}
+				}
 		oneBars=new ArrayList<float[]>();
 	}
 
 	private String getMotive(float[] phrase1, float[] phrase2){
 
 
-		if(similarNotes(phrase1, phrase2,(float)0.9)){
+		if(similarNotes(phrase1, phrase2,(float)1)){
 			return "1";
 		}
-		else if(similarNotes(phrase1, phrase2,(float)0.6)){
+		else if(similarNotes(phrase1, phrase2,(float)0.8)){
 			return "2";
 		}
-		else if(similarRelativePitch(phrase1, phrase2)){ //FUNKAR EJ
+		else if(similarNotes(phrase1, phrase2,(float)0.6)){
 			return "3";
 		}
-		else if(similarDuration(phrase1, phrase2)){
-			return "4";
-		}
-		else if(reflectedPitch(phrase1, phrase2)){
-			return "5";
-		}
-		else if(reflectedVertically(phrase1, phrase2)){
-			return "6";
-		}
+//		else if(similarRelativePitch(phrase1, phrase2)){ //FUNKAR EJ
+//			return "3";
+//		}
+//		else if(similarDuration(phrase1, phrase2)){
+//			return "4";
+//		}
+//		else if(reflectedPitch(phrase1, phrase2)){
+//			return "5";
+//		}
+//		else if(reflectedVertically(phrase1, phrase2)){
+//			return "6";
+//		}
 		else{
 			return "0";
 		}
@@ -578,7 +579,9 @@ public class StructureAnalyzer {
 	}
 
 	private boolean similarRelativePitch(float[] vector1, float[] vector2){ // Compares two vectors if they have the same relative pitch
-		
+		if(countSong==8){
+			System.out.print("");
+		}
 		int yes=0;
 		int no=0;
 		for(int i=0; i<vector1.length-1; i++){
