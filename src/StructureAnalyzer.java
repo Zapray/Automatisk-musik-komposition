@@ -29,8 +29,8 @@ public class StructureAnalyzer {
 	private int countSection = 0;
 	private int countSong = 0;
 	private String textFile = "/Databases_parts/chorus.txt";
-	private String outputTextFile = "/Crazy.txt";
 	private String outputTextFile2 = "/Sections.txt";
+	private String outputTextFile = "/Yolo.txt";
 
 	private MatlabProxy proxy;
 
@@ -318,6 +318,15 @@ public class StructureAnalyzer {
 			}
 			for(int row = 0; row < patternMatrix.length; row++){
 				for(int col = 0; col < patternMatrix[row].length; col++){
+					if(patternMatrix[row][col]==null){
+						patternMatrix[row][col]="00";
+						//countEquals++;
+					}
+					
+				}
+			}
+			for(int row = 0; row < patternMatrix.length; row++){
+				for(int col = 0; col < patternMatrix[row].length; col++){
 					outFile.print(patternMatrix[row][col]);
 					if(col<3){
 						outFile.print(',');
@@ -476,15 +485,7 @@ public class StructureAnalyzer {
 			}
 		}
 				//countEquals++;
-				for(int row = 0; row < patternMatrix.length; row++){
-					for(int col = 0; col < patternMatrix[row].length; col++){
-						if(patternMatrix[row][col]==null){
-							patternMatrix[row][col]="00";
-							//countEquals++;
-						}
-						
-					}
-				}
+				
 		oneBars=new ArrayList<float[]>();
 	}
 
@@ -500,6 +501,24 @@ public class StructureAnalyzer {
 		else if(similarNotes(phrase1, phrase2,(float)0.6)){
 			return "3";
 		}
+//		else if(similarNotes(phrase1, phrase2,(float)0.7)){
+//			return "7";
+//		}
+//		else if(similarNotes(phrase1, phrase2,(float)0.6)){
+//			return "6";
+//		}
+//		else if(similarNotes(phrase1, phrase2,(float)0.5)){
+//			return "5";
+//		}
+//		else if(similarNotes(phrase1, phrase2,(float)0.4)){
+//			return "4";
+//		}
+//		else if(similarNotes(phrase1, phrase2,(float)0.3)){
+//			return "3";
+//		}
+//		else if(similarNotes(phrase1, phrase2,(float)0.2)){
+//			return "2";
+//		}
 //		else if(similarRelativePitch(phrase1, phrase2)){ //FUNKAR EJ
 //			return "3";
 //		}
