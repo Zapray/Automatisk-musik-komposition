@@ -20,7 +20,7 @@ public class Section {
 	int sectionID;
 	Boolean isNew;
 	private List<Motive> motives;
-	
+	int identicalMotives;
 	/**
 	 * 
 	 * @param motives the list of motives making up the phrase
@@ -28,11 +28,12 @@ public class Section {
 	 * @param isNew whether this section has occured before '
 	 * (in which case it will share the same sectionID as the idential one)
 	 */
-	public Section(List<Motive> motives, int sectionID, Boolean isNew)
+	public Section(List<Motive> motives, int sectionID, Boolean isNew, int identicalMotives)
 	{
 		this.motives = motives;
 		this.sectionID = sectionID;
 		this.isNew = isNew;
+		this.identicalMotives = identicalMotives;
 	}
 	
 	public List<Motive> getMotives() {
