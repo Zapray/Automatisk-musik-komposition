@@ -81,9 +81,9 @@ public class Main {
 		
 		//TODO drums seem to stop after a while?
 		
-		sections.add(new Section(mvl, 1, true));
-		sections.add(new Section(mvl, 1, false));
-		sections.add(new Section(mvl2, 2, true));
+		sections.add(new Section(mvl, 1, true,0));
+		sections.add(new Section(mvl, 1, false,0));
+		sections.add(new Section(mvl2, 2, true,0));
 		
 		MotiveGenerator mg = new MotiveGenerator();
 		ChordMarkov markov = new ChordMarkov(CHORDORDER, cMax, l);
