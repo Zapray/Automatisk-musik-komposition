@@ -25,11 +25,15 @@ public class StructureAnalyzer {
 	private ArrayList<Float> pitchList = new ArrayList<Float>();
 	private ArrayList<Float> durationList = new ArrayList<Float>();
 	private String[][] patternMatrix;
+	private String[] patternArray;
 	private int countEquals = 0;
 	private int countSection = 0;
 	private int countSong = 0;
+	private int countSectionType;
 	private String textFile = "/Databases_parts/chorus.txt";
-	private String outputTextFile = "/Crazy.txt";
+	private String outputTextFile2 = "/Sections.txt";
+	private String outputTextFile = "/Yolo.txt";
+
 	private MatlabProxy proxy;
 
 	public static void main(String[] args) throws Exception{
@@ -57,11 +61,11 @@ public class StructureAnalyzer {
 
 		//printMatrix(patternMatrix);
 
-//				testMethods(1);
-//				testMethods(2);
-//				testMethods(3);
-//				testMethods(4);
-//				testMethods(5);
+		//				testMethods(1);
+		//				testMethods(2);
+		//				testMethods(3);
+		//				testMethods(4);
+		//				testMethods(5);
 
 		if(isPlottingOn){
 			proxy.disconnect();
@@ -94,7 +98,7 @@ public class StructureAnalyzer {
 						data.add(section);
 
 						countSection++;
-						System.out.println("Section:"+countSection);
+						//System.out.println("Section:"+countSection);
 
 					}
 
@@ -105,10 +109,12 @@ public class StructureAnalyzer {
 							isDurationFour = false;
 						}
 					}
-
+					System.out.println("***********************SONG: " + countSong + "******************************");
 					if(data.size() > 1 && isDurationFour){
 						analyzeMotifs();
 						printMatrix(patternMatrix);
+						System.out.println();
+						printArray(patternArray);
 						System.out.println();
 						//otherTextFileThingy(patternMatrix);
 					}
@@ -121,8 +127,8 @@ public class StructureAnalyzer {
 					pitchList = new ArrayList<Float>();
 					durationList = new ArrayList<Float>();
 					section = new ArrayList<ArrayList<Float>>();
-					
-					System.out.println("***********************SONG: " + countSong + "******************************");
+
+
 				}else{
 					for(int i=0; i<line.length(); i++){
 
@@ -166,17 +172,22 @@ public class StructureAnalyzer {
 		}
 	}
 
-	
+
 
 	private void analyzeMotifs() throws Exception{
 
 
 		File filen = new File(System.getProperty("user.dir")+outputTextFile);
+		File filen2 = new File(System.getProperty("user.dir")+outputTextFile2);
 
 		if(!filen.exists()) {
 			filen.createNewFile();
 		}
+		if(!filen2.exists()) {
+			filen2.createNewFile();
+		}
 		PrintWriter outFile = new PrintWriter(new FileWriter(System.getProperty("user.dir")+ outputTextFile, true));
+		PrintWriter outFile2 = new PrintWriter(new FileWriter(System.getProperty("user.dir")+ outputTextFile2, true));
 		try{
 
 			//**********************PLOT**************************//
@@ -226,7 +237,6 @@ public class StructureAnalyzer {
 				}
 			}
 			patternMatrix = new String[sections.size()][4];
-
 			for(int first=0; first < sections.size(); first++){
 				for(int second=first+1; second < sections.size(); second++){
 					//*******************SECTIONS********************//
@@ -234,7 +244,21 @@ public class StructureAnalyzer {
 					int secondSection = second+1;
 					//String hej = patternMatrix[0][0];
 					compareBars(data.get(first), data.get(second), firstSection, secondSection);
-
+				}
+			}
+			for(int row = 0; row < patternMatrix.length; row++){
+				for(int col = 0; col < patternMatrix[row].length; col++){
+					if(patternMatrix[row][col]==null){
+						patternMatrix[row][col]="00";
+						//countEquals++;
+					}
+				}
+			}
+			compareSections();
+			for(int i = 0; i < patternArray.length; i++){
+				if(patternArray[i]==null){
+					countSectionType++;
+					patternArray[i] = countSectionType + "N";
 				}
 			}
 			for(int row = 0; row < patternMatrix.length; row++){
@@ -246,13 +270,76 @@ public class StructureAnalyzer {
 				}
 				outFile.println();
 			}
-			outFile.println('-');
+			for(int i = 0; i < patternArray.length; i++){
+					outFile2.println(patternArray[i]);
+			}
+			outFile2.println('-');
 		} finally{
 			if(outFile != null){
 				outFile.close();
 			}
+			if(outFile2 != null){
+				outFile2.close();
+			}
 		}
 
+	}
+
+	private void compareSections(){
+		patternArray = new String[sections.size()];
+		countSectionType = 0;
+		for(int first=0; first < sections.size(); first++){
+			for(int second=first+1; second < sections.size(); second++){
+
+				//COMPARE SECTIONS (patternMatrix done)
+				String status = "NEW";
+				String similarBars = "";
+				for(int bar = 0; bar < 4; bar++){
+					if((patternMatrix[first][bar].charAt(0) == patternMatrix[second][bar].charAt(0) 
+							&& patternMatrix[first][bar].charAt(0) != '0' 
+							&& bar < 4)){
+						similarBars = similarBars + Integer.toString(bar+1);
+						status = "REP";
+					}
+				}
+				if(status == "REP"){
+
+					if(patternArray[first] == null){
+						countSectionType++;
+						if(patternArray[second] == null){
+							patternArray[first] = Integer.toString(countSectionType) + "N";
+							patternArray[second] = patternArray[first].charAt(0) + "R" + similarBars;
+						}else{
+							if(patternArray[second].length()-2 < similarBars.length()){
+								patternArray[first] = Integer.toString(countSectionType) + "N";
+								patternArray[second] = patternArray[first].charAt(0) + "R" + similarBars;
+							}
+						}
+					}else{
+						if(patternArray[first].charAt(1) == 'R'){
+							countSectionType++;
+							if(patternArray[second]==null){
+								patternArray[first] = Integer.toString(countSectionType) + "N";
+								patternArray[second] = patternArray[first].charAt(0) + "R" + similarBars;
+							}else{
+								if(patternArray[second].length()-2 < similarBars.length()){
+									patternArray[first] = Integer.toString(countSectionType) + "N";
+									patternArray[second] = patternArray[first].charAt(0) + "R" + similarBars;
+								}
+							}
+						}else{
+							if(patternArray[second] == null){
+								patternArray[second] = patternArray[first].charAt(0) + "R" + similarBars;
+							}else{
+								if(patternArray[second].length()-2 < similarBars.length()){
+									patternArray[second] = patternArray[first].charAt(0) + "R" + similarBars;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	private void compareBars(ArrayList<ArrayList<Float>> section1, ArrayList<ArrayList<Float>> section2, int firstSection, int secondSection){
@@ -299,9 +386,14 @@ public class StructureAnalyzer {
 
 		for(int first=0; first<8; first++){
 			for(int second=first+1; second<8; second++){
-				if(countSong==8 && first == 0 && second == 5){
+
+				if(countSong==10){
 					System.out.print("");
 				}
+				if(countSong == 3 && firstSection == 1 && secondSection == 3 && first == 0 && second == 6){
+					System.out.print("");
+				}
+
 				String motive = getMotive(oneBars.get(first), oneBars.get(second));
 				if(motive != "0"){
 
@@ -312,54 +404,58 @@ public class StructureAnalyzer {
 					//System.out.println("Equal bars: " + firstBar + " and " + secondBar);
 
 					if(firstBar <=4 && secondBar<=4){
-						//Check to see if matrix entry is empty or not (initialize or copy value)
-						if(patternMatrix[firstSection-1][first] == null){
+						if(patternMatrix[firstSection-1][first] == null){//First bar is null - INITIALIZE NEW PATTERN
 							countEquals++;
 							patternMatrix[firstSection-1][first] = Integer.toString(countEquals) + "0";
 							if(patternMatrix[firstSection-1][first].charAt(1) < motive.charAt(0) && patternMatrix[firstSection-1][second] != null){
-								//Do nothing
+								//Do nothing CAUSE PATTERN THAT EXISTS IS BETTER THAN THE NEWLY FOUND PATTERN
 							}else{
+								//CHANGE CAUSE NEWLY FOUND PATTERN IS BETTER
 								patternMatrix[firstSection-1][second] = patternMatrix[firstSection-1][first].charAt(0) + motive;
 							}
-						}else{
-							if(patternMatrix[secondSection-1][first] != null && patternMatrix[secondSection-1][first].charAt(1) > motive.charAt(0)){
+						}else{ //First bar have been paired
+							if(patternMatrix[firstSection-1][first] != null && patternMatrix[firstSection-1][first].charAt(1) > motive.charAt(0)){
+								//Compare first bar: INITIALIZE NEW PATTERN CAUSE PATTERN IS BETTER (need to send a number to the previous pattern)
 								countEquals++;
-								patternMatrix[secondSection-1][first] = Integer.toString(countEquals) + "0";
+								patternMatrix[firstSection-1][first] = Integer.toString(countEquals) + "0";
 								patternMatrix[firstSection-1][second] = patternMatrix[firstSection-1][first].charAt(0) + motive;
-								
-							}else if(patternMatrix[secondSection-1][second] != null 
-									&& patternMatrix[secondSection-1][second].charAt(1) < motive.charAt(0)){
-								//Do nothing
+
+							}else if(patternMatrix[firstSection-1][second] != null 
+									&& patternMatrix[firstSection-1][second].charAt(1) < motive.charAt(0)){
+								//Check second bar: DO NOTHING CAUSE PATTERN 
+
 							}
 							else{
 								patternMatrix[firstSection-1][second] = patternMatrix[firstSection-1][first].charAt(0) + motive;
 							}
-							
+
 						}
 					}else if(firstBar <= 4 && secondBar > 4){
-						//Check to see if matrix entry is empty or not (initialize or copy value)
-						if(patternMatrix[firstSection-1][first] == null){
+						if(patternMatrix[firstSection-1][first] == null){//First bar is null - INITIALIZE NEW PATTERN
 							countEquals++;
 							patternMatrix[firstSection-1][first] = Integer.toString(countEquals) + "0";
 							if(patternMatrix[firstSection-1][first].charAt(1) < motive.charAt(0) && patternMatrix[secondSection-1][second-4] != null){
-								//Do nothing
+								//Do nothing CAUSE PATTERN THAT EXISTS IS BETTER THAN THE NEWLY FOUND PATTERN
 							}else{
+								//CHANGE CAUSE NEWLY FOUND PATTERN IS BETTER
 								patternMatrix[secondSection-1][second-4] = patternMatrix[firstSection-1][first].charAt(0) + motive;
 							}
 
-						}else {
-							if(patternMatrix[secondSection-1][first] != null && patternMatrix[secondSection-1][first].charAt(1) > motive.charAt(0)){
+						}else { //First bar have been paired
+							//
+							if(patternMatrix[firstSection-1][first] != null && patternMatrix[firstSection-1][first].charAt(1) > motive.charAt(0)){
 								countEquals++;
-								patternMatrix[secondSection-1][first] = Integer.toString(countEquals) + "0";
+								patternMatrix[firstSection-1][first] = Integer.toString(countEquals) + "0";
 								patternMatrix[secondSection-1][second-4] = patternMatrix[firstSection-1][first].charAt(0) + motive;
 							}else if(patternMatrix[secondSection-1][second-4] != null 
 									&& patternMatrix[secondSection-1][second-4].charAt(1) < motive.charAt(0)){
-								//Do nothing
+								//Do nothing CAUSE PATTERN THAT EXISTS IS BETTER THAN THE NEWLY FOUND PATTERN
 							}
 							else{
+								//CHANGE CAUSE NEWLY FOUND PATTERN IS BETTER
 								patternMatrix[secondSection-1][second-4] = patternMatrix[firstSection-1][first].charAt(0) + motive;
 							}
-							
+
 						}
 					}else{
 						//Check to see if matrix entry is empty or not (initialize or copy value)
@@ -383,48 +479,61 @@ public class StructureAnalyzer {
 							}else{
 								patternMatrix[secondSection-1][second-4] = patternMatrix[secondSection-1][first-4].charAt(0) + motive;
 							}
-							
-							
+
+
 						}
 					}
 
 				}
 			}
 		}
-		//		countEquals++;
-		//		for(int row = 0; row < patternMatrix.length; row++){
-		//			for(int col = 0; col < patternMatrix[row].length; col++){
-		//				if(patternMatrix[row][col]==null){
-		//					patternMatrix[row][col]=countEquals+"0";
-		//					countEquals++;
-		//				}
-		//				
-		//			}
-		//		}
+		//countEquals++;
+
 		oneBars=new ArrayList<float[]>();
 	}
 
 	private String getMotive(float[] phrase1, float[] phrase2){
 
 
-		if(similarNotes(phrase1, phrase2,(float)0.9)){
+		if(similarNotes(phrase1, phrase2,(float)1)){
 			return "1";
 		}
-		else if(similarNotes(phrase1, phrase2,(float)0.6)){
+		else if(similarNotes(phrase1, phrase2,(float)0.8)){
 			return "2";
 		}
-		else if(similarRelativePitch(phrase1, phrase2)){ //FUNKAR EJ
+		else if(similarNotes(phrase1, phrase2,(float)0.6)){
 			return "3";
 		}
-		else if(similarDuration(phrase1, phrase2)){
-			return "4";
-		}
-		else if(reflectedPitch(phrase1, phrase2)){
-			return "5";
-		}
-		else if(reflectedVertically(phrase1, phrase2)){
-			return "6";
-		}
+		//		else if(similarNotes(phrase1, phrase2,(float)0.7)){
+		//			return "7";
+		//		}
+		//		else if(similarNotes(phrase1, phrase2,(float)0.6)){
+		//			return "6";
+		//		}
+		//		else if(similarNotes(phrase1, phrase2,(float)0.5)){
+		//			return "5";
+		//		}
+		//		else if(similarNotes(phrase1, phrase2,(float)0.4)){
+		//			return "4";
+		//		}
+		//		else if(similarNotes(phrase1, phrase2,(float)0.3)){
+		//			return "3";
+		//		}
+		//		else if(similarNotes(phrase1, phrase2,(float)0.2)){
+		//			return "2";
+		//		}
+		//		else if(similarRelativePitch(phrase1, phrase2)){ //FUNKAR EJ
+		//			return "3";
+		//		}
+		//		else if(similarDuration(phrase1, phrase2)){
+		//			return "4";
+		//		}
+		//		else if(reflectedPitch(phrase1, phrase2)){
+		//			return "5";
+		//		}
+		//		else if(reflectedVertically(phrase1, phrase2)){
+		//			return "6";
+		//		}
 		else{
 			return "0";
 		}
@@ -451,7 +560,7 @@ public class StructureAnalyzer {
 
 		}
 	}
-	
+
 	private void printMatrix(String [][] matrix){
 		for(int row = 0; row < matrix.length; row++){
 			for(int col = 0; col < matrix[row].length; col++){
@@ -460,6 +569,12 @@ public class StructureAnalyzer {
 			System.out.println("");
 		}
 
+	}
+	
+	private void printArray(String [] array){
+		for(int i = 0; i < array.length; i++){
+			System.out.println(array[i]);
+		}
 	}
 
 	private double[] convertToDouble(float[] floatArray){
@@ -578,7 +693,11 @@ public class StructureAnalyzer {
 	}
 
 	private boolean similarRelativePitch(float[] vector1, float[] vector2){ // Compares two vectors if they have the same relative pitch
-		
+
+		if(countSong==8){
+			System.out.print("");
+		}
+
 		int yes=0;
 		int no=0;
 		for(int i=0; i<vector1.length-1; i++){
@@ -597,7 +716,7 @@ public class StructureAnalyzer {
 		}
 		float ratio = (float)yes/(yes+no);
 
-		System.out.println(ratio);
+		//System.out.println(ratio);
 
 
 
@@ -617,7 +736,7 @@ public class StructureAnalyzer {
 			reflVector[i] = reflVector[reflVector.length - 1 - i];
 			reflVector[reflVector.length - 1 - i] = tmp;
 		}
-		
+
 		return similarNotes(reflVector, vector2, (float)0.8);
 	}
 
@@ -633,10 +752,10 @@ public class StructureAnalyzer {
 		for(int i = 0; i < vector1.length; i++){
 			reflVector[i] = maxValue - vector1[i];
 		}
-		
+
 		return(similarRelativePitch(reflVector, vector2));
 	}
-	
+
 	private boolean scaledDuration(float[] tiny, float[] bigger){ //Compares one vector with a longer vector if they have the same pitches but a different scale of duration
 		int yes=0;
 		int no=0;
@@ -709,7 +828,7 @@ public class StructureAnalyzer {
 			}
 			System.out.println("reflectedPitch: ");
 			reflectedPitch(p1,p2);
-			
+
 		}else{ // MOTIV 5
 			double [] tiny = {52.0, 52.0, 52.0,	52.0, 54.0, 54.0, 54.0, 54.0, 65.0, 65.0, 65.0, 65.0, 69.0, 69.0, 69.0, 69.0, 72.0, 72.0, 72.0, 72.0, 74.0, 74.0, 74.0, 74.0, 76.0, 76.0, 76.0, 76.0, 78.0, 78.0, 78.0, 78.0};
 			float[] tmp2 = new float[tiny.length];
