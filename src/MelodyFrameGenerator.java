@@ -12,5 +12,5 @@ public abstract class MelodyFrameGenerator extends MelodyGenerator {
 	public abstract List<Frame> generateSong(int length);
 	public abstract List<Frame> generateSong(List<Integer> subChords);
 	public abstract List<Frame> generateSong(List<Integer> chords, Frame lastFrame);
-
+	public abstract List<Frame> eightyMutation(List<Frame> motive);
 }

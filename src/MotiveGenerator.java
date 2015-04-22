@@ -33,11 +33,26 @@ public class MotiveGenerator {
 		for(Motive motive : motives) {
 			if (motive.isNew) {
 				newMotives.put(motive.index, tmn.generateSong(doubleChord(chords.get(i)), prevFrame));
+				for(Frame m : newMotives.get(motive.index)) {
+					song.add(m.clone());
+				}
+			} else { //not new
+				List<Frame> newMotive = new ArrayList<Frame>();
+				switch (motive.getSimilarity()) {
+				case HUNDRED:
+					newMotive = newMotives.get(motive.index);
+					break;
+				case EIGHTY:
+					newMotive = mutateMotive(newMotives.get(motive.index), Percentage.EIGHTY, tmn);
+					break;
+				case SIXTY:
+					newMotive = mutateMotive(newMotives.get(motive.index), Percentage.SIXTY, tmn);
+				}
+				for(Frame m : newMotive) {
+					song.add(m);
+				}
 			}
-			for(Frame m : newMotives.get(motive.index)) {
-				song.add(m.clone());
-			}
-			System.out.println(chords.get(i));
+			
 			i++;
 			i = i%CHORDPROGLENGTH;
 			prevFrame = song.peekLast();
@@ -46,7 +61,28 @@ public class MotiveGenerator {
 		System.out.println(song);
 		return song;
 	}
-	
+	//Assumes the motive List is 4 frames long
+	private List<Frame> mutateMotive(List<Frame> motive, Percentage similarity, MelodyFrameGenerator tmn) {
+		if(motive.size() != 2) {
+			throw new IllegalArgumentException("cannot mutate a motive that isn't exactly 2 frames long");
+		}
+		List<Frame> newMotive = new ArrayList<Frame>();
+		List<Integer> chords = new ArrayList<Integer>();
+		switch (similarity) {
+		case EIGHTY:
+			newMotive = tmn.eightyMutation(motive);
+			break;
+		case SIXTY: // mutates half the frames
+			newMotive.add(motive.get(0).clone());
+			chords.add(motive.get(1).getChord());
+			newMotive.addAll(tmn.generateSong(chords, motive.get(0)));
+			break;
+		default:
+			throw new IllegalArgumentException();
+		}
+		return newMotive;
+	}
+
 	private static LinkedList<Frame> fixChords(LinkedList<Frame> song, List<Integer> chordProg) {
 		int j = 0;
 		for(int i = 0; i < song.size(); i+=2) {

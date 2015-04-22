@@ -203,5 +203,13 @@ public class Tmn extends MelodyFrameGenerator{
 		}
 		return newData;
 	}
+	/**
+	 * Mutates a given pair of frames so that is resembles the original to 80%
+	 */
+	@Override
+	public List<Frame> eightyMutation(List<Frame> framePairs) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }
