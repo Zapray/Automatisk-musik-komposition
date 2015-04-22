@@ -25,9 +25,11 @@ public class StructureAnalyzer {
 	private ArrayList<Float> pitchList = new ArrayList<Float>();
 	private ArrayList<Float> durationList = new ArrayList<Float>();
 	private String[][] patternMatrix;
+	private String[] patternArray;
 	private int countEquals = 0;
 	private int countSection = 0;
 	private int countSong = 0;
+	private int countSectionType;
 	private String textFile = "/Databases_parts/chorus.txt";
 	private String outputTextFile2 = "/Sections.txt";
 	private String outputTextFile = "/Yolo.txt";
@@ -233,12 +235,6 @@ public class StructureAnalyzer {
 				}
 			}
 			patternMatrix = new String[sections.size()][4];
-			String[] patternArray = new String[sections.size()];
-			int countSectionType = 0;
-			
-			
-
-
 			for(int first=0; first < sections.size(); first++){
 				for(int second=first+1; second < sections.size(); second++){
 					//*******************SECTIONS********************//
@@ -246,96 +242,24 @@ public class StructureAnalyzer {
 					int secondSection = second+1;
 					//String hej = patternMatrix[0][0];
 					compareBars(data.get(first), data.get(second), firstSection, secondSection);
-					//Replace with 00
-					for(int row = 0; row < patternMatrix.length; row++){
-						for(int col = 0; col < patternMatrix[row].length; col++){
-							if(patternMatrix[row][col]==null){
-								patternMatrix[row][col]="00";
-								//countEquals++;
-							}
-
-						}
+				}
+			}
+			for(int row = 0; row < patternMatrix.length; row++){
+				for(int col = 0; col < patternMatrix[row].length; col++){
+					if(patternMatrix[row][col]==null){
+						patternMatrix[row][col]="00";
+						//countEquals++;
 					}
-					//COMPARE SECTIONS (patternMatrix done)
-//					int bar=0;
-//					while(patternMatrix[first][bar].charAt(0) == patternMatrix[second][bar].charAt(0) && bar < 4){
-//						status = "REP";
-//						countSimilarBars++;
-//						bar++;
-//					}
-					String status = "NEW";
-					String similarBars = "";
-					for(int bar = 0; bar < 4; bar++){
-						if((patternMatrix[first][bar].charAt(0) == patternMatrix[second][bar].charAt(0) && bar < 4)){
-							similarBars = similarBars + Integer.toString(bar+1);
-							status = "REP";
-						}
-					}
-					if(status == "REP"){
-
-						if(patternArray[first] == null){
-							countSectionType++;
-							if(patternArray[second] == null){
-								patternArray[first] = Integer.toString(countSectionType++) + "N";
-								patternArray[second] = patternArray[first].charAt(0) + "R" + similarBars;
-							}else{
-								if(patternArray[second].length()-2 < similarBars.length()){
-									patternArray[first] = Integer.toString(countSectionType++) + "N";
-									patternArray[second] = patternArray[first].charAt(0) + "R" + similarBars;
-								}
-							}
-						}else{
-							if(patternArray[first].charAt(1) == 'R'){
-								if(patternArray[second]==null){
-									patternArray[first] = Integer.toString(countSectionType++) + "N";
-									patternArray[second] = patternArray[first].charAt(0) + "R" + similarBars;
-								}else{
-									if(patternArray[second].length()-2 < similarBars.length()){
-										patternArray[first] = Integer.toString(countSectionType++) + "N";
-										patternArray[second] = patternArray[first].charAt(0) + "R" + similarBars;
-									}
-								}
-							}else{
-								if(patternArray[second] == null){
-									patternArray[second] = patternArray[first].charAt(0) + "R" + similarBars;
-								}else{
-									if(patternArray[second].length()-2 < similarBars.length()){
-										patternArray[second] = patternArray[first].charAt(0) + "R" + similarBars;
-									}
-								}
-							}
-						}
-					}
-
-					
-					//					for(int bar = 0; bar < 4; bar++){
-					//						if(patternMatrix[first][bar].charAt(0) == patternMatrix[second][bar].charAt(0)){
-					//							status = "REP";
-					//							countSimilarBars++;
-					//						}
-					//					}
-
-					//					while(patternMatrix[second][bar].charAt(1) == 1 && bar < 4){
-					//						countSimilarBars++;
-					//						bar++;
-					//					}
-					//					for(int i = 0; i < 4; i++){
-					//						if(patternMatrix[second][i].charAt(1)==1){
-					//							trueSimilarBarCount++;
-					//						}
-					//					}
-					//					if(countSimilarBars == trueSimilarBarCount){
-					//						patternArray[second] = Integer.toString(countSectionType) + Integer.toString(REP) + Integer.toString(countSimilarBars);
-					//						//outFile2.print(countSectionType + ",REP," + countSimilarBars);
-					//					}else{
-					//						patternArray[second] = Integer.toString(countSectionType++) + Integer.toString(NEW);
-					//						//outFile2.print(countSectionType++ + ",NEW");
-					//					}
-
 
 				}
 			}
-			
+			compareSections();
+			for(int i = 0; i < patternArray.length; i++){
+				if(patternArray[i]==null){
+					countSectionType++;
+					patternArray[i] = countSectionType + "N";
+				}
+			}
 			for(int row = 0; row < patternMatrix.length; row++){
 				for(int col = 0; col < patternMatrix[row].length; col++){
 					outFile.print(patternMatrix[row][col]);
@@ -358,6 +282,61 @@ public class StructureAnalyzer {
 			}
 		}
 
+	}
+
+	private void compareSections(){
+		patternArray = new String[sections.size()];
+		countSectionType = 0;
+		for(int first=0; first < sections.size(); first++){
+			for(int second=first+1; second < sections.size(); second++){
+
+				//COMPARE SECTIONS (patternMatrix done)
+				String status = "NEW";
+				String similarBars = "";
+				for(int bar = 0; bar < 4; bar++){
+					if((patternMatrix[first][bar].charAt(0) == patternMatrix[second][bar].charAt(0) && bar < 4)){
+						similarBars = similarBars + Integer.toString(bar+1);
+						status = "REP";
+					}
+				}
+				if(status == "REP"){
+
+					if(patternArray[first] == null){
+						countSectionType++;
+						if(patternArray[second] == null){
+							patternArray[first] = Integer.toString(countSectionType) + "N";
+							patternArray[second] = patternArray[first].charAt(0) + "R" + similarBars;
+						}else{
+							if(patternArray[second].length()-2 < similarBars.length()){
+								patternArray[first] = Integer.toString(countSectionType) + "N";
+								patternArray[second] = patternArray[first].charAt(0) + "R" + similarBars;
+							}
+						}
+					}else{
+						if(patternArray[first].charAt(1) == 'R'){
+							countSectionType++;
+							if(patternArray[second]==null){
+								patternArray[first] = Integer.toString(countSectionType) + "N";
+								patternArray[second] = patternArray[first].charAt(0) + "R" + similarBars;
+							}else{
+								if(patternArray[second].length()-2 < similarBars.length()){
+									patternArray[first] = Integer.toString(countSectionType) + "N";
+									patternArray[second] = patternArray[first].charAt(0) + "R" + similarBars;
+								}
+							}
+						}else{
+							if(patternArray[second] == null){
+								patternArray[second] = patternArray[first].charAt(0) + "R" + similarBars;
+							}else{
+								if(patternArray[second].length()-2 < similarBars.length()){
+									patternArray[second] = patternArray[first].charAt(0) + "R" + similarBars;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	private void compareBars(ArrayList<ArrayList<Float>> section1, ArrayList<ArrayList<Float>> section2, int firstSection, int secondSection){
