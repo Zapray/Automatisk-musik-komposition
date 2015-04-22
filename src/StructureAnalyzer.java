@@ -18,7 +18,7 @@ import matlabcontrol.extensions.MatlabTypeConverter;
 
 public class StructureAnalyzer {
 
-	private boolean isPlottingOn = false; //Set to true if you wish to plot the section while debugging
+	private boolean isPlottingOn = true; //Set to true if you wish to plot the section while debugging
 	private ArrayList<ArrayList<ArrayList<Float>>> data = new ArrayList<ArrayList<ArrayList<Float>>>();
 	private ArrayList<float[]> oneBars = new ArrayList<float[]>();
 	private ArrayList<float[]> sections = new ArrayList<float[]>();
@@ -113,6 +113,8 @@ public class StructureAnalyzer {
 					if(data.size() > 1 && isDurationFour){
 						analyzeMotifs();
 						printMatrix(patternMatrix);
+						System.out.println();
+						printArray(patternArray);
 						System.out.println();
 						//otherTextFileThingy(patternMatrix);
 					}
@@ -250,7 +252,6 @@ public class StructureAnalyzer {
 						patternMatrix[row][col]="00";
 						//countEquals++;
 					}
-
 				}
 			}
 			compareSections();
@@ -294,7 +295,9 @@ public class StructureAnalyzer {
 				String status = "NEW";
 				String similarBars = "";
 				for(int bar = 0; bar < 4; bar++){
-					if((patternMatrix[first][bar].charAt(0) == patternMatrix[second][bar].charAt(0) && bar < 4)){
+					if((patternMatrix[first][bar].charAt(0) == patternMatrix[second][bar].charAt(0) 
+							&& patternMatrix[first][bar].charAt(0) != '0' 
+							&& bar < 4)){
 						similarBars = similarBars + Integer.toString(bar+1);
 						status = "REP";
 					}
@@ -384,7 +387,7 @@ public class StructureAnalyzer {
 		for(int first=0; first<8; first++){
 			for(int second=first+1; second<8; second++){
 
-				if(countSong==8 && first == 0 && second == 5){
+				if(countSong==10){
 					System.out.print("");
 				}
 				if(countSong == 3 && firstSection == 1 && secondSection == 3 && first == 0 && second == 6){
@@ -401,24 +404,26 @@ public class StructureAnalyzer {
 					//System.out.println("Equal bars: " + firstBar + " and " + secondBar);
 
 					if(firstBar <=4 && secondBar<=4){
-						//Check to see if matrix entry is empty or not (initialize or copy value)
-						if(patternMatrix[firstSection-1][first] == null){
+						if(patternMatrix[firstSection-1][first] == null){//First bar is null - INITIALIZE NEW PATTERN
 							countEquals++;
 							patternMatrix[firstSection-1][first] = Integer.toString(countEquals) + "0";
 							if(patternMatrix[firstSection-1][first].charAt(1) < motive.charAt(0) && patternMatrix[firstSection-1][second] != null){
-								//Do nothing
+								//Do nothing CAUSE PATTERN THAT EXISTS IS BETTER THAN THE NEWLY FOUND PATTERN
 							}else{
+								//CHANGE CAUSE NEWLY FOUND PATTERN IS BETTER
 								patternMatrix[firstSection-1][second] = patternMatrix[firstSection-1][first].charAt(0) + motive;
 							}
-						}else{
+						}else{ //First bar have been paired
 							if(patternMatrix[firstSection-1][first] != null && patternMatrix[firstSection-1][first].charAt(1) > motive.charAt(0)){
+								//Compare first bar: INITIALIZE NEW PATTERN CAUSE PATTERN IS BETTER (need to send a number to the previous pattern)
 								countEquals++;
 								patternMatrix[firstSection-1][first] = Integer.toString(countEquals) + "0";
 								patternMatrix[firstSection-1][second] = patternMatrix[firstSection-1][first].charAt(0) + motive;
 
 							}else if(patternMatrix[firstSection-1][second] != null 
 									&& patternMatrix[firstSection-1][second].charAt(1) < motive.charAt(0)){
-								//Do nothing
+								//Check second bar: DO NOTHING CAUSE PATTERN 
+
 							}
 							else{
 								patternMatrix[firstSection-1][second] = patternMatrix[firstSection-1][first].charAt(0) + motive;
@@ -426,26 +431,28 @@ public class StructureAnalyzer {
 
 						}
 					}else if(firstBar <= 4 && secondBar > 4){
-						//Check to see if matrix entry is empty or not (initialize or copy value)
-						if(patternMatrix[firstSection-1][first] == null){
+						if(patternMatrix[firstSection-1][first] == null){//First bar is null - INITIALIZE NEW PATTERN
 							countEquals++;
 							patternMatrix[firstSection-1][first] = Integer.toString(countEquals) + "0";
 							if(patternMatrix[firstSection-1][first].charAt(1) < motive.charAt(0) && patternMatrix[secondSection-1][second-4] != null){
-								//Do nothing
+								//Do nothing CAUSE PATTERN THAT EXISTS IS BETTER THAN THE NEWLY FOUND PATTERN
 							}else{
+								//CHANGE CAUSE NEWLY FOUND PATTERN IS BETTER
 								patternMatrix[secondSection-1][second-4] = patternMatrix[firstSection-1][first].charAt(0) + motive;
 							}
 
-						}else {
+						}else { //First bar have been paired
+							//
 							if(patternMatrix[firstSection-1][first] != null && patternMatrix[firstSection-1][first].charAt(1) > motive.charAt(0)){
 								countEquals++;
 								patternMatrix[firstSection-1][first] = Integer.toString(countEquals) + "0";
 								patternMatrix[secondSection-1][second-4] = patternMatrix[firstSection-1][first].charAt(0) + motive;
 							}else if(patternMatrix[secondSection-1][second-4] != null 
 									&& patternMatrix[secondSection-1][second-4].charAt(1) < motive.charAt(0)){
-								//Do nothing
+								//Do nothing CAUSE PATTERN THAT EXISTS IS BETTER THAN THE NEWLY FOUND PATTERN
 							}
 							else{
+								//CHANGE CAUSE NEWLY FOUND PATTERN IS BETTER
 								patternMatrix[secondSection-1][second-4] = patternMatrix[firstSection-1][first].charAt(0) + motive;
 							}
 
@@ -562,6 +569,12 @@ public class StructureAnalyzer {
 			System.out.println("");
 		}
 
+	}
+	
+	private void printArray(String [] array){
+		for(int i = 0; i < array.length; i++){
+			System.out.println(array[i]);
+		}
 	}
 
 	private double[] convertToDouble(float[] floatArray){
