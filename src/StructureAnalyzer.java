@@ -234,12 +234,10 @@ public class StructureAnalyzer {
 			}
 			patternMatrix = new String[sections.size()][4];
 			String[] patternArray = new String[sections.size()];
-			int countSectionType = 1;
-			int countSimilarBars = 0;
-			int trueSimilarBarCount = 0;
-			String status = "NEW";
-			int NEW = 0;
-			int REP = 1;
+			int countSectionType = 0;
+			
+			
+
 
 			for(int first=0; first < sections.size(); first++){
 				for(int second=first+1; second < sections.size(); second++){
@@ -248,83 +246,96 @@ public class StructureAnalyzer {
 					int secondSection = second+1;
 					//String hej = patternMatrix[0][0];
 					compareBars(data.get(first), data.get(second), firstSection, secondSection);
+					//Replace with 00
+					for(int row = 0; row < patternMatrix.length; row++){
+						for(int col = 0; col < patternMatrix[row].length; col++){
+							if(patternMatrix[row][col]==null){
+								patternMatrix[row][col]="00";
+								//countEquals++;
+							}
 
+						}
+					}
 					//COMPARE SECTIONS (patternMatrix done)
-					
 //					int bar=0;
-//					while(patternMatrix[first][bar].charAt(0) == patternMatrix[second][bar].charAt(0)){
+//					while(patternMatrix[first][bar].charAt(0) == patternMatrix[second][bar].charAt(0) && bar < 4){
 //						status = "REP";
 //						countSimilarBars++;
 //						bar++;
 //					}
-//					if(status == "REP"){
-//						
-//						patternArray[first] = Integer.toString(countSectionType) + NEW + "0";
-//						patternArray[second] = Integer.toString(countSectionType) + status + Integer.toString(countSimilarBars);
-//					}
-//					
-					if(patternArray[first] == null){
-						countSectionType++;
-						patternArray[first] = Integer.toString(countSectionType) + "NEW" + "0";
-						if(patternArray[first].charAt(2) > countSimilarBars && patternArray[second] != null){
-							//Do nothing
-						}else{
-							patternArray[second] = patternArray[first].charAt(0) + REP + Integer.toString(countSimilarBars);
+					String status = "NEW";
+					String similarBars = "";
+					for(int bar = 0; bar < 4; bar++){
+						if((patternMatrix[first][bar].charAt(0) == patternMatrix[second][bar].charAt(0) && bar < 4)){
+							similarBars = similarBars + Integer.toString(bar+1);
+							status = "REP";
 						}
-					}else{
-						if(patternArray[first] != null && patternArray[first].charAt(1) > countSimilarBars){
+					}
+					if(status == "REP"){
+
+						if(patternArray[first] == null){
 							countSectionType++;
-							patternArray[first] = Integer.toString(countSectionType) + NEW + "0";
-							patternArray[second] = patternArray[first].charAt(0) + REP +Integer.toString(countSimilarBars);
-
-						}else if(patternArray[second] != null 
-								&& patternArray[second].charAt(2) < countSimilarBars){
-							//Do nothing
+							if(patternArray[second] == null){
+								patternArray[first] = Integer.toString(countSectionType++) + "N";
+								patternArray[second] = patternArray[first].charAt(0) + "R" + similarBars;
+							}else{
+								if(patternArray[second].length()-2 < similarBars.length()){
+									patternArray[first] = Integer.toString(countSectionType++) + "N";
+									patternArray[second] = patternArray[first].charAt(0) + "R" + similarBars;
+								}
+							}
+						}else{
+							if(patternArray[first].charAt(1) == 'R'){
+								if(patternArray[second]==null){
+									patternArray[first] = Integer.toString(countSectionType++) + "N";
+									patternArray[second] = patternArray[first].charAt(0) + "R" + similarBars;
+								}else{
+									if(patternArray[second].length()-2 < similarBars.length()){
+										patternArray[first] = Integer.toString(countSectionType++) + "N";
+										patternArray[second] = patternArray[first].charAt(0) + "R" + similarBars;
+									}
+								}
+							}else{
+								if(patternArray[second] == null){
+									patternArray[second] = patternArray[first].charAt(0) + "R" + similarBars;
+								}else{
+									if(patternArray[second].length()-2 < similarBars.length()){
+										patternArray[second] = patternArray[first].charAt(0) + "R" + similarBars;
+									}
+								}
+							}
 						}
-						else{
-							patternArray[second] = patternArray[first].charAt(0) + REP +Integer.toString(countSimilarBars);
-						}
-
 					}
-					
-				
 
-//					for(int bar = 0; bar < 4; bar++){
-//						if(patternMatrix[first][bar].charAt(0) == patternMatrix[second][bar].charAt(0)){
-//							status = "REP";
-//							countSimilarBars++;
-//						}
-//					}
 					
-//					while(patternMatrix[second][bar].charAt(1) == 1 && bar < 4){
-//						countSimilarBars++;
-//						bar++;
-//					}
-//					for(int i = 0; i < 4; i++){
-//						if(patternMatrix[second][i].charAt(1)==1){
-//							trueSimilarBarCount++;
-//						}
-//					}
-//					if(countSimilarBars == trueSimilarBarCount){
-//						patternArray[second] = Integer.toString(countSectionType) + Integer.toString(REP) + Integer.toString(countSimilarBars);
-//						//outFile2.print(countSectionType + ",REP," + countSimilarBars);
-//					}else{
-//						patternArray[second] = Integer.toString(countSectionType++) + Integer.toString(NEW);
-//						//outFile2.print(countSectionType++ + ",NEW");
-//					}
+					//					for(int bar = 0; bar < 4; bar++){
+					//						if(patternMatrix[first][bar].charAt(0) == patternMatrix[second][bar].charAt(0)){
+					//							status = "REP";
+					//							countSimilarBars++;
+					//						}
+					//					}
+
+					//					while(patternMatrix[second][bar].charAt(1) == 1 && bar < 4){
+					//						countSimilarBars++;
+					//						bar++;
+					//					}
+					//					for(int i = 0; i < 4; i++){
+					//						if(patternMatrix[second][i].charAt(1)==1){
+					//							trueSimilarBarCount++;
+					//						}
+					//					}
+					//					if(countSimilarBars == trueSimilarBarCount){
+					//						patternArray[second] = Integer.toString(countSectionType) + Integer.toString(REP) + Integer.toString(countSimilarBars);
+					//						//outFile2.print(countSectionType + ",REP," + countSimilarBars);
+					//					}else{
+					//						patternArray[second] = Integer.toString(countSectionType++) + Integer.toString(NEW);
+					//						//outFile2.print(countSectionType++ + ",NEW");
+					//					}
 
 
 				}
 			}
-			for(int row = 0; row < patternMatrix.length; row++){
-				for(int col = 0; col < patternMatrix[row].length; col++){
-					if(patternMatrix[row][col]==null){
-						patternMatrix[row][col]="00";
-						//countEquals++;
-					}
-					
-				}
-			}
+			
 			for(int row = 0; row < patternMatrix.length; row++){
 				for(int col = 0; col < patternMatrix[row].length; col++){
 					outFile.print(patternMatrix[row][col]);
@@ -334,10 +345,16 @@ public class StructureAnalyzer {
 				}
 				outFile.println();
 			}
-			outFile.println('-');
+			for(int i = 0; i < patternArray.length; i++){
+					outFile2.println(patternArray[i]);
+			}
+			outFile2.println('-');
 		} finally{
 			if(outFile != null){
 				outFile.close();
+			}
+			if(outFile2 != null){
+				outFile2.close();
 			}
 		}
 
@@ -484,8 +501,8 @@ public class StructureAnalyzer {
 				}
 			}
 		}
-				//countEquals++;
-				
+		//countEquals++;
+
 		oneBars=new ArrayList<float[]>();
 	}
 
@@ -501,36 +518,36 @@ public class StructureAnalyzer {
 		else if(similarNotes(phrase1, phrase2,(float)0.6)){
 			return "3";
 		}
-//		else if(similarNotes(phrase1, phrase2,(float)0.7)){
-//			return "7";
-//		}
-//		else if(similarNotes(phrase1, phrase2,(float)0.6)){
-//			return "6";
-//		}
-//		else if(similarNotes(phrase1, phrase2,(float)0.5)){
-//			return "5";
-//		}
-//		else if(similarNotes(phrase1, phrase2,(float)0.4)){
-//			return "4";
-//		}
-//		else if(similarNotes(phrase1, phrase2,(float)0.3)){
-//			return "3";
-//		}
-//		else if(similarNotes(phrase1, phrase2,(float)0.2)){
-//			return "2";
-//		}
-//		else if(similarRelativePitch(phrase1, phrase2)){ //FUNKAR EJ
-//			return "3";
-//		}
-//		else if(similarDuration(phrase1, phrase2)){
-//			return "4";
-//		}
-//		else if(reflectedPitch(phrase1, phrase2)){
-//			return "5";
-//		}
-//		else if(reflectedVertically(phrase1, phrase2)){
-//			return "6";
-//		}
+		//		else if(similarNotes(phrase1, phrase2,(float)0.7)){
+		//			return "7";
+		//		}
+		//		else if(similarNotes(phrase1, phrase2,(float)0.6)){
+		//			return "6";
+		//		}
+		//		else if(similarNotes(phrase1, phrase2,(float)0.5)){
+		//			return "5";
+		//		}
+		//		else if(similarNotes(phrase1, phrase2,(float)0.4)){
+		//			return "4";
+		//		}
+		//		else if(similarNotes(phrase1, phrase2,(float)0.3)){
+		//			return "3";
+		//		}
+		//		else if(similarNotes(phrase1, phrase2,(float)0.2)){
+		//			return "2";
+		//		}
+		//		else if(similarRelativePitch(phrase1, phrase2)){ //FUNKAR EJ
+		//			return "3";
+		//		}
+		//		else if(similarDuration(phrase1, phrase2)){
+		//			return "4";
+		//		}
+		//		else if(reflectedPitch(phrase1, phrase2)){
+		//			return "5";
+		//		}
+		//		else if(reflectedVertically(phrase1, phrase2)){
+		//			return "6";
+		//		}
 		else{
 			return "0";
 		}
