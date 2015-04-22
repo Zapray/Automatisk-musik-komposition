@@ -65,34 +65,21 @@ public class Main {
 		Tmn tmn = new Tmn(pMax, dMax, cMax, mm.getDurationConversionTable());
 		tmn.train(l);
 
-		List<Section> sections = new ArrayList<Section>(); // = StructueGenerator.GenerateStructure(frames)
-		List<Motive> mvl= new ArrayList<Motive>();
-		mvl.add(Motive.exampleMot()); // temporary structure
-		mvl.add(new Motive(MotiveVariation.REPEAT, 1, 4));
-		mvl.add(new Motive(MotiveVariation.NEW, 2, 1));
-		mvl.add(new Motive(MotiveVariation.NEW, 3, 1));
-		mvl.add(new Motive(MotiveVariation.REPEAT, 2, 1));
-		List<Motive> mvl2= new ArrayList<Motive>();
-		mvl2.add(Motive.exampleMot()); // temporary structure
-		mvl2.add(new Motive(MotiveVariation.REPEAT, 1, 4));
-		mvl2.add(new Motive(MotiveVariation.NEW, 2, 1));
-		mvl2.add(new Motive(MotiveVariation.NEW, 3, 1));
-		mvl2.add(new Motive(MotiveVariation.REPEAT, 2, 1));
 		
-		//TODO drums seem to stop after a while?
-		
-		sections.add(new Section(mvl, 1, true,0));
-		sections.add(new Section(mvl, 1, false,0));
-		sections.add(new Section(mvl2, 2, true,0));
-		
+		List<Motive> mvl = new ArrayList<Motive>();  // = StructueGenerator.GenerateStructure(frames)
+		mvl.add(new Motive(1));
+		mvl.add(new Motive(2));
+		mvl.add(new Motive(1, false, Percentage.HUNDRED));
+		mvl.add(new Motive(2, false, Percentage.HUNDRED));
+		mvl.add(new Motive(3));
+		mvl.add(new Motive(4));
+		mvl.add(new Motive(5));
+		mvl.add(new Motive(6));
+		frames = mvl.size();//magic number!
 		MotiveGenerator mg = new MotiveGenerator();
 		ChordMarkov markov = new ChordMarkov(CHORDORDER, cMax, l);
-		int nrOfChords = 0;
-		for(Section section : sections) {
-			nrOfChords = section.getLength();
-		}
 				
-		List<Frame> song = mg.generateSong(tmn, sections, markov.generateChordProg(nrOfChords));
+		List<Frame> song = mg.generateSong(tmn, mvl, markov);
 		
 		System.out.println(mm.analyzeSong(song));
 		

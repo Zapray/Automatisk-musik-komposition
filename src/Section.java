@@ -39,16 +39,4 @@ public class Section {
 	public List<Motive> getMotives() {
 		return motives;
 	}
-	/**
-	 * 
-	 * @return how long the Section is in bars
-	 */
-	public int getLength() {
-		int length = 0;
-		for(Motive m : motives) {
-			length+=m.bars;
-		}
-		return length;
-	}
-	
 }

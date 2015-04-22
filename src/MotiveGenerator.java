@@ -10,63 +10,73 @@ import java.util.List;
  *
  */
 public class MotiveGenerator {
-
+	public static final int CHORDPROGLENGTH = 4;
 	public MotiveGenerator() {
 		
 	}
 	
 	/**
-	 * Assumes chords and sections are of the same total bar length
 	 * @param tmn
 	 * @param sections
-	 * @param chords
+	 * @param chordMarkov
 	 * @return
 	 */
-	public List<Frame> generateSong(MelodyFrameGenerator tmn, List<Section> sections, List<Integer> chords) {
+	public List<Frame> generateSong(MelodyFrameGenerator tmn, List<Motive> motives, ChordMarkov chordMarkov) {
+		LinkedList<Frame> song = new LinkedList<Frame>();
+		Frame prevFrame = null;	
+		List<Integer> chords = chordMarkov.generateChordProg(CHORDPROGLENGTH);
+		HashMap<Integer, List<Frame>> newMotives = new HashMap<Integer, List<Frame>>();
+		int i = 0;
 		
-		chords = doubleChords(chords);
-		HashMap<Integer, List<Frame>> sectionMap = new HashMap<Integer, List<Frame>>(); 
-		LinkedList<Frame> song = new LinkedList<Frame>(); 
-		Frame prevFrame = null;
-		for(Section section : sections) {
-			if(!section.isNew) {
-				song.addAll(sectionMap.get(section.sectionID));
-			}else {
-				HashMap<Integer, List<Frame>> newMotives = new HashMap<Integer, List<Frame>>();
-				LinkedList<Frame> songSection = new LinkedList<Frame>();
-				List<Integer> typeIndexes = new ArrayList<Integer>();
-				
-				for(Motive motive : section.getMotives()) {
-					switch (motive.variation) {
-						case NEW:
-							List<Integer> subChords = new ArrayList<Integer>();
-							for(int i = 0; i < motive.bars; i++) {
-								subChords.add(chords.remove(i));
-							}
-							newMotives.put(motive.index, tmn.generateSong(subChords, prevFrame));
-							songSection.addAll(newMotives.get(motive.index));
-							break;
-						case REPEAT:
-							songSection.addAll(newMotives.get(motive.index));
-							break;
-						//Add more cases for the new motives here
-					}
-				}
-				song.addAll(songSection);
-				sectionMap.put(section.sectionID, songSection);
+		System.out.println(chords);
+		
+		for(Motive motive : motives) {
+			if (motive.isNew) {
+				newMotives.put(motive.index, tmn.generateSong(doubleChord(chords.get(i)), prevFrame));
 			}
+			for(Frame m : newMotives.get(motive.index)) {
+				song.add(m.clone());
+			}
+			System.out.println(chords.get(i));
+			i++;
+			i = i%CHORDPROGLENGTH;
 			prevFrame = song.peekLast();
-			//
+		}
+		song = fixChords(song, chords);
+		System.out.println(song);
+		return song;
+	}
+	
+	private static LinkedList<Frame> fixChords(LinkedList<Frame> song, List<Integer> chordProg) {
+		int j = 0;
+		for(int i = 0; i < song.size(); i+=2) {
+			song.get(i).setChord(chordProg.get(j));
+			song.get(i+1).setChord(chordProg.get(j));
+			j++;
+			j = j%CHORDPROGLENGTH;
 		}
 		return song;
 	}
-	private static List<Integer> doubleChords(List<Integer> pre) {
+
+	private static List<Integer> doubleChord(Integer i) {
 		List<Integer> post = new ArrayList<Integer>();
-		for(Integer i: pre) {
-			post.add(new Integer(i));
-			post.add(new Integer(i));
-		}
+		post.add(new Integer(i));
+		post.add(new Integer(i));
 		return post;
 		
+	}
+	public static void main(String[] args) {
+		List<Integer> chords = new ArrayList<Integer>();
+		chords.add(1);
+		chords.add(2);
+		chords.add(3);
+		LinkedList<Frame> song = new LinkedList<Frame>();
+		song.add(new Frame(null, 4));
+		song.add(new Frame(null, 4));
+		song.add(new Frame(null, 4));
+		song.add(new Frame(null, 4));
+		song.add(new Frame(null, 4));
+		song.add(new Frame(null, 4));
+		System.out.println(fixChords(song,chords));
 	}
 }

@@ -28,4 +28,15 @@ public class Frame {
 		return melodyPackage.get(melodyPackage.size()-1);
 
 	}
+	public void setChord(Integer integer) {
+		// TODO Auto-generated method stub
+		chord = integer;
+	}
+	@Override
+	public String toString() {
+		return "frame wtih chord = " + chord; 
+	}
+	public Frame clone() {
+		return new Frame(melodyPackage, chord);
+	}
 }

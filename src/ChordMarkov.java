@@ -31,14 +31,14 @@ public class ChordMarkov {
 		}
 		return songList;
 	}
-	public List<Integer> generateChordProg (int bars) {
+	public List<Integer> generateChordProg (int chords) {
 		ArrayList<Float> conversionTable = new ArrayList<Float>();
 		//creating a silly conversionTable so that I can reuse the NMarkov code
 		for(int i = 0; i < markovChain.pMax; i++) {
 			conversionTable.add(new Float(1));
 		}
 		
-		List<Note> NoteList = markovChain.generateSong(bars, conversionTable);
+		List<Note> NoteList = markovChain.generateSong(chords, conversionTable);
 		List<Integer> chordList = new ArrayList<Integer>();
 		for(Note note : NoteList) {
 			chordList.add(new Integer(note.getPitch()));

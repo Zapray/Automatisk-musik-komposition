@@ -1,17 +1,29 @@
 
 
 public class Motive {
-	public MotiveVariation variation;
+	public Boolean isNew;
 	public int index;
-	public int bars;
+	private Percentage similarity;
+	public static int FRAMESIZE = 2;
 	
-	public Motive(MotiveVariation variation, int index, int bars) {
-		this.variation = variation;
+	public Motive(int index, Boolean isNew, Percentage similarity) {
+		this.isNew = isNew;
 		this.index = index;
-		this.bars = bars;
+		this.similarity = similarity;
 	}
-	
-	public static Motive exampleMot() { //SICK EXAMPLE YO
-		return new Motive(MotiveVariation.NEW, 1, 4);
+	/**
+	 * Creates a new Motive
+	 * @param index
+	 */
+	public Motive(int index) {
+		this.isNew = true;
+		this.index = index;
+		this.similarity = null;
+	}
+	public Percentage getSimilarity() {
+		if(similarity == null) {
+			throw new IllegalArgumentException();
+		}
+		return similarity;
 	}
 }
