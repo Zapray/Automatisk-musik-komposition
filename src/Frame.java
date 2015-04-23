@@ -39,4 +39,13 @@ public class Frame {
 	public Frame clone() {
 		return new Frame(melodyPackage, chord);
 	}
+	@Override
+	public boolean equals(Object o) {
+		if ( o instanceof Frame) {
+			return (chord == ((Frame)o).getChord()) && melodyPackage.equals(((Frame)o).getMelodyPackage());
+		}else {
+			return false;
+		}
+		
+	}
 }

@@ -28,8 +28,6 @@ public class MotiveGenerator {
 		HashMap<Integer, List<Frame>> newMotives = new HashMap<Integer, List<Frame>>();
 		int i = 0;
 		
-		System.out.println(chords);
-		
 		for(Motive motive : motives) {
 			if (motive.isNew) {
 				newMotives.put(motive.index, tmn.generateSong(doubleChord(chords.get(i)), prevFrame));
@@ -58,7 +56,6 @@ public class MotiveGenerator {
 			prevFrame = song.peekLast();
 		}
 		song = fixChords(song, chords);
-		System.out.println(song);
 		return song;
 	}
 	//Assumes the motive List is 4 frames long

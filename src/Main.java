@@ -68,10 +68,8 @@ public class Main {
 		
 		List<Motive> mvl = new ArrayList<Motive>();  // = StructueGenerator.GenerateStructure(frames)
 		mvl.add(new Motive(1));
-		mvl.add(new Motive(1, false, Percentage.HUNDRED));
-		mvl.add(new Motive(1, false, Percentage.SIXTY));
-		mvl.add(new Motive(1, false, Percentage.SIXTY));
-		mvl.add(new Motive(1, false, Percentage.SIXTY));
+		mvl.add(new Motive(1, false, Percentage.EIGHTY));
+		mvl.add(new Motive(1, false, Percentage.EIGHTY));
 		frames = mvl.size();//magic number!
 		MotiveGenerator mg = new MotiveGenerator();
 		ChordMarkov markov = new ChordMarkov(CHORDORDER, cMax, l);

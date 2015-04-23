@@ -21,7 +21,8 @@ public class Tmn extends MelodyFrameGenerator{
 	private NMarkov chordsMarkov;
 	private static final int chordsOrder = 3;
 	private static final int MELODYORDER = 2;
-	private static List<? extends List<Frame>> data;
+	private static final double FRAMELENGTH = 0.5;
+	private List<? extends List<Frame>> data;
 	/**
 	 * 
 	 * @param pMax the maximum allowed number of pitches
@@ -85,16 +86,15 @@ public class Tmn extends MelodyFrameGenerator{
 		return chordData;
 	}
 
-	public Frame generateFrame(Frame prev, Random rand, int chord) {
+	public Frame generateFrame(Frame prev, Random rand, int chord, double length) {
 //		ArrayList<Note> prevs = new ArrayList<Note>();
 //		prevs.add(new Note(1, prev.getChord()));
 		//int chord = chordsMarkov.generateNote(prevs, rand).getPitch();
 		
 		int pitch = generatePitch(prev.getLastNote().getPitch(), chord ,rand);
-		
 		NMarkov melodyGen = new NMarkov(MELODYORDER, pMax, dMax);
 		melodyGen.train(filterData(chord, data));
-		List<Note> melodyPackage = melodyGen.generateSong(0.5, pitch, conversionTable); //halvtakter
+		List<Note> melodyPackage = melodyGen.generateSong(length, pitch, conversionTable); //halvtakter
 		//hopefully the garbage collector deals with the old melodyGen here
 		return new Frame(melodyPackage, chord);
 	}
@@ -150,7 +150,6 @@ public class Tmn extends MelodyFrameGenerator{
 		}
 		return generateSong(chords);
 	}
-
 	@Override
 	public List<Frame> generateSong(List<Integer> chords) {
 		
@@ -167,7 +166,7 @@ public class Tmn extends MelodyFrameGenerator{
 		Frame prevFrame = new Frame(firstNoteList, prevChord);
 		
 		for(int i = 0; i < chords.size(); i++) {
-			Frame newFrame = generateFrame(prevFrame, rand, chords.get(i));
+			Frame newFrame = generateFrame(prevFrame, rand, chords.get(i), FRAMELENGTH);
 			prevFrame = newFrame;
 			song.add(newFrame);
 		}
@@ -183,7 +182,7 @@ public class Tmn extends MelodyFrameGenerator{
 		Frame prevFrame = lastFrame;
 		
 		for(int i = 0; i < chords.size(); i++) {
-			Frame newFrame = generateFrame(prevFrame, rand, chords.get(i));
+			Frame newFrame = generateFrame(prevFrame, rand, chords.get(i), FRAMELENGTH);
 			prevFrame = newFrame;
 			song.add(newFrame);
 		}
@@ -204,12 +203,50 @@ public class Tmn extends MelodyFrameGenerator{
 		return newData;
 	}
 	/**
-	 * Mutates a given pair of frames so that is resembles the original to 80%
+	 * returns a mutation of a given pair of frames so that is resembles the original to 80%
 	 */
 	@Override
-	public List<Frame> eightyMutation(List<Frame> framePairs) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Frame> eightyMutation(List<Frame> framePair) {
+		boolean forceChange = true;
+		ArrayList<Frame> newFramePair = new ArrayList<Frame>();
+		newFramePair.add(framePair.get(0).clone());
+		newFramePair.add(framePair.get(1).clone());
+		Frame old = newFramePair.remove(1);
+		
+		List<Note> newMelody = new ArrayList<Note>();
+		double length = 0;
+		for(int i = 0;i < old.getMelodyPackage().size(); i++) {
+			double addedLength = conversionTable.get(old.getMelodyPackage().get(i).getDuration());
+			length += addedLength;
+			if(length >= (3/7.0)) {
+				length -= addedLength; 
+				break;
+			}
+			
+			newMelody.add(old.getMelodyPackage().get(i));
+		}
+		double lengthOfFirstNote = conversionTable.get(old.getMelodyPackage().get(0).getDuration());
+		System.out.println(lengthOfFirstNote == FRAMELENGTH);
+
+		if(lengthOfFirstNote == FRAMELENGTH) {
+			List<Integer> singleChordList = new ArrayList<Integer>();
+			singleChordList.add(old.getChord());
+			newFramePair.addAll(generateSong(singleChordList));
+			return newFramePair;
+		}else{
+			length = FRAMELENGTH-length;
+		}
+		Random rand = new Random();
+		Frame firstHalOfNewFrame = new Frame(newMelody, old.getChord());
+		Frame secondHalfOfNewFrame = generateFrame(firstHalOfNewFrame, rand, old.getChord(), length);
+		newMelody.addAll(secondHalfOfNewFrame.getMelodyPackage());
+		
+		//Frame newFrame = new Frame(newMelody, old.getChord());
+		newFramePair.add(firstHalOfNewFrame);
+		if(forceChange && newFramePair.get(1).equals(old)) { //does this work as intended?
+			return eightyMutation(newFramePair);
+		}
+		return newFramePair;
 	}
 
 }

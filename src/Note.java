@@ -27,4 +27,27 @@ public class Note {
 	public String toString() {
 		return duration + ", " + pitch; 
 	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + duration;
+		result = prime * result + pitch;
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Note other = (Note) obj;
+		if (duration != other.duration)
+			return false;
+		if (pitch != other.pitch)
+			return false;
+		return true;
+	}
 }
