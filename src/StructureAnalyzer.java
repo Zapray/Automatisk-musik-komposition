@@ -18,12 +18,13 @@ import matlabcontrol.extensions.MatlabTypeConverter;
 
 public class StructureAnalyzer {
 
-	private boolean isPlottingOn = true; //Set to true if you wish to plot the section while debugging
+	private boolean isPlottingOn = false; //Set to true if you wish to plot the section while debugging
 	private ArrayList<ArrayList<ArrayList<Float>>> data = new ArrayList<ArrayList<ArrayList<Float>>>();
 	private ArrayList<float[]> oneBars = new ArrayList<float[]>();
 	private ArrayList<float[]> sections = new ArrayList<float[]>();
 	private ArrayList<Float> pitchList = new ArrayList<Float>();
 	private ArrayList<Float> durationList = new ArrayList<Float>();
+	private ArrayList<ArrayList<Float>> lastBars = new ArrayList<ArrayList<Float>>();
 	private String[][] patternMatrix;
 	private String[] patternArray;
 	private int countEquals = 0;
@@ -33,6 +34,7 @@ public class StructureAnalyzer {
 	private String textFile = "/Databases_parts/chorus.txt";
 	private String outputTextFile2 = "/Sections.txt";
 	private String outputTextFile = "/Yolo.txt";
+
 
 	//Analyze the result
 	private int countMotive1 = 0;
@@ -72,14 +74,6 @@ public class StructureAnalyzer {
 
 		parseData();
 
-		//printMatrix(patternMatrix);
-
-		//				testMethods(1);
-		//				testMethods(2);
-		//				testMethods(3);
-		//				testMethods(4);
-		//				testMethods(5);
-
 		if(isPlottingOn){
 			proxy.disconnect();
 		}
@@ -109,9 +103,12 @@ public class StructureAnalyzer {
 						section.add(pitchList);
 						section.add(durationList);
 						data.add(section);
-
 						countSection++;
 						//System.out.println("Section:"+countSection);
+
+					}else{
+						lastBars.add(pitchList);
+						lastBars.add(durationList);
 
 					}
 
@@ -214,43 +211,66 @@ public class StructureAnalyzer {
 				double[] section1 = convertToDouble(createPitchVector(data.get(0)));
 				double[] section2 = convertToDouble(createPitchVector(data.get(1)));
 
-				if(countSection < 4){//2 sections
+				if(countSection < 3){//2 sections
 					proxy.feval("plotMelody", section1, section2);
 				}else{
 					double[] section3 = convertToDouble(createPitchVector(data.get(2)));
-					double[] section4 = convertToDouble(createPitchVector(data.get(3)));
-					if (countSection < 6){//4 sections
-						proxy.feval("plotMelody", section1, section2, section3, section4);
+					if (countSection < 4){//4 sections
+						proxy.feval("plotMelody", section1, section2, section3);
 					}else{
-						double[] section5 = convertToDouble(createPitchVector(data.get(4)));
-						double[] section6 = convertToDouble(createPitchVector(data.get(5)));
-						if (countSection < 8){//6 sections
-							proxy.feval("plotMelody", section1, section2, section3, section4, section5, section6);
+						double[] section4 = convertToDouble(createPitchVector(data.get(3)));
+						if (countSection < 5){//6 sections
+							proxy.feval("plotMelody", section1, section2, section3, section4);
 						}else{//more than 6 sections...
-							double[] section7 = convertToDouble(createPitchVector(data.get(6)));
-							double[] section8 = convertToDouble(createPitchVector(data.get(7)));
-							proxy.feval("plotMelody", section1, section2, section3, section4, section5, section6, section7, section8);
+							double[] section5 = convertToDouble(createPitchVector(data.get(4)));
+							if(countSection < 6){
+								proxy.feval("plotMelody", section1, section2, section3, section4, section5);
+							}else{
+								double[] section6 = convertToDouble(createPitchVector(data.get(5)));
+								if(countSection < 7){
+									proxy.feval("plotMelody", section1, section2, section3, section4, section5, section6);
+								}else{
+									double[] section7 = convertToDouble(createPitchVector(data.get(6)));
+									if(countSection < 8){
+										proxy.feval("plotMelody", section1, section2, section3, section4, section5, section6, section7);
+									}else{
+										double[] section8 = convertToDouble(createPitchVector(data.get(7)));
+										proxy.feval("plotMelody", section1, section2, section3, section4, section5, section6, section7, section8);
+									}
+
+								}
+							}
 						}
 					}
 				}
 			}
 
 			//**********************COMPARE*************************//
-
 			sections.add(createPitchVector(data.get(0)));
 			sections.add(createPitchVector(data.get(1)));
-			if(countSection < 4){ //2 sections
+			if(countSection < 3){ //2 sections
 			}else{
 				sections.add(createPitchVector(data.get(2)));
-				sections.add(createPitchVector(data.get(3)));
-				if (countSection < 6){ //4 sections
+				if (countSection < 4){ //3 sections
 				}else{
-					sections.add(createPitchVector(data.get(4)));
-					sections.add(createPitchVector(data.get(5)));
-					if(countSection < 8){ //6sections
-					}else{//more than 6 sections...
-						sections.add(createPitchVector(data.get(6)));
-						sections.add(createPitchVector(data.get(7)));
+					sections.add(createPitchVector(data.get(3)));
+					if(countSection < 5){ //4 sections
+					}else{
+						sections.add(createPitchVector(data.get(4)));
+						if(countSection < 6){//5 sections
+						}else{
+							sections.add(createPitchVector(data.get(5)));
+							if(countSection < 7){//6 sections
+							}else{
+								sections.add(createPitchVector(data.get(6)));
+								if(countSection < 8){//7 sections
+								}else{
+									sections.add(createPitchVector(data.get(7)));
+								}
+							}
+						}
+
+
 					}
 				}
 			}
@@ -258,20 +278,11 @@ public class StructureAnalyzer {
 			tmp1 = 0;
 			tmp2 = 0;
 			tmp3 = 0;
-			for(int first=0; first < sections.size(); first++){
-				for(int second=first+1; second < sections.size(); second++){
-					//*******************SECTIONS********************//
-					int firstSection = first+1;
-					int secondSection = second+1;
-					//String hej = patternMatrix[0][0];
-					compareBars(data.get(first), data.get(second), firstSection, secondSection);
-				}
-			}
+			compareBars();
 			for(int row = 0; row < patternMatrix.length; row++){
 				for(int col = 0; col < patternMatrix[row].length; col++){
 					if(patternMatrix[row][col]==null){
 						patternMatrix[row][col]="00";
-						//countEquals++;
 					}
 				}
 			}
@@ -370,96 +381,109 @@ public class StructureAnalyzer {
 		}
 	}
 
-	private void compareBars(ArrayList<ArrayList<Float>> section1, ArrayList<ArrayList<Float>> section2, int firstSection, int secondSection){
-		float[] p1 =new float[16];
-		float[] p2 =new float[16];
-		float[] p3 =new float[16];
-		float[] p4 =new float[16];
-		float[] p5 =new float[16];
-		float[] p6 =new float[16];
-		float[] p7 =new float[16];
-		float[] p8 =new float[16];
-
-		for(int j=0; j<16;j++){
-			//Bars in sections
-			if(firstSection == 1 && secondSection == 3 ){
-				System.out.println();
-			}
-			p1[j]=createPitchVector(section1)[j];
-			p2[j]=createPitchVector(section1)[j+16];
-			p3[j]=createPitchVector(section1)[j+32];
-			p4[j]=createPitchVector(section1)[j+48];
-			p5[j]=createPitchVector(section2)[j];
-			p6[j]=createPitchVector(section2)[j+16];
-			p7[j]=createPitchVector(section2)[j+32];
-			p8[j]=createPitchVector(section2)[j+48];
-		}
-		oneBars.add(p1);
-		oneBars.add(p2);
-		oneBars.add(p3);
-		oneBars.add(p4);
-		oneBars.add(p5);
-		oneBars.add(p6);
-		oneBars.add(p7);
-		oneBars.add(p8);
-		p1 =new float[16];
-		p2 =new float[16];
-		p3 =new float[16];
-		p4 =new float[16];
-		p5 =new float[16];
-		p6 =new float[16];
-		p7 =new float[16];
-		p8 =new float[16];
+	private void compareBars(){//ArrayList<ArrayList<Float>> section1, ArrayList<ArrayList<Float>> section2, int firstSection, int secondSection){
 
 		int motiveCount = 0;
 		while(motiveCount < 3){
 			motiveCount++;
-			for(int first=0; first<8; first++){
-				for(int second=first+1; second<8; second++){
-					countTotalBarComb++;
-					if(countSong==10){
-						System.out.print("");
-					}
-					if(countSong == 3 && firstSection == 1 && secondSection == 3 && first == 0 && second == 6){
-						System.out.print("");
-					}
+			for(int firstS=0; firstS < sections.size(); firstS++){
+				for(int secondS=firstS+1; secondS < sections.size(); secondS++){
+					ArrayList<ArrayList<Float>> section1 = data.get(firstS);
+					ArrayList<ArrayList<Float>> section2 = data.get(secondS);
+					int firstSection = firstS+1;
+					int secondSection = secondS+1;
 
-					String motive = getMotive(oneBars.get(first), oneBars.get(second));
-					if(motive.equals(Integer.toString(motiveCount))){
 
-						//**********Save result************
-						if(motive == "1" && tmp1 == 0){
-							countMotive1++;
-							tmp1++;
-						}else if(motive == "2"&& tmp2 == 0){
-							countMotive2++;
-							tmp2++;
-						}else if(motive == "3"&& tmp3 == 0){
-							countMotive3++;
-							tmp3++;
+					float[] p1 =new float[16];
+					float[] p2 =new float[16];
+					float[] p3 =new float[16];
+					float[] p4 =new float[16];
+					float[] p5 =new float[16];
+					float[] p6 =new float[16];
+					float[] p7 =new float[16];
+					float[] p8 =new float[16];
+
+					for(int j=0; j<16;j++){
+						//Bars in sections
+						if(firstSection == 1 && secondSection == 3 ){
+							System.out.println();
 						}
-						//*********************************
+						p1[j]=createPitchVector(section1)[j];
+						p2[j]=createPitchVector(section1)[j+16];
+						p3[j]=createPitchVector(section1)[j+32];
+						p4[j]=createPitchVector(section1)[j+48];
+						p5[j]=createPitchVector(section2)[j];
+						p6[j]=createPitchVector(section2)[j+16];
+						p7[j]=createPitchVector(section2)[j+32];
+						p8[j]=createPitchVector(section2)[j+48];
+					}
+					oneBars.add(p1);
+					oneBars.add(p2);
+					oneBars.add(p3);
+					oneBars.add(p4);
+					oneBars.add(p5);
+					oneBars.add(p6);
+					oneBars.add(p7);
+					oneBars.add(p8);
+					p1 =new float[16];
+					p2 =new float[16];
+					p3 =new float[16];
+					p4 =new float[16];
+					p5 =new float[16];
+					p6 =new float[16];
+					p7 =new float[16];
+					p8 =new float[16];
 
-						int firstBar = first+1;
-						int secondBar = second+1;
-						//System.out.println(firstSection + "  " + secondSection + "  " +  firstBar + "  " + secondBar);
-						//System.out.print("Sections: " + firstSection + " and "+ secondSection + "       ");
-						//System.out.println("Equal bars: " + firstBar + " and " + secondBar);
 
-						if(firstBar <=4 && secondBar<=4){
-							addPattern(firstSection-1, firstSection-1, first, second, motive);
-						}else if(firstBar <= 4 && secondBar > 4){
-							addPattern(firstSection-1, secondSection-1, first, second-4, motive);
-						}else{
-							addPattern(secondSection-1, secondSection-1, first-4, second-4, motive);
+					for(int first=0; first<8; first++){
+						for(int second=first+1; second<8; second++){
+							countTotalBarComb++;
+							if(countSong==10){
+								System.out.print("");
+							}
+							if(countSong == 3 && firstSection == 1 && secondSection == 3 && first == 0 && second == 6){
+								System.out.print("");
+							}
+
+							String motive = getMotive(oneBars.get(first), oneBars.get(second));
+							if(motive.equals(Integer.toString(motiveCount))){
+
+								//**********Save result************
+								if(motive == "1" && tmp1 == 0){
+									countMotive1++;
+									tmp1++;
+								}else if(motive == "2"&& tmp2 == 0){
+									countMotive2++;
+									tmp2++;
+								}else if(motive == "3"&& tmp3 == 0){
+									countMotive3++;
+									tmp3++;
+								}
+								//*********************************
+
+								int firstBar = first+1;
+								int secondBar = second+1;
+								//System.out.println(firstSection + "  " + secondSection + "  " +  firstBar + "  " + secondBar);
+								//System.out.print("Sections: " + firstSection + " and "+ secondSection + "       ");
+								//System.out.println("Equal bars: " + firstBar + " and " + secondBar);
+
+								if(firstBar <=4 && secondBar<=4){
+									addPattern(firstSection-1, firstSection-1, first, second, motive);
+								}else if(firstBar <= 4 && secondBar > 4){
+									addPattern(firstSection-1, secondSection-1, first, second-4, motive);
+								}else{
+									addPattern(secondSection-1, secondSection-1, first-4, second-4, motive);
+								}
+							}
 						}
 					}
+
+					//countEquals++;
+
+					oneBars=new ArrayList<float[]>();
 				}
 			}
 		}
-		//countEquals++;
-
-		oneBars=new ArrayList<float[]>();
 	}
 
 	private String getMotive(float[] phrase1, float[] phrase2){
@@ -512,8 +536,8 @@ public class StructureAnalyzer {
 
 
 	private void addPattern(int firstSection, int secondSection, int firstBar, int secondBar, String motive){
-		
-		
+
+
 		if(patternMatrix[firstSection][firstBar] == null && patternMatrix[secondSection][secondBar] == null ){
 			countEquals++;
 			patternMatrix[firstSection][firstBar] = Integer.toString(countEquals) + "0";
@@ -525,7 +549,7 @@ public class StructureAnalyzer {
 				&& patternMatrix[firstSection][firstBar] == null){
 			patternMatrix[firstSection][firstBar] = patternMatrix[secondSection][secondBar].charAt(0) + motive;
 		}
-		
+
 	}
 
 
