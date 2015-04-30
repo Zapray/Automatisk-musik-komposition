@@ -10,7 +10,7 @@ import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Sequence;
 import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
-
+import javax.sound.midi.MetaMessage;
 
 public class MidiManager2 {
 
@@ -268,7 +268,14 @@ public class MidiManager2 {
 		
 		
 	}
-
+	public byte string2Byte(String hexString){
+		int val = Integer.parseInt( hexString, 16);
+		byte[] byteArray = new byte[1];
+		return byteArray[0] = (byte) ( ( val >>> 24 ) & 0xff );
+		//byteArray[1] = (byte) ( ( val >>> 16 ) & 0xff );
+		//byteArray[2] = (byte) ( ( val >>> 8 ) & 0xff );
+		//byteArray[3] = (byte) ( ( val >>> 0 ) & 0xff );
+	}
 	//public List<ArrayList<Note>> getData(){
 		//return songList;
 	//}
@@ -278,7 +285,33 @@ public class MidiManager2 {
 	public List<ArrayList<Frame>> getData(){
 		return listOfFramesList;
 	}
-
+	public byte[] dec2Hex(int number){
+		int result=number;
+		ArrayList<String> index = new ArrayList<String>();
+		int count=0;
+		//char[] hex={'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+		String[] hex={"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"};
+		
+		while(result!=0){
+			count++;
+			result=number/16;
+			index.add(hex[number-(result*16)]);
+			number=result;
+		}
+		byte[] data = new byte[3];
+		
+		data[0]=string2Byte("0"+index.get(count-1));
+		System.out.print("0"+"x"+"0"+index.get(count-1));
+		int a=1;
+		for(int i=count-2; i>-1; i=i-2){
+			data[a]=string2Byte(index.get(i)+index.get(i-1));
+			System.out.print(index.get(i)+index.get(i-1));
+			a++;
+		}
+		
+		return data; 
+		
+	}
 	
 	public void createMidi(List<Frame> newFrameList,int nbrOfFrames) throws Exception{
 		 Sequence sequence;//need sequencer to create midi
@@ -291,7 +324,54 @@ public class MidiManager2 {
          //File outputFile = new File(System.getProperty("user.dir")+"/songs/TestSong.mid");
          File outputFile = new File(System.getProperty("user.dir")+"/songs/TestSong.mid");
          Track track = sequence.createTrack();
+         MetaMessage bpm = new MetaMessage();
+         byte[] data = {(byte)0x07, (byte)0xA1, (byte)0x20};//120bpm
+         //{(byte)0x07, (byte)0xA1, (byte)0x20};//120bpm 
+         Random random=new Random();
+         int randomBpm = random.nextInt(7);
+         //System.out.println(randomBpm);
+         //byte[] data=dec2Hex(60000000/(120));
+         //System.out.println(data);
+         if(randomBpm==0){
+        	 data[0]=(byte)0x0B; 
+        	 data[1]=(byte)0x71;
+        	 data[2]=(byte)0xB0;
+        	 //80bpm
+         }if(randomBpm==1){
+        	 data[0]=(byte)0x0A; 
+        	 data[1]=(byte)0x2C;
+        	 data[2]=(byte)0x2B;
+        	 //90bpm ish
+         }if(randomBpm==2){
+        	 data[0]=(byte)0x09; 
+        	 data[1]=(byte)0x27;
+        	 data[2]=(byte)0xC0;
+        	 //100bpm
+         }if(randomBpm==3){
+        	 data[0]=(byte)0x08; 
+        	 data[1]=(byte)0x52;
+        	 data[2]=(byte)0xAF;
+        	 //110bpm ish
+         }if(randomBpm==4){
+        	 data[0]=(byte)0x07; 
+        	 data[1]=(byte)0xA1;
+        	 data[2]=(byte)0x20;
+        	 //120bpm 
+         }if(randomBpm==5){
+        	 data[0]=(byte)0x07; 
+        	 data[1]=(byte)0x0A;
+        	 data[2]=(byte)0xE2;
+        	 //130bpm ish
+         }if(randomBpm==6){
+        	 data[0]=(byte)0x06; 
+        	 data[1]=(byte)0x8A;
+        	 data[2]=(byte)0x1B;
+        	 //120bpm 
+         }
          
+ 		 bpm.setMessage(0x51 ,data, data.length);
+ 		 MidiEvent newBpm = new MidiEvent(bpm,(long)0);
+ 		 track.add(newBpm);
          
      
         
