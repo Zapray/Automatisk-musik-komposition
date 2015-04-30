@@ -34,6 +34,19 @@ public class StructureAnalyzer {
 	private String outputTextFile2 = "/Sections.txt";
 	private String outputTextFile = "/Yolo.txt";
 
+	//Analyze the result
+	private int countMotive1 = 0;
+	private int countMotive2 = 0;
+	private int countMotive3 = 0;
+	private int countTotalBarComb = 0;
+	private int countSimilarSections = 0;
+	private int countTotalSectionComb = 0;
+	private int tmp1;
+	private int tmp2;
+	private int tmp3;
+	private int soundAnalyzedSongs = 0;
+
+
 	private MatlabProxy proxy;
 
 	public static void main(String[] args) throws Exception{
@@ -111,6 +124,7 @@ public class StructureAnalyzer {
 					}
 					System.out.println("***********************SONG: " + countSong + "******************************");
 					if(data.size() > 1 && isDurationFour){
+						soundAnalyzedSongs++;
 						analyzeMotifs();
 						printMatrix(patternMatrix);
 						System.out.println();
@@ -156,7 +170,11 @@ public class StructureAnalyzer {
 				line=in.readLine();
 
 			}
-			System.out.print("Done");
+			System.out.println("Done");
+			System.out.println("How often motive 1 occurs at least once in a song: " + (float)countMotive1/soundAnalyzedSongs);
+			System.out.println("How often motive 1 occurs at least once in a song: " + (float)countMotive2/soundAnalyzedSongs);
+			System.out.println("How often motive 1 occurs at least once in a song: " + (float)countMotive3/soundAnalyzedSongs);
+			System.out.println("Amount of similar sections: " + (float)countSimilarSections/soundAnalyzedSongs);
 
 		}catch (IOException e) {
 			e.printStackTrace();
@@ -237,6 +255,9 @@ public class StructureAnalyzer {
 				}
 			}
 			patternMatrix = new String[sections.size()][4];
+			tmp1 = 0;
+			tmp2 = 0;
+			tmp3 = 0;
 			for(int first=0; first < sections.size(); first++){
 				for(int second=first+1; second < sections.size(); second++){
 					//*******************SECTIONS********************//
@@ -271,7 +292,7 @@ public class StructureAnalyzer {
 				outFile.println();
 			}
 			for(int i = 0; i < patternArray.length; i++){
-					outFile2.println(patternArray[i]);
+				outFile2.println(patternArray[i]);
 			}
 			outFile2.println('-');
 		} finally{
@@ -288,9 +309,10 @@ public class StructureAnalyzer {
 	private void compareSections(){
 		patternArray = new String[sections.size()];
 		countSectionType = 0;
+		int tmp = 0;
 		for(int first=0; first < sections.size(); first++){
 			for(int second=first+1; second < sections.size(); second++){
-
+				countTotalSectionComb++;
 				//COMPARE SECTIONS (patternMatrix done)
 				String status = "NEW";
 				String similarBars = "";
@@ -302,7 +324,13 @@ public class StructureAnalyzer {
 						status = "REP";
 					}
 				}
+
 				if(status == "REP"){
+					//*******Save result**************
+					if(similarBars.equals("1234") && tmp == 0){
+						countSimilarSections++;
+						tmp++;
+					}
 
 					if(patternArray[first] == null){
 						countSectionType++;
@@ -383,107 +411,49 @@ public class StructureAnalyzer {
 		p7 =new float[16];
 		p8 =new float[16];
 
-
-		for(int first=0; first<8; first++){
-			for(int second=first+1; second<8; second++){
-
-				if(countSong==10){
-					System.out.print("");
-				}
-				if(countSong == 3 && firstSection == 1 && secondSection == 3 && first == 0 && second == 6){
-					System.out.print("");
-				}
-
-				String motive = getMotive(oneBars.get(first), oneBars.get(second));
-				if(motive != "0"){
-
-					int firstBar = first+1;
-					int secondBar = second+1;
-					//System.out.println(firstSection + "  " + secondSection + "  " +  firstBar + "  " + secondBar);
-					//System.out.print("Sections: " + firstSection + " and "+ secondSection + "       ");
-					//System.out.println("Equal bars: " + firstBar + " and " + secondBar);
-
-					if(firstBar <=4 && secondBar<=4){
-						if(patternMatrix[firstSection-1][first] == null){//First bar is null - INITIALIZE NEW PATTERN
-							countEquals++;
-							patternMatrix[firstSection-1][first] = Integer.toString(countEquals) + "0";
-							if(patternMatrix[firstSection-1][first].charAt(1) < motive.charAt(0) && patternMatrix[firstSection-1][second] != null){
-								//Do nothing CAUSE PATTERN THAT EXISTS IS BETTER THAN THE NEWLY FOUND PATTERN
-							}else{
-								//CHANGE CAUSE NEWLY FOUND PATTERN IS BETTER
-								patternMatrix[firstSection-1][second] = patternMatrix[firstSection-1][first].charAt(0) + motive;
-							}
-						}else{ //First bar have been paired
-							if(patternMatrix[firstSection-1][first] != null && patternMatrix[firstSection-1][first].charAt(1) > motive.charAt(0)){
-								//Compare first bar: INITIALIZE NEW PATTERN CAUSE PATTERN IS BETTER (need to send a number to the previous pattern)
-								countEquals++;
-								patternMatrix[firstSection-1][first] = Integer.toString(countEquals) + "0";
-								patternMatrix[firstSection-1][second] = patternMatrix[firstSection-1][first].charAt(0) + motive;
-
-							}else if(patternMatrix[firstSection-1][second] != null 
-									&& patternMatrix[firstSection-1][second].charAt(1) < motive.charAt(0)){
-								//Check second bar: DO NOTHING CAUSE PATTERN 
-
-							}
-							else{
-								patternMatrix[firstSection-1][second] = patternMatrix[firstSection-1][first].charAt(0) + motive;
-							}
-
-						}
-					}else if(firstBar <= 4 && secondBar > 4){
-						if(patternMatrix[firstSection-1][first] == null){//First bar is null - INITIALIZE NEW PATTERN
-							countEquals++;
-							patternMatrix[firstSection-1][first] = Integer.toString(countEquals) + "0";
-							if(patternMatrix[firstSection-1][first].charAt(1) < motive.charAt(0) && patternMatrix[secondSection-1][second-4] != null){
-								//Do nothing CAUSE PATTERN THAT EXISTS IS BETTER THAN THE NEWLY FOUND PATTERN
-							}else{
-								//CHANGE CAUSE NEWLY FOUND PATTERN IS BETTER
-								patternMatrix[secondSection-1][second-4] = patternMatrix[firstSection-1][first].charAt(0) + motive;
-							}
-
-						}else { //First bar have been paired
-							//
-							if(patternMatrix[firstSection-1][first] != null && patternMatrix[firstSection-1][first].charAt(1) > motive.charAt(0)){
-								countEquals++;
-								patternMatrix[firstSection-1][first] = Integer.toString(countEquals) + "0";
-								patternMatrix[secondSection-1][second-4] = patternMatrix[firstSection-1][first].charAt(0) + motive;
-							}else if(patternMatrix[secondSection-1][second-4] != null 
-									&& patternMatrix[secondSection-1][second-4].charAt(1) < motive.charAt(0)){
-								//Do nothing CAUSE PATTERN THAT EXISTS IS BETTER THAN THE NEWLY FOUND PATTERN
-							}
-							else{
-								//CHANGE CAUSE NEWLY FOUND PATTERN IS BETTER
-								patternMatrix[secondSection-1][second-4] = patternMatrix[firstSection-1][first].charAt(0) + motive;
-							}
-
-						}
-					}else{
-						//Check to see if matrix entry is empty or not (initialize or copy value)
-						if(patternMatrix[secondSection-1][first-4] == null){
-							countEquals++;
-							patternMatrix[secondSection-1][first-4] = Integer.toString(countEquals) + "0";
-							if(patternMatrix[secondSection-1][first-4].charAt(1) < motive.charAt(0) && patternMatrix[secondSection-1][second-4] != null){
-								//Do nothing
-							}else{
-								patternMatrix[secondSection-1][second-4] = patternMatrix[secondSection-1][first-4].charAt(0) + motive;
-							}
-						}else {
-							if(patternMatrix[secondSection-1][first-4] != null 
-									&& patternMatrix[secondSection-1][first-4].charAt(1) > motive.charAt(0)){
-								countEquals++;
-								patternMatrix[secondSection-1][first-4] = Integer.toString(countEquals) + "0";
-								patternMatrix[secondSection-1][second-4] = patternMatrix[secondSection-1][first-4].charAt(0) + motive;
-							}else if(patternMatrix[secondSection-1][second-4] != null 
-									&& patternMatrix[secondSection-1][second-4].charAt(1) < motive.charAt(0)){
-								//Do nothing
-							}else{
-								patternMatrix[secondSection-1][second-4] = patternMatrix[secondSection-1][first-4].charAt(0) + motive;
-							}
-
-
-						}
+		int motiveCount = 0;
+		while(motiveCount < 3){
+			motiveCount++;
+			for(int first=0; first<8; first++){
+				for(int second=first+1; second<8; second++){
+					countTotalBarComb++;
+					if(countSong==10){
+						System.out.print("");
+					}
+					if(countSong == 3 && firstSection == 1 && secondSection == 3 && first == 0 && second == 6){
+						System.out.print("");
 					}
 
+					String motive = getMotive(oneBars.get(first), oneBars.get(second));
+					if(motive.equals(Integer.toString(motiveCount))){
+
+						//**********Save result************
+						if(motive == "1" && tmp1 == 0){
+							countMotive1++;
+							tmp1++;
+						}else if(motive == "2"&& tmp2 == 0){
+							countMotive2++;
+							tmp2++;
+						}else if(motive == "3"&& tmp3 == 0){
+							countMotive3++;
+							tmp3++;
+						}
+						//*********************************
+
+						int firstBar = first+1;
+						int secondBar = second+1;
+						//System.out.println(firstSection + "  " + secondSection + "  " +  firstBar + "  " + secondBar);
+						//System.out.print("Sections: " + firstSection + " and "+ secondSection + "       ");
+						//System.out.println("Equal bars: " + firstBar + " and " + secondBar);
+
+						if(firstBar <=4 && secondBar<=4){
+							addPattern(firstSection-1, firstSection-1, first, second, motive);
+						}else if(firstBar <= 4 && secondBar > 4){
+							addPattern(firstSection-1, secondSection-1, first, second-4, motive);
+						}else{
+							addPattern(secondSection-1, secondSection-1, first-4, second-4, motive);
+						}
+					}
 				}
 			}
 		}
@@ -540,26 +510,82 @@ public class StructureAnalyzer {
 
 	}
 
-	private void otherTextFileThingy(String [][] matrix){
 
-		int count = 1;
-		for(int row = 0; row < matrix.length; row++){
-			System.out.println();
-			for(int col = 0; col < matrix[row].length-1; col++){
+	private void addPattern(int firstSection, int secondSection, int firstBar, int secondBar, String motive){
+		
+		
+		if(patternMatrix[firstSection][firstBar] == null && patternMatrix[secondSection][secondBar] == null ){
+			countEquals++;
+			patternMatrix[firstSection][firstBar] = Integer.toString(countEquals) + "0";
+			patternMatrix[secondSection][secondBar] = patternMatrix[firstSection][firstBar].charAt(0) + motive;
+		}else if((patternMatrix[firstSection][firstBar] != null && patternMatrix[firstSection][firstBar].charAt(1) == '0') 
+				&& patternMatrix[secondSection][secondBar] == null){
+			patternMatrix[secondSection][secondBar] = patternMatrix[firstSection][firstBar].charAt(0) + motive;
+		}else if((patternMatrix[secondSection][secondBar] != null && patternMatrix[secondSection][secondBar].charAt(1) == '0') 
+				&& patternMatrix[firstSection][firstBar] == null){
+			patternMatrix[firstSection][firstBar] = patternMatrix[secondSection][secondBar].charAt(0) + motive;
+		}
+		
+	}
 
-				if(patternMatrix[row][col].charAt(0) != patternMatrix[row][col+1].charAt(0)){
-					count++;
-					if(col == 3 ){
-						System.out.print(count + "  "); count = 1;
+
+	private void hejsvej(int firstSection, int secondSection, int firstBar, int secondBar, String motive){
+
+		if(patternMatrix[firstSection][firstBar] == null && patternMatrix[secondSection][secondBar] == null){//BOTH EMPTY
+			countEquals++;
+			patternMatrix[firstSection][firstBar] = Integer.toString(countEquals) + "0";
+			patternMatrix[secondSection][secondBar] = patternMatrix[firstSection][firstBar].charAt(0) + motive;
+
+		}else if(patternMatrix[firstSection][firstBar] == null && patternMatrix[secondSection][secondBar] != null){ //FIRST EMPTY
+
+			//Find original pattern and replace with new
+			if(patternMatrix[secondSection][secondBar].charAt(1) != '0'){
+				for(int row = 0; row < patternMatrix.length; row++){
+					for(int col = 0; col < patternMatrix[row].length; col++){
+						if(patternMatrix[row][col] != null && patternMatrix[row][col].equals(patternMatrix[secondSection][secondBar].charAt(0) + "0")){
+							patternMatrix[row][col] = Integer.toString(countEquals) + patternMatrix[secondSection][secondBar].charAt(1);
+						}
 					}
-				}else{
-					System.out.print(count + "  "); count = 1;
 				}
-
+				//New pattern in second
+				patternMatrix[secondSection][secondBar] = Integer.toString(countEquals) + "0";
 			}
+			patternMatrix[firstSection][firstBar] = patternMatrix[secondSection][secondBar].charAt(0) + motive;
 
+		}else if(patternMatrix[firstSection][firstBar] != null && patternMatrix[secondSection][secondBar] == null){ //SECOND EMPTY
+
+
+			//Send motive in first to the original phrase
+			if(patternMatrix[firstSection][firstBar].charAt(1) != '0'){
+				for(int row = 0; row < patternMatrix.length; row++){
+					for(int col = 0; col < patternMatrix[row].length; col++){
+						if(patternMatrix[row][col] != null && patternMatrix[row][col].equals(patternMatrix[firstSection][firstBar].charAt(0) + "0")){
+							patternMatrix[row][col] = Integer.toString(countEquals) + patternMatrix[firstSection][firstBar].charAt(1);
+						}
+					}
+				}
+				//New pattern in first
+				patternMatrix[firstSection][firstBar] = Integer.toString(countEquals) + "0";
+			}
+			patternMatrix[secondSection][secondBar] = patternMatrix[firstSection][firstBar].charAt(0) + motive;
+
+		}else{//BOTH FULL
+			if(patternMatrix[firstSection][firstBar].charAt(1) > motive.charAt(0) && patternMatrix[secondSection][secondBar].charAt(1) > motive.charAt(0)){
+
+				//Send motive in first to the original phrase
+				for(int row = 0; row < patternMatrix.length; row++){
+					for(int col = 0; col < patternMatrix[row].length; col++){
+						if(patternMatrix[row][col] != null && patternMatrix[row][col].equals(patternMatrix[firstSection][firstBar].charAt(0) + "0")){
+							patternMatrix[row][col] = Integer.toString(countEquals) + patternMatrix[firstSection][firstBar].charAt(1);
+						}
+					}
+				}
+				patternMatrix[firstSection][firstBar] = Integer.toString(countEquals) + "0";
+				patternMatrix[secondSection][secondBar] = patternMatrix[firstSection][firstBar].charAt(0) + motive;
+			}
 		}
 	}
+
 
 	private void printMatrix(String [][] matrix){
 		for(int row = 0; row < matrix.length; row++){
@@ -570,11 +596,32 @@ public class StructureAnalyzer {
 		}
 
 	}
-	
+
 	private void printArray(String [] array){
 		for(int i = 0; i < array.length; i++){
 			System.out.println(array[i]);
 		}
+	}
+
+	private void analyzeResult(String [][] matrix){
+
+		//Detect patterns in song
+		Map<Integer, ArrayList<Integer>> detectedPatterns = new HashMap<Integer, ArrayList<Integer>>();
+		for(int row = 0; row < matrix.length; row++){
+			for(int col = 0; col < matrix[row].length; col++){
+				if(matrix[row][col].charAt(0) != 0){
+					ArrayList<Integer> tmp = detectedPatterns.get(Integer.parseInt("" + matrix[row][col].charAt(0)));
+					tmp.add(4*row + col + 1);
+					detectedPatterns.put((Integer)Integer.parseInt("" + matrix[row][col].charAt(0)), tmp); 
+				}
+			}
+		}
+
+		//Add patterns in total map and 
+
+
+
+
 	}
 
 	private double[] convertToDouble(float[] floatArray){
