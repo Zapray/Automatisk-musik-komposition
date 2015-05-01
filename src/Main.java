@@ -57,7 +57,7 @@ public class Main {
 		}
 	}
 	public static void generateSongPart() {
-		MidiManager2 mm = new MidiManager2(System.getProperty("user.dir")+"/databases_parts/chorus.txt");
+		MidiManager2 mm = new MidiManager2(System.getProperty("user.dir")+"/databases_parts/verse.txt");
 		List<? extends List<Frame>> l = mm.getData();
 		pMax = mm.getPMax();
 		dMax = mm.getDMax();
@@ -68,23 +68,32 @@ public class Main {
 		
 		List<Motive> mvl = new ArrayList<Motive>();  // = StructueGenerator.GenerateStructure(frames)
 		mvl.add(new Motive(1));
+		mvl.add(new Motive(1, false, Percentage.EIGHTY));
+		mvl.add(new Motive(1, false, Percentage.HUNDRED));
+		mvl.add(new Motive(1, false, Percentage.SIXTY));
+		mvl.add(new Motive(1, false, Percentage.HUNDRED));
+		mvl.add(new Motive(1, false, Percentage.EIGHTY));
+		mvl.add(new Motive(1, false, Percentage.SIXTY));
 		mvl.add(new Motive(2));
-		mvl.add(new Motive(1, false, Percentage.SIXTY));
-		mvl.add(new Motive(2, false, Percentage.EIGHTY));
+		/**
+		 * bra chorus
+		mvl.add(new Motive(1));
+		mvl.add(new Motive(1, false, Percentage.HUNDRED));
+		mvl.add(new Motive(2));
 		mvl.add(new Motive(3));
+		mvl.add(new Motive(1, false, Percentage.HUNDRED));
+		mvl.add(new Motive(1, false, Percentage.EIGHTY));
+		mvl.add(new Motive(2, false, Percentage.HUNDRED));
 		mvl.add(new Motive(4));
-		mvl.add(new Motive(1, false, Percentage.SIXTY));
-		mvl.add(new Motive(2, false, Percentage.EIGHTY));
+		*/
 		frames = mvl.size();//magic number!
 		MotiveGenerator mg = new MotiveGenerator();
-		ChordMarkov markov = new ChordMarkov(CHORDORDER, cMax, l);
-				
+		ChordMarkov markov = new ChordMarkov(CHORDORDER, cMax, l);	
 		List<Frame> song = mg.generateSong(tmn, mvl, markov);
-		
 		System.out.println(mm.analyzeSong(song));
 		
 		try {
-			mm.createMidi(song, frames);
+			mm.createMidi(song,2*frames);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

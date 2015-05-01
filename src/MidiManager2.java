@@ -434,7 +434,7 @@ public class MidiManager2 {
         	 chordsForBassLine.add(chord);
          }
          
-         PianoRythm pianoRythm = new PianoRythm(chordsForPianoRythm,"chorus");
+         PianoRythm pianoRythm = new PianoRythm(chordsForPianoRythm,"verse");
          
          /**
           * Remove Pianorythm. Comment out next phrase. 

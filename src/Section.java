@@ -17,10 +17,10 @@ import java.util.List;
 //////////////////////////////////////////////////////////////////////
 public class Section {
 
-	int sectionID;
-	Boolean isNew;
+	private int sectionID;
+	private Boolean isNew;
 	private List<Motive> motives;
-	int identicalMotives;
+	private int identicalMotives;
 	/**
 	 * 
 	 * @param motives the list of motives making up the phrase
@@ -28,7 +28,7 @@ public class Section {
 	 * @param isNew whether this section has occured before '
 	 * (in which case it will share the same sectionID as the idential one)
 	 */
-	public Section(List<Motive> motives, int sectionID, Boolean isNew, int identicalMotives)
+	public Section(int sectionID, Boolean isNew,List<Motive> motives, int identicalMotives)
 	{
 		this.motives = motives;
 		this.sectionID = sectionID;
@@ -38,5 +38,18 @@ public class Section {
 	
 	public List<Motive> getMotives() {
 		return motives;
+	}
+
+	public int getIdentMotives() {
+		
+		return identicalMotives;
+	}
+
+	public int getSectionID() {
+		return sectionID;
+	}
+
+	public boolean isNew() {
+		return isNew;
 	}
 }
