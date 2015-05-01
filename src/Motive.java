@@ -26,4 +26,20 @@ public class Motive {
 		}
 		return similarity;
 	}
+	// Allt nedanför ska bort
+	public int getInex()
+	{
+		return index;
+	}
+	
+	public Boolean isNew()
+	{
+		return isNew;
+	}
+	
+	public Percentage getSim()
+	{
+		return similarity;
+	}
 }
+
