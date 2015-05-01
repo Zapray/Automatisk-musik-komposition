@@ -31,9 +31,9 @@ public class StructureAnalyzer {
 	private int countSection = 0;
 	private int countSong = 0;
 	private int countSectionType;
-	private String textFile = "/Databases_parts/bridge.txt";
-	private String outputTextFile2 = "/Structure_parts/Sections/bridge2.txt";
-	private String outputTextFile = "/Structure_parts/Motifs/bridge.txt";
+	private String textFile = "/Databases_parts/verse.txt";
+	private String outputTextFile2 = "/Structure_parts/Sections/verse.txt";
+	private String outputTextFile = "/Structure_parts/Motifs/verse.txt";
 
 
 	//Analyze the result
