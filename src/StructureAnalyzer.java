@@ -31,9 +31,9 @@ public class StructureAnalyzer {
 	private int countSection = 0;
 	private int countSong = 0;
 	private int countSectionType;
-	private String textFile = "/Databases_parts/chorus.txt";
-	private String outputTextFile2 = "/Sections.txt";
-	private String outputTextFile = "/Yolo.txt";
+	private String textFile = "/Databases_parts/bridge.txt";
+	private String outputTextFile2 = "/Structure_parts/Sections/bridge2.txt";
+	private String outputTextFile = "/Structure_parts/Motifs/bridge.txt";
 
 
 	//Analyze the result
@@ -293,6 +293,8 @@ public class StructureAnalyzer {
 					patternArray[i] = countSectionType + "N";
 				}
 			}
+			
+			//Print to textfiles:
 			for(int row = 0; row < patternMatrix.length; row++){
 				for(int col = 0; col < patternMatrix[row].length; col++){
 					outFile.print(patternMatrix[row][col]);
@@ -302,6 +304,8 @@ public class StructureAnalyzer {
 				}
 				outFile.println();
 			}
+			outFile.println('-');
+			
 			for(int i = 0; i < patternArray.length; i++){
 				outFile2.println(patternArray[i]);
 			}
@@ -381,7 +385,7 @@ public class StructureAnalyzer {
 		}
 	}
 
-	private void compareBars(){//ArrayList<ArrayList<Float>> section1, ArrayList<ArrayList<Float>> section2, int firstSection, int secondSection){
+	private void compareBars(){
 
 		int motiveCount = 0;
 		while(motiveCount < 3){
@@ -483,6 +487,8 @@ public class StructureAnalyzer {
 					oneBars=new ArrayList<float[]>();
 				}
 			}
+			//Compare last bars:
+			
 		}
 	}
 
