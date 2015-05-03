@@ -57,7 +57,11 @@ public class Main {
 		}
 	}
 	public static void generateSongPart() {
-		MidiManager2 mm = new MidiManager2(System.getProperty("user.dir")+"/databases_parts/verse.txt");
+		String part = "verse";
+		MidiManager2 mm = new MidiManager2(System.getProperty("user.dir")+"/databases_parts/" + part + ".txt");
+		StructureGenerator sg = new StructureGenerator(System.getProperty("user.dir")+"/Structure_parts/Sections/" + part +".txt", System.getProperty("user.dir")+"/Structure_parts/Motifs/" +part+".txt");
+		
+		
 		List<? extends List<Frame>> l = mm.getData();
 		pMax = mm.getPMax();
 		dMax = mm.getDMax();
@@ -66,7 +70,13 @@ public class Main {
 		tmn.train(l);
 
 		
-		List<Motive> mvl = new ArrayList<Motive>();  // = StructueGenerator.GenerateStructure(frames)
+		//List<Motive> mvl = new ArrayList<Motive>();  // = StructueGenerator.GenerateStructure(frames)
+		List<Motive> mvl = sg.generateNewStructure();
+		
+		
+		
+		
+		/**
 		mvl.add(new Motive(1));
 		mvl.add(new Motive(1, false, Percentage.EIGHTY));
 		mvl.add(new Motive(1, false, Percentage.HUNDRED));
@@ -75,6 +85,7 @@ public class Main {
 		mvl.add(new Motive(1, false, Percentage.EIGHTY));
 		mvl.add(new Motive(1, false, Percentage.SIXTY));
 		mvl.add(new Motive(2));
+		*/
 		/**
 		 * bra chorus
 		mvl.add(new Motive(1));
