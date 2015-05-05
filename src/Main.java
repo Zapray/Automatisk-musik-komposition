@@ -1,3 +1,5 @@
+package src;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +32,7 @@ public class Main {
 		}
 	}
 	public static void runTmn() {
-		MidiManager2 mm = new MidiManager2(System.getProperty("user.dir")+"/databases_parts/chorus.txt");
+		MidiManager2 mm = new MidiManager2(System.getProperty("user.dir")+"/Databases_parts/chorus.txt");
 		List<? extends List<Frame>> l = mm.getData();
 		pMax = mm.getPMax();
 		dMax = mm.getDMax();
@@ -63,7 +65,7 @@ public class Main {
 		Boolean bass = false;
 		Boolean pianorythm = false;
 
-		MidiManager2 mm = new MidiManager2(System.getProperty("user.dir")+"/databases_parts/" + part + ".txt");
+		MidiManager2 mm = new MidiManager2(System.getProperty("user.dir")+"/Databases_parts/" + part + ".txt");
 		StructureGenerator sg = new StructureGenerator(System.getProperty("user.dir")+"/Structure_parts/Sections/" + part +".txt", System.getProperty("user.dir")+"/Structure_parts/Motifs/" +part+".txt");
 		
 		

@@ -1,3 +1,5 @@
+package src;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -96,10 +98,10 @@ public class MidiAnalysator {
 							note.add(shortMessage.getData1());
 							//dataarray[counter1][0]=shortMessage.getData1();
 							tick=event.getTick();
-							//System.out.println("Detta Šr en note on");
+							//System.out.println("Detta ï¿½r en note on");
 							//System.out.println(tick);
 						}else if(shortMessage.getCommand() == ShortMessage.NOTE_OFF){
-							//System.out.println("Detta Šr en note off");
+							//System.out.println("Detta ï¿½r en note off");
 							notelength.add(convertTicksToNoteLength(tick, event.getTick(), res));
 							//dataarray[counter1][1]=convertTicksToNoteLength(tick, event.getTick(), res);
 							counter1 +=1;  

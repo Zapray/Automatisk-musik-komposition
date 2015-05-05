@@ -1,3 +1,5 @@
+package src;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -82,7 +84,7 @@ public class DrumBeat {
 					//System.out.println(event.getTick());
 					//ShortMessage shortMessage = (ShortMessage) message;
 					//System.out.println(event.getMessage() + "    " + shortMessage.getCommand() + "    " +shortMessage.getData1() + "    " + shortMessage.getData2());
-					//System.out.println("Loopen kšrs");
+					//System.out.println("Loopen kï¿½rs");
 					drumList.add(eventj);
 				}
 

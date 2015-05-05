@@ -1,3 +1,5 @@
+package src;
+
 import java.io.*;
 import java.util.ArrayList;
 
@@ -87,7 +89,7 @@ public class MidiPlayer {
          MidiEvent NoteOff;
          
          
-         //VŠldigt ful kod
+         //Vï¿½ldigt ful kod
          //metaMessage.setMessage(4,[B@851052d],8);
          //metaMessage.setMessage(81,[B@54281d4b,8);
          //metaMessage.setMessage(89,[B@82a6f16,8);

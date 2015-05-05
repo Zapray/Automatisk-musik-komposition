@@ -1,3 +1,6 @@
+package src;
+
+
 /*
  * This is a Midi Analyzer that can analyzer midi files from the midi database Hooktheory.
  * The class finds the chords and the melody in the files and writes them into a textfile on the format
@@ -68,7 +71,7 @@ public class StatisticsAnalyzer {
 			numberOfSongsWithChord.add(0);
 		}
 		for(File file : files){
-			//System.out.println("NylŒt");
+			//System.out.println("Nylï¿½t");
 			String ext1 = FilenameUtils.getExtension(file.getName());
 			if(ext1.equals("mid")){
 				count++;
@@ -206,7 +209,7 @@ public class StatisticsAnalyzer {
 			
 		}
 		/**
-		File filen = new File(System.getProperty("user.dir")+"/statistikackordsfšljder.txt");
+		File filen = new File(System.getProperty("user.dir")+"/statistikackordsfï¿½ljder.txt");
 
 
 		//File filen = new File("database_intro.txt");
@@ -217,7 +220,7 @@ public class StatisticsAnalyzer {
 			filen.createNewFile();
 		}
 		
-		PrintWriter outFile = new PrintWriter(new FileWriter(System.getProperty("user.dir")+"/statistikackordsfšljder.txt", true));
+		PrintWriter outFile = new PrintWriter(new FileWriter(System.getProperty("user.dir")+"/statistikackordsfï¿½ljder.txt", true));
 		*/
 		
 		File filen = new File(System.getProperty("user.dir")+"/statistikantalsangermedackord.txt");
@@ -325,10 +328,10 @@ public class StatisticsAnalyzer {
 					note.add(shortMessage.getData1());
 					//dataarray[counter1][0]=shortMessage.getData1();
 					tick=event.getTick();
-					//System.out.println("Detta Šr en note on");
+					//System.out.println("Detta ï¿½r en note on");
 					//System.out.println(tick);
 				}else if(shortMessage.getCommand() == ShortMessage.NOTE_OFF){
-					//System.out.println("Detta Šr en note off");
+					//System.out.println("Detta ï¿½r en note off");
 					notelength.add(convertTicksToNoteLength(tick, event.getTick(), res));
 					//dataarray[counter1][1]=convertTicksToNoteLength(tick, event.getTick(), res);
 					//counter1 +=1;  

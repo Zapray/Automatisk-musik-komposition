@@ -1,10 +1,12 @@
+package src;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-//MŒste se šver denna, spottar ut fel ackord ibland :( Tex sŒ blir (62, 67, 59) - (D G B) ett D nŠr det ska vara ett G. 
+//Mï¿½ste se ï¿½ver denna, spottar ut fel ackord ibland :( Tex sï¿½ blir (62, 67, 59) - (D G B) ett D nï¿½r det ska vara ett G. 
 
 public class Chord {
 
