@@ -442,18 +442,24 @@ public class MidiManager2 {
           */  
          chordsForPianoRythm = pianoRythm.getFixedRythm();
          
+         
+         
          for(int  i=0; i<chordsForPianoRythm.size();i++ ){
         	 
         	 Chord ackord = chordsForPianoRythm.get(i);
         	 //System.out.println(ackord.getNote1() +  "  " + ackord.getNote2() + "  "+ ackord.getNote3());
         	 
+        	 if(ackord.getLabel()==null){
+        		 tickMeter = tickMeter + convertNoteLengthToTicks(ackord.getDuration(), resolution); 
+        	 }else{
         	 
         	ShortMessage	shortMessage1 = new ShortMessage();
         	ShortMessage	shortMessage2 = new ShortMessage();
         	ShortMessage	shortMessage3 = new ShortMessage();
-      		shortMessage1.setMessage(ShortMessage.NOTE_ON,0,ackord.getNote1(), 114 );
-      		shortMessage2.setMessage(ShortMessage.NOTE_ON,0,ackord.getNote2(), 114 );
-      		shortMessage3.setMessage(ShortMessage.NOTE_ON,0,ackord.getNote3(), 114 );
+      		shortMessage1.setMessage(ShortMessage.NOTE_ON,0,ackord.getNote1(), ackord.getVel());
+      		shortMessage2.setMessage(ShortMessage.NOTE_ON,0,ackord.getNote2(), ackord.getVel());
+      		shortMessage3.setMessage(ShortMessage.NOTE_ON,0,ackord.getNote3(), ackord.getVel());
+      		
       		NoteOn1=new MidiEvent(shortMessage1,tickMeter);
       		track2.add(NoteOn1);
       		NoteOn2=new MidiEvent(shortMessage2,tickMeter);
@@ -478,7 +484,7 @@ public class MidiManager2 {
       		track2.add(NoteOff3);
       			
         	 
-        	 
+        	 } 
          }
        /**
          //Write the bassline

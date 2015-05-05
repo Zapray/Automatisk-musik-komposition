@@ -11,6 +11,7 @@ public class Chord {
 	private int note1;
 	private int note2;
 	private int note3;
+	private int vel;
 	private float duration;
 	private String label= "other";
 	private String notes[] = {"C","C#","D","D#","E","F","F#","G","G#","A","A#","B"};
@@ -40,6 +41,74 @@ public class Chord {
 		
 		
 	}
+	public int getVel(){
+		return vel;
+	}
+	public Chord(int note1, int note2, int note3, float duration,int vel){
+
+		this.note1 = note1;
+		this.note2 = note2;
+		this.note3 = note3;
+		this.duration = duration;
+		this.vel = vel;
+		int [] notesInChord = new int[3];
+		notesInChord[0] = note1;
+		notesInChord[1] = note2;
+		notesInChord[2] = note3;
+
+		if(Arrays.equals(notesInChord, new int[3])){
+			label = null;
+		}else{
+			this.chord.add(note2letter(note1));
+			this.chord.add(note2letter(note2));
+			this.chord.add(note2letter(note3));
+			createChordTable();
+
+			for(String key : keys){
+
+				if(chordTable.get(key).contains(note2letter(note1)) && chordTable.get(key).contains(note2letter(note2)) && chordTable.get(key).contains(note2letter(note3))){
+					label = key;
+					break;
+				}
+
+			}
+			if(label=="other"){
+				for(String key : keys){
+					if(chordTable.get(key).contains(note2letter(note1)) && chordTable.get(key).contains(note2letter(note2))){
+						label = key;
+						break;
+					}
+				}
+			}
+			if(label=="other"){
+				for(String key : keys){
+					if(chordTable.get(key).contains(note2letter(note1)) && chordTable.get(key).contains(note2letter(note3))){
+						label = key;
+						break;
+					}
+				}
+			}
+			if(label=="other"){
+				for(String key : keys){
+					if(chordTable.get(key).contains(note2letter(note2)) && chordTable.get(key).contains(note2letter(note3))){
+						label = key;
+						break;
+					}
+				}
+			}
+			if(label=="other"){
+				for(String key : keys){
+					if(chordTable.get(key).contains(note2letter(note1))){
+						label = key;
+						break;
+					}
+				}
+			}
+			
+		}
+
+	}
+	
 	public Chord(int note1, int note2, int note3, float duration){
 
 		this.note1 = note1;
@@ -105,6 +174,11 @@ public class Chord {
 
 	}
 	
+	
+	
+	
+	
+	
 	public Chord(String label, float duration){
 		
 		this.label = label;
@@ -123,6 +197,25 @@ public class Chord {
 		}
 		
 	}
+	
+	public Chord(String label, float duration,int vel){
+		this.vel = vel;
+		this.label = label;
+		this.duration = duration;
+		createChordTable();
+		for(String key : keys){
+			if(key.equals(label)){
+				List<String> allnotes = chordTable.get(key);
+				note1 = letter2note(allnotes.get(0));
+				note2 = letter2note(allnotes.get(1));
+				note3 = letter2note(allnotes.get(2));
+				
+				
+			}
+			
+		}
+	}
+	
 	public float getDuration(){
 		return this.duration;
 	}
