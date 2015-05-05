@@ -328,7 +328,7 @@ public class MidiManager2 {
          byte[] data = {(byte)0x07, (byte)0xA1, (byte)0x20};//120bpm
          //{(byte)0x07, (byte)0xA1, (byte)0x20};//120bpm 
          Random random=new Random();
-         int randomBpm = random.nextInt(7);
+         int randomBpm = random.nextInt(5);
          //System.out.println(randomBpm);
          //byte[] data=dec2Hex(60000000/(120));
          //System.out.println(data);
