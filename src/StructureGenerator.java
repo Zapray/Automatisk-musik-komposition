@@ -23,7 +23,19 @@ public class StructureGenerator {
 			readSongStructures(sections, motives, "-",",",",");
 		}
 		
-		
+		public ArrayList<Motive> stealStructure() {
+			ArrayList<Section> songStructure = songs.get((int)(songs.size()*Math.random()));
+			ArrayList<Motive> newSongStructure = new ArrayList<Motive>();
+			
+			for(Section s : songStructure) {
+				for(Motive m : s.getMotives()) {
+					newSongStructure.add(m);
+				}
+			}
+			
+			return newSongStructure;
+			
+		}
 		//////////////////////////////////////////////////////
 		// Detta är metoden som skall anropas av andra klasser
 		public ArrayList<Motive> generateNewStructure()

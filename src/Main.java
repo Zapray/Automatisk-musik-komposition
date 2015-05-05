@@ -74,9 +74,24 @@ public class Main {
 		Tmn tmn = new Tmn(pMax, dMax, cMax, mm.getDurationConversionTable());
 		tmn.train(l);
 
-		List<Motive> mvl = sg.generateNewStructure();
+		List<Motive> mvl  = sg.generateNewStructure();
+		//List<Motive> mvl = sg.stealStructure();
+//		List<Motive> mvl = new ArrayList<Motive>();
+//		mvl.add(new Motive(1));
+//		mvl.add(new Motive(2));
+//		mvl.add(new Motive(2, false, Percentage.SIXTY));
+//		mvl.add(new Motive(2, false, Percentage.SIXTY));
+//		mvl.add(new Motive(3));
+//		mvl.add(new Motive(2, false, Percentage.SIXTY));
+//		mvl.add(new Motive(2, false, Percentage.EIGHTY));
+		frames = mvl.size();//magic number!
+		for(Motive m : mvl) {
+			System.out.println(m.isNew + ", " +m.index);
+		}
+		
 		
 		frames = mvl.size();
+		
 		MotiveGenerator mg = new MotiveGenerator();
 		ChordMarkov markov = new ChordMarkov(CHORDORDER, cMax, l);	
 		List<Frame> song = mg.generateSong(tmn, mvl, markov);

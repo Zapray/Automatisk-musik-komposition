@@ -10,7 +10,7 @@ public double toDouble(){
 	case SIXTY:
 		return 0.6;
 	default:
-		throw new IllegalArgumentException();
+		return 0;
 	}
 		
 	}
