@@ -322,7 +322,7 @@ public class MidiManager2 {
          MidiEvent NoteOn;				//
          MidiEvent NoteOff;
          //File outputFile = new File(System.getProperty("user.dir")+"/songs/TestSong.mid");
-         File outputFile = new File(System.getProperty("user.dir")+"/songs/TestSong.mid");
+         File outputFile = new File(System.getProperty("user.dir")+"/Turing/TestSong.mid");
          Track track = sequence.createTrack();
          MetaMessage bpm = new MetaMessage();
          byte[] data = {(byte)0x07, (byte)0xA1, (byte)0x20};//120bpm
