@@ -325,12 +325,12 @@ public class MidiManager2 {
          int counter = 1;
          boolean filebol = true;
                   
-         File outputFile = new File(System.getProperty("user.dir")+"/Turing/Albin-chorus-" + counter + ".mid");
+         File outputFile = new File(System.getProperty("user.dir")+"/Turing/Johan-chorus-" + counter + ".mid");
          
          while(filebol){
         	 if(outputFile.exists()){
         		 counter++;
-        		 outputFile = new File(System.getProperty("user.dir")+"/Turing/Albin-chorus-" + counter + ".mid");
+        		 outputFile = new File(System.getProperty("user.dir")+"/Turing/Johan-chorus-" + counter + ".mid");
         	 }else{
         		 filebol=false;
         	 }
