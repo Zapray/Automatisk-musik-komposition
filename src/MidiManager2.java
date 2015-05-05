@@ -479,7 +479,7 @@ public class MidiManager2 {
         	 
         	 
          }
-       
+       /**
          //Write the bassline
          Track track4 = sequence.createTrack();
          
@@ -512,7 +512,7 @@ public class MidiManager2 {
         		 //drumbeat.getDrumList().get(i).setTick(ticksPerFourBars + drumbeat.getDrumList().get(i).getTick());
         		 track3.add(drumbeat.getDrumList().get(i)); 	 
         	 }
-         
+         */
          
          
       
