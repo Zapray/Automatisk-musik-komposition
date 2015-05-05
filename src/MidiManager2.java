@@ -322,13 +322,25 @@ public class MidiManager2 {
          MidiEvent NoteOn;				//
          MidiEvent NoteOff;
          //File outputFile = new File(System.getProperty("user.dir")+"/songs/TestSong.mid");
-         File outputFile = new File(System.getProperty("user.dir")+"/songs/TestSong.mid");
+         int counter = 1;
+         boolean filebol = true;
+                  
+         File outputFile = new File(System.getProperty("user.dir")+"/Turing/Albin-chorus-" + counter + ".mid");
+         
+         while(filebol){
+        	 if(outputFile.exists()){
+        		 counter++;
+        		 outputFile = new File(System.getProperty("user.dir")+"/Turing/Albin-chorus-" + counter + ".mid");
+        	 }else{
+        		 filebol=false;
+        	 }
+         }
          Track track = sequence.createTrack();
          MetaMessage bpm = new MetaMessage();
          byte[] data = {(byte)0x07, (byte)0xA1, (byte)0x20};//120bpm
          //{(byte)0x07, (byte)0xA1, (byte)0x20};//120bpm 
          Random random=new Random();
-         int randomBpm = random.nextInt(7);
+         int randomBpm = random.nextInt(5);
          //System.out.println(randomBpm);
          //byte[] data=dec2Hex(60000000/(120));
          //System.out.println(data);
@@ -357,17 +369,18 @@ public class MidiManager2 {
         	 data[1]=(byte)0xA1;
         	 data[2]=(byte)0x20;
         	 //120bpm 
-         }if(randomBpm==5){
-        	 data[0]=(byte)0x07; 
-        	 data[1]=(byte)0x0A;
-        	 data[2]=(byte)0xE2;
-        	 //130bpm ish
-         }if(randomBpm==6){
-        	 data[0]=(byte)0x06; 
-        	 data[1]=(byte)0x8A;
-        	 data[2]=(byte)0x1B;
-        	 //120bpm 
          }
+//         }if(randomBpm==5){
+//        	 data[0]=(byte)0x07; 
+//        	 data[1]=(byte)0x0A;
+//        	 data[2]=(byte)0xE2;
+//        	 //130bpm ish
+//         }if(randomBpm==6){
+//        	 data[0]=(byte)0x06; 
+//        	 data[1]=(byte)0x8A;
+//        	 data[2]=(byte)0x1B;
+//        	 //120bpm 
+//         }
          
  		 bpm.setMessage(0x51 ,data, data.length);
  		 MidiEvent newBpm = new MidiEvent(bpm,(long)0);
@@ -434,25 +447,31 @@ public class MidiManager2 {
         	 chordsForBassLine.add(chord);
          }
          
-         PianoRythm pianoRythm = new PianoRythm(chordsForPianoRythm,"verse");
+         PianoRythm pianoRythm = new PianoRythm(chordsForPianoRythm,"chorus");
          
          /**
           * Remove Pianorythm. Comment out next phrase. 
           */  
          chordsForPianoRythm = pianoRythm.getFixedRythm();
          
+         
+         
          for(int  i=0; i<chordsForPianoRythm.size();i++ ){
         	 
         	 Chord ackord = chordsForPianoRythm.get(i);
         	 //System.out.println(ackord.getNote1() +  "  " + ackord.getNote2() + "  "+ ackord.getNote3());
         	 
+        	 if(ackord.getLabel()==null){
+        		 tickMeter = tickMeter + convertNoteLengthToTicks(ackord.getDuration(), resolution); 
+        	 }else{
         	 
         	ShortMessage	shortMessage1 = new ShortMessage();
         	ShortMessage	shortMessage2 = new ShortMessage();
         	ShortMessage	shortMessage3 = new ShortMessage();
-      		shortMessage1.setMessage(ShortMessage.NOTE_ON,0,ackord.getNote1(), 114 );
-      		shortMessage2.setMessage(ShortMessage.NOTE_ON,0,ackord.getNote2(), 114 );
-      		shortMessage3.setMessage(ShortMessage.NOTE_ON,0,ackord.getNote3(), 114 );
+      		shortMessage1.setMessage(ShortMessage.NOTE_ON,0,ackord.getNote1(), ackord.getVel());
+      		shortMessage2.setMessage(ShortMessage.NOTE_ON,0,ackord.getNote2(), ackord.getVel());
+      		shortMessage3.setMessage(ShortMessage.NOTE_ON,0,ackord.getNote3(), ackord.getVel());
+      		
       		NoteOn1=new MidiEvent(shortMessage1,tickMeter);
       		track2.add(NoteOn1);
       		NoteOn2=new MidiEvent(shortMessage2,tickMeter);
@@ -477,7 +496,7 @@ public class MidiManager2 {
       		track2.add(NoteOff3);
       			
         	 
-        	 
+        	 } 
          }
        /**
          //Write the bassline

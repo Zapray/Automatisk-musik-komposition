@@ -8,26 +8,27 @@ import java.util.Random;
 public class PianoRythm {
 
 	private ArrayList<Chord> fixedChordList = new ArrayList<Chord>();
-	
+	private ArrayList<Float> rythm = new ArrayList<Float>();
+	private ArrayList<String> ackord = new ArrayList<String>();
+	private ArrayList<Integer> velocity = new ArrayList<Integer>();
 	public PianoRythm(ArrayList<Chord> chordList, String partOfSong){
 		
 
-		ArrayList<Float> rythm = chooseRythmFromDatabase(partOfSong);
+		chooseRythmFromDatabase(partOfSong);
 		
 		//for(int i=0;i<rythm.size();i++){
 			//System.out.println(rythm.get(i));
 		//}
 		
 		
-		this.fixedChordList = adaptChordsToRythm(chordList,rythm);
+		this.fixedChordList = adaptChordsToRythm(chordList);
 		
 		
 		
 		
 	}
 
-	private ArrayList<Chord> adaptChordsToRythm(ArrayList<Chord> chordList,
-			ArrayList<Float> rythm) {
+	private ArrayList<Chord> adaptChordsToRythm(ArrayList<Chord> chordList) {
 		ArrayList<Chord> fixedChordList = new ArrayList<Chord>();
 		
 		int rythmcounter = 0;
@@ -37,20 +38,25 @@ public class PianoRythm {
 		for(int i = 0; i<chordList.size(); i++){
 			float totRythmDur = 0;
 			int index = 0;
-			//System.out.println("Loopiteration:  " + i);
 			while(totRythmDur < 0.5){
-				//System.out.println("totRytmDur:  " + totRythmDur + "   index:  " + index + "    rythmcounter: " + rythmcounter );
 				totRythmDur = totRythmDur + rythm.get(index + rythmcounter);
 				index++;
 				if(index+rythmcounter ==rythm.size()){
-					//System.out.println("JAG BREAKAR");
 					break;
 				}
 			}
 			
 			for(int j = rythmcounter; j<index+rythmcounter;j++){
-				fixedChordList.add(new Chord(chordList.get(i).getLabel(),rythm.get(j)));
-			}
+				
+				if(ackord.get(j)==null){
+					fixedChordList.add(new Chord(null,rythm.get(j),velocity.get(j)));
+				
+				}else{
+					fixedChordList.add(new Chord(chordList.get(i).getLabel(),rythm.get(j),velocity.get(j)));
+				}
+				
+				
+				}
 			
 			
 		    i = i + (int) Math.floor(2*totRythmDur) -1;
@@ -78,7 +84,7 @@ public class PianoRythm {
 		return fixedChordList;
 	}
 
-	private ArrayList<Float> chooseRythmFromDatabase(String partOfSong) {
+	private void chooseRythmFromDatabase(String partOfSong) {
 		
 		
 		String filePath = System.getProperty("user.dir")+"/PianoRythmDatabase/pianorythm_" + partOfSong + ".txt";
@@ -127,13 +133,32 @@ public class PianoRythm {
 		try{
 			String line=in.readLine();
 			while(line !=null){
+				
 				if(line.equals("-")){
 					barCounter++;
 				}
 				if(barCounter == randomNum){
 					line=in.readLine();
 						while(!line.equals("-")){
-							durations.add(Float.parseFloat(line));
+							boolean comma1 = true;
+							boolean comma2 = true;
+							int index1 = 0;
+							int index2 = 0;
+						
+							for(int k = 0; k<line.length(); k++){
+								if(line.charAt(k)==',' && comma1){
+									index1=k;
+									rythm.add(Float.parseFloat(line.substring(0,k)));
+									comma1= false;
+								}else if(line.charAt(k)==',' && comma2){
+									index2=k;
+									ackord.add(line.substring(index1+1,k));
+									velocity.add(Integer.parseInt(line.substring(k+1, line.length())));
+									comma2=false;
+								}
+								
+							}
+							
 							line=in.readLine();
 						}
 					
@@ -156,12 +181,11 @@ public class PianoRythm {
 		
 		
 		
-		return durations;
 	}
 	
 	public static void main(String[] args){
 		ArrayList<Chord> listan = new ArrayList<Chord>();
-		PianoRythm piano = new PianoRythm(listan,"chorus");
+		PianoRythm piano = new PianoRythm(listan,"test");
 		
 		}
 

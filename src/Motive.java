@@ -39,7 +39,14 @@ public class Motive {
 	
 	public Percentage getSim()
 	{
+		if(similarity == null) {
+			throw new IllegalArgumentException();
+		}
 		return similarity;
+	}
+	@Override
+	public String toString() {
+		return getInex() + " and sim " + getSim();
 	}
 }
 
