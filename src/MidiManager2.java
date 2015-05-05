@@ -357,17 +357,18 @@ public class MidiManager2 {
         	 data[1]=(byte)0xA1;
         	 data[2]=(byte)0x20;
         	 //120bpm 
-         }if(randomBpm==5){
-        	 data[0]=(byte)0x07; 
-        	 data[1]=(byte)0x0A;
-        	 data[2]=(byte)0xE2;
-        	 //130bpm ish
-         }if(randomBpm==6){
-        	 data[0]=(byte)0x06; 
-        	 data[1]=(byte)0x8A;
-        	 data[2]=(byte)0x1B;
-        	 //120bpm 
          }
+//         }if(randomBpm==5){
+//        	 data[0]=(byte)0x07; 
+//        	 data[1]=(byte)0x0A;
+//        	 data[2]=(byte)0xE2;
+//        	 //130bpm ish
+//         }if(randomBpm==6){
+//        	 data[0]=(byte)0x06; 
+//        	 data[1]=(byte)0x8A;
+//        	 data[2]=(byte)0x1B;
+//        	 //120bpm 
+//         }
          
  		 bpm.setMessage(0x51 ,data, data.length);
  		 MidiEvent newBpm = new MidiEvent(bpm,(long)0);
