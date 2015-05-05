@@ -76,12 +76,11 @@ public class Main {
 
 		List<Motive> mvl = sg.generateNewStructure();
 		
-		frames = mvl.size();//magic number!
+		frames = mvl.size();
 		MotiveGenerator mg = new MotiveGenerator();
 		ChordMarkov markov = new ChordMarkov(CHORDORDER, cMax, l);	
 		List<Frame> song = mg.generateSong(tmn, mvl, markov);
 		//System.out.println(mm.analyzeSong(song));
-		
 		
 		
 		try {
