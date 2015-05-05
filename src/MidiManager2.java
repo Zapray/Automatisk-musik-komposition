@@ -322,7 +322,19 @@ public class MidiManager2 {
          MidiEvent NoteOn;				//
          MidiEvent NoteOff;
          //File outputFile = new File(System.getProperty("user.dir")+"/songs/TestSong.mid");
-         File outputFile = new File(System.getProperty("user.dir")+"/Turing/Johan-chorus-X.mid");
+         int counter = 1;
+         boolean filebol = true;
+                  
+         File outputFile = new File(System.getProperty("user.dir")+"/Turing/Albin-chorus-" + counter + ".mid");
+         
+         while(filebol){
+        	 if(outputFile.exists()){
+        		 counter++;
+        		 outputFile = new File(System.getProperty("user.dir")+"/Turing/Albin-chorus-" + counter + ".mid");
+        	 }else{
+        		 filebol=false;
+        	 }
+         }
          Track track = sequence.createTrack();
          MetaMessage bpm = new MetaMessage();
          byte[] data = {(byte)0x07, (byte)0xA1, (byte)0x20};//120bpm
