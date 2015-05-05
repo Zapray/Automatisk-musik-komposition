@@ -1,3 +1,5 @@
+package src;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -784,7 +786,7 @@ public class StructureGenerator {
 				if(sum-epsilon > random)
 				{
 					if(j>=15){
-						k++;
+						k=j/15;
 					}
 					return new Section(sec.get(j/15-k).getSectionID(),false,null,translationPositionPorbSec[j%15]);
 				}
