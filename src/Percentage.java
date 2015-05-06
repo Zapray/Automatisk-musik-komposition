@@ -1,4 +1,4 @@
-package src;
+
 
 
 public enum Percentage {

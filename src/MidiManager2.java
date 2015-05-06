@@ -1,4 +1,4 @@
-package src;
+
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -327,20 +327,16 @@ public class MidiManager2 {
          int counter = 1;
          boolean filebol = true;
                   
-<<<<<<< HEAD
-         File outputFile = new File(System.getProperty("user.dir")+"/Turing/Oscar-chorus-" + counter + ".mid");
-=======
-         File outputFile = new File(System.getProperty("user.dir")+"/Turing/Johan-chorus-" + counter + ".mid");
->>>>>>> 656f9f01ac5b3b06a1a907fe446e8a65c16576d6
+
+         File outputFile = new File(System.getProperty("user.dir")+"/Turing/Karin-chorus-" + counter + ".mid");
+
          
          while(filebol){
         	 if(outputFile.exists()){
         		 counter++;
-<<<<<<< HEAD
-        		 outputFile = new File(System.getProperty("user.dir")+"/Turing/Oscar-chorus-" + counter + ".mid");
-=======
-        		 outputFile = new File(System.getProperty("user.dir")+"/Turing/Johan-chorus-" + counter + ".mid");
->>>>>>> 656f9f01ac5b3b06a1a907fe446e8a65c16576d6
+
+        		 outputFile = new File(System.getProperty("user.dir")+"/Turing/Karin-chorus-" + counter + ".mid");
+
         	 }else{
         		 filebol=false;
         	 }

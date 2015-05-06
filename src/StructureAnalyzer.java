@@ -1,4 +1,4 @@
-package src;
+
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
+import java.util.Map.Entry;
 import java.lang.*;
 
 import matlabcontrol.MatlabConnectionException;
@@ -33,23 +34,28 @@ public class StructureAnalyzer {
 	private int countSection = 0;
 	private int countSong = 0;
 	private int countSectionType;
-	private String textFile = "/Databases_parts/verse.txt";
-	private String outputTextFile2 = "/Structure_parts/Sections/verse.txt";
-	private String outputTextFile = "/Structure_parts/Motifs/verse.txt";
+	private String textFile = "/Databases_parts/chorus.txt";
+	private String outputTextFile2 = "/Structure_parts/Sections/yolo.txt";
+	private String outputTextFile = "/Structure_parts/Motifs/yolo.txt";
 
 
 	//Analyze the result
 	private int countMotive1 = 0;
 	private int countMotive2 = 0;
 	private int countMotive3 = 0;
+	private int countMotive = 0;
 	private int countTotalBarComb = 0;
 	private int countSimilarSections = 0;
 	private int countTotalSectionComb = 0;
+	private int tmp;
 	private int tmp1;
 	private int tmp2;
 	private int tmp3;
-	private int soundAnalyzedSongs = 0;
-
+	private int countAnalyzedSongs = 0;
+	private Map<ArrayList<Integer>, Integer> countCombinations = new HashMap<ArrayList<Integer>, Integer>();
+	private Map<ArrayList<Integer>, Integer> twoCombinations = new HashMap<ArrayList<Integer>, Integer>();
+	private Map<ArrayList<Integer>, Integer> sortedCombinations;
+	private int[][] combinationMatrix;
 
 	private MatlabProxy proxy;
 
@@ -123,7 +129,7 @@ public class StructureAnalyzer {
 					}
 					System.out.println("***********************SONG: " + countSong + "******************************");
 					if(data.size() > 1 && isDurationFour){
-						soundAnalyzedSongs++;
+						countAnalyzedSongs++;
 						analyzeMotifs();
 						printMatrix(patternMatrix);
 						System.out.println();
@@ -170,14 +176,21 @@ public class StructureAnalyzer {
 
 			}
 			System.out.println("Done");
-			System.out.println("How often motive 1 occurs at least once in a song: " + (float)countMotive1/soundAnalyzedSongs);
-			System.out.println("How often motive 1 occurs at least once in a song: " + (float)countMotive2/soundAnalyzedSongs);
-			System.out.println("How often motive 1 occurs at least once in a song: " + (float)countMotive3/soundAnalyzedSongs);
-			System.out.println("Amount of similar sections: " + (float)countSimilarSections/soundAnalyzedSongs);
-
+			System.out.println("How often motive 1 occurs at least once in a song: " + (float)countMotive1/countAnalyzedSongs);
+			System.out.println("How often motive 2 occurs at least once in a song: " + (float)countMotive2/countAnalyzedSongs);
+			System.out.println("How often motive 3 occurs at least once in a song: " + (float)countMotive3/countAnalyzedSongs);
+			System.out.println("How often a motive occurs at least once in a song: " + (float)countMotive/countAnalyzedSongs);
+			System.out.println("Amount of similar sections: " + (float)countSimilarSections/countAnalyzedSongs);
+			//sort
+			//sortedCombinations = new TreeMap<ArrayList<Integer>, Integer>(countCombinations);
+			
+			combinationsMatrixForMATLAB();
+			printFile();
+			System.out.println();
+			
 		}catch (IOException e) {
 			e.printStackTrace();
-		} finally {
+		} finally {         
 			try {
 				if (in != null){
 					in.close();
@@ -189,6 +202,69 @@ public class StructureAnalyzer {
 		}
 	}
 
+	public void printFile() throws IOException{
+		
+		PrintWriter outFile3 = new PrintWriter(new FileWriter(System.getProperty("user.dir")+"/countedCombinations.txt", true));
+		PrintWriter outFile4 = new PrintWriter(new FileWriter(System.getProperty("user.dir")+"/twoCombinations.txt", true));
+		PrintWriter outFile5 = new PrintWriter(new FileWriter(System.getProperty("user.dir")+"/combinationMatrix.txt", true));
+
+		
+		//FrequencySorted
+		for (Map.Entry<ArrayList<Integer>, Integer> entry : countCombinations.entrySet()) {
+			outFile3.print(entry.getValue() + ": ");
+			for(int i = 0; i < entry.getKey().size(); i++){
+				 outFile3.print("   " + entry.getKey().get(i));
+				 
+			}
+			outFile3.println();
+		}
+		
+		for (Map.Entry<ArrayList<Integer>, Integer> entry : twoCombinations.entrySet()) {
+			outFile4.print(entry.getValue() + ": ");
+			for(int i = 0; i < entry.getKey().size(); i++){
+				 outFile4.print("  " + entry.getKey().get(i));
+				 
+			}
+			outFile4.println();
+		}
+		
+		//Matrix for MATLAB
+		outFile5.print("[");
+		for(int row = 0; row < 8; row++){
+			for(int col = 0; col < 8; col++){
+				outFile5.print(combinationMatrix[row][col]);
+				if((col == 7 && row == 7) || col == 7){
+					//do nothing
+				}else{
+					outFile5.print(", ");
+				}
+			}
+			if(row != 7){
+				outFile5.println(";");
+			}
+			
+		}
+		outFile5.print("];");
+		
+		outFile3.close();
+		outFile4.close();
+		outFile5.close();
+
+	}
+	
+	public void combinationsMatrixForMATLAB(){
+		combinationMatrix = new int[8][8];
+		for (Map.Entry<ArrayList<Integer>, Integer> entry : twoCombinations.entrySet()) {
+			int row = entry.getKey().get(0)-1;
+			int col = entry.getKey().get(1)-1;
+			int row2 = entry.getKey().get(1)-1;
+			int col2 = entry.getKey().get(0)-1;
+			if(row < 8 && col < 8){
+				combinationMatrix[row][col] = entry.getValue();
+				combinationMatrix[row2][col2] = entry.getValue();
+			}
+		}
+	}
 
 
 	private void analyzeMotifs() throws Exception{
@@ -280,6 +356,7 @@ public class StructureAnalyzer {
 			tmp1 = 0;
 			tmp2 = 0;
 			tmp3 = 0;
+			tmp = 0;
 			compareBars();
 			for(int row = 0; row < patternMatrix.length; row++){
 				for(int col = 0; col < patternMatrix[row].length; col++){
@@ -295,6 +372,9 @@ public class StructureAnalyzer {
 					patternArray[i] = countSectionType + "N";
 				}
 			}
+			
+			//Analyze result
+			analyzeResult(patternMatrix);
 			
 			//Print to textfiles:
 			for(int row = 0; row < patternMatrix.length; row++){
@@ -326,7 +406,7 @@ public class StructureAnalyzer {
 	private void compareSections(){
 		patternArray = new String[sections.size()];
 		countSectionType = 0;
-		int tmp = 0;
+		int tmpS = 0;
 		for(int first=0; first < sections.size(); first++){
 			for(int second=first+1; second < sections.size(); second++){
 				countTotalSectionComb++;
@@ -344,9 +424,9 @@ public class StructureAnalyzer {
 
 				if(status == "REP"){
 					//*******Save result**************
-					if(similarBars.equals("1234") && tmp == 0){
+					if(similarBars.equals("1234") && tmpS == 0){
 						countSimilarSections++;
-						tmp++;
+						tmpS++;
 					}
 
 					if(patternArray[first] == null){
@@ -455,6 +535,10 @@ public class StructureAnalyzer {
 							if(motive.equals(Integer.toString(motiveCount))){
 
 								//**********Save result************
+								if(tmp == 0){
+									countMotive++;
+									tmp++;
+								}
 								if(motive == "1" && tmp1 == 0){
 									countMotive1++;
 									tmp1++;
@@ -489,7 +573,6 @@ public class StructureAnalyzer {
 					oneBars=new ArrayList<float[]>();
 				}
 			}
-			//Compare last bars:
 			
 		}
 	}
@@ -639,20 +722,48 @@ public class StructureAnalyzer {
 
 		//Detect patterns in song
 		Map<Integer, ArrayList<Integer>> detectedPatterns = new HashMap<Integer, ArrayList<Integer>>();
+		ArrayList<Integer> positions = new ArrayList<Integer>();
 		for(int row = 0; row < matrix.length; row++){
 			for(int col = 0; col < matrix[row].length; col++){
-				if(matrix[row][col].charAt(0) != 0){
-					ArrayList<Integer> tmp = detectedPatterns.get(Integer.parseInt("" + matrix[row][col].charAt(0)));
-					tmp.add(4*row + col + 1);
-					detectedPatterns.put((Integer)Integer.parseInt("" + matrix[row][col].charAt(0)), tmp); 
+				if(matrix[row][col].charAt(0) != '0'){
+					int pattern = Character.getNumericValue(matrix[row][col].charAt(0));
+					int bar = 4*row + col + 1;
+	
+				    if(detectedPatterns.get(pattern) == null){
+				    	positions = new ArrayList<Integer>();
+				    }else{
+				    	positions = detectedPatterns.get(pattern);
+				    }
+					positions.add(bar);
+					detectedPatterns.put(pattern, positions); 
 				}
 			}
 		}
 
-		//Add patterns in total map and 
-
-
-
+		//Add patterns in total map and count!
+		for (Entry<Integer, ArrayList<Integer>> entry : detectedPatterns.entrySet()) {
+			ArrayList<Integer> pattern = entry.getValue();
+			Integer count = countCombinations.get(pattern);
+			countCombinations.put(pattern, (count == null) ? 1:count+1);	
+		}
+		
+		//Add patterns in twoCombinations and count
+		for (Entry<Integer, ArrayList<Integer>> entry : detectedPatterns.entrySet()) {
+			ArrayList<Integer> pattern = entry.getValue();
+			ArrayList<Integer> tmp;
+			//Extract patterns of two and add and count
+			for(int i = 0; i < pattern.size(); i++){
+				for(int j = i+1; j < pattern.size(); j++){
+					int p1 = pattern.get(i);
+					int p2 = pattern.get(j);
+					tmp = new ArrayList<Integer>();
+					tmp.add(p1);
+					tmp.add(p2);
+					Integer count = twoCombinations.get(tmp);
+					twoCombinations.put(tmp, (count == null) ? 1:count+1);	
+				}
+			}
+		}
 
 	}
 
