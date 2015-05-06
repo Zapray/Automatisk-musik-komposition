@@ -1,5 +1,3 @@
-package src;
-
 
 /*
  * This is a Midi Analyzer that can analyzer midi files from the midi database Hooktheory.
