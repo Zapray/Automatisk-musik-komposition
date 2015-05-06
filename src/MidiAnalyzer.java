@@ -39,9 +39,14 @@ import javax.sound.midi.*;
 
 
 public class MidiAnalyzer {
-
+	static boolean isItOurSongs=true; //is it our songs? simple question really:P
 	public static void main(String args[]) throws Exception{
-		File[] files =new File (System.getProperty("user.dir")+"/database/Chorus/").listFiles(); 
+		//String real="/database/Chorus/
+		
+		String database="/Turing/Statistikanalys av programmet/";//location of midifiles u want 2 analyze
+		String textbase="ourSongs";//where the created textfile will be located
+		//File[] files =new File (System.getProperty("user.dir")+"/database/Chorus/").listFiles();
+		File[] files =new File (System.getProperty("user.dir")+database).listFiles();
 		Arrays.sort(files);
 		int count = 0;
 		int equalCount = 0;
@@ -56,7 +61,7 @@ public class MidiAnalyzer {
 				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Hooktheory_data/Chorus/Hooktheory-2015-02-18-03-59-28.mid")));
 
 
-				InputStream is = new BufferedInputStream(new FileInputStream( new File(System.getProperty("user.dir")+"/database/Chorus/" + file.getName())));
+				InputStream is = new BufferedInputStream(new FileInputStream( new File(System.getProperty("user.dir")+database + file.getName())));
 				//InputStream is = new BufferedInputStream(new FileInputStream( new File("/Users/KarinBrotjefors/Dropbox/Chalmers/Kandidatarbete/Automatisk-musik-komposition/database/Chorus/Hooktheory-2015-02-21-04-50-00.mid")));
 
 				
@@ -95,7 +100,7 @@ public class MidiAnalyzer {
 				//}//end for
 
 
-				File filen = new File(System.getProperty("user.dir")+"/PersDatabas/database_chorus.txt");
+				File filen = new File(System.getProperty("user.dir")+textbase);
 
 
 				//File filen = new File("database_intro.txt");
@@ -108,7 +113,7 @@ public class MidiAnalyzer {
 
 
 
-				PrintWriter outFile = new PrintWriter(new FileWriter(System.getProperty("user.dir")+"/PersDatabas/database_chorus.txt", true));
+				PrintWriter outFile = new PrintWriter(new FileWriter(System.getProperty("user.dir")+textbase, true));
 
 
 				//PrintWriter outFile = new PrintWriter(new FileWriter("database_intro.txt", true));
@@ -464,7 +469,9 @@ public class MidiAnalyzer {
 	}
 
 	public static boolean newTick(Track track, int nEvent){
-
+		if(nEvent==0 && isItOurSongs){
+			return false;
+		}
 		if(track.get(nEvent).getTick() - track.get(nEvent-1).getTick() == 0){
 			return false;
 		}else return true;
