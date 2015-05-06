@@ -44,7 +44,7 @@ public class MidiAnalyzer {
 		//String real="/database/Chorus/
 		
 		String database="/Turing/Statistikanalys av programmet/";//location of midifiles u want 2 analyze
-		String textbase="ourSongs";//where the created textfile will be located
+		String textbase="/ourSongs.txt";//where the created textfile will be located
 		//File[] files =new File (System.getProperty("user.dir")+"/database/Chorus/").listFiles();
 		File[] files =new File (System.getProperty("user.dir")+database).listFiles();
 		Arrays.sort(files);
