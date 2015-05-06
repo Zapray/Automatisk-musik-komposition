@@ -338,6 +338,7 @@ public class MidiManager2 {
         		 outputFile = new File(System.getProperty("user.dir")+"/Turing/Karin-chorus-" + counter + ".mid");
 
 
+
         	 }else{
         		 filebol=false;
         	 }
