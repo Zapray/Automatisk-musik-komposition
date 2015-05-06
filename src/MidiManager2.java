@@ -1,5 +1,4 @@
 
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -328,6 +327,7 @@ public class MidiManager2 {
          boolean filebol = true;
                   
 
+
          File outputFile = new File(System.getProperty("user.dir")+"/Turing/Karin-chorus-" + counter + ".mid");
 
          
@@ -336,6 +336,7 @@ public class MidiManager2 {
         		 counter++;
 
         		 outputFile = new File(System.getProperty("user.dir")+"/Turing/Karin-chorus-" + counter + ".mid");
+
 
         	 }else{
         		 filebol=false;
