@@ -41,7 +41,7 @@ import javax.sound.midi.*;
 public class StatisticsAnalyzer {
 
 	public static void main(String args[]) throws Exception{
-		File[] files =new File (System.getProperty("user.dir")+"/database/Verseandchorus/").listFiles(); 
+		File[] files =new File (System.getProperty("user.dir")+"/Turing/Statistikanalys av programmet/").listFiles(); 
 
 		int count = 0;
 		int equalCount = 0;
@@ -77,7 +77,7 @@ public class StatisticsAnalyzer {
 				Sequencer sequencer = MidiSystem.getSequencer();//Creates a sequencer
 				sequencer.open();// have to open the sequencer to be able to use sequences. Don't know why, it works without the first two lines.
 				
-				InputStream is = new BufferedInputStream(new FileInputStream( new File(System.getProperty("user.dir")+"/database/Verseandchorus/" + file.getName())));
+				InputStream is = new BufferedInputStream(new FileInputStream( new File(System.getProperty("user.dir")+"/Turing/Statistikanalys av programmet/" + file.getName())));
 				
 				Sequence sequence = MidiSystem.getSequence(is);//Creates a sequence which you can analyze.
 				float res = sequence.getResolution();
@@ -222,7 +222,7 @@ public class StatisticsAnalyzer {
 		PrintWriter outFile = new PrintWriter(new FileWriter(System.getProperty("user.dir")+"/statistikackordsf�ljder.txt", true));
 		*/
 		
-		File filen = new File(System.getProperty("user.dir")+"/statistikantalsangermedackord.txt");
+		File filen = new File(System.getProperty("user.dir")+"/newStatistics.txt");
 
 
 		//File filen = new File("database_intro.txt");
@@ -233,7 +233,7 @@ public class StatisticsAnalyzer {
 			filen.createNewFile();
 		}
 		
-		PrintWriter outFile = new PrintWriter(new FileWriter(System.getProperty("user.dir")+"/statistikantalsangermedackord.txt", true));
+		PrintWriter outFile = new PrintWriter(new FileWriter(System.getProperty("user.dir")+"/newStatistics.txt", true));
 
 
 		
@@ -470,7 +470,9 @@ public class StatisticsAnalyzer {
 	}
 
 	public static boolean newTick(Track track, int nEvent){
-
+		if(nEvent==0){
+			return false;
+		}
 		if(track.get(nEvent).getTick() - track.get(nEvent-1).getTick() == 0){
 			return false;
 		}else return true;
