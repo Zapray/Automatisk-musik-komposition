@@ -1,0 +1,27 @@
+
+filename = 'Algoritmisk Komposition Quiz_1431068980';
+
+
+[tmp, song1, raw] = xlsread(filename, 'Q:S');
+[tmp, song2, raw] = xlsread(filename, 'U:W');
+[tmp, song3, raw] = xlsread(filename, 'Y:AA');
+[tmp, song4, raw] =  xlsread(filename, 'AC:AE');
+[tmp, song5, raw] =  xlsread(filename, 'AG:AI');
+[tmp, song6, raw] =  xlsread(filename, 'AK:AM');
+[tmp, song7, raw] =  xlsread(filename, 'AO:AQ');
+[tmp, song8, raw] =  xlsread(filename, 'AS:AU');
+[tmp, song9, raw] = xlsread(filename, 'AW:AY');
+[tmp, song10, raw] =  xlsread(filename, 'BA:BC');
+
+count = zeros(size(song1,1),3);
+
+
+
+
+for i = 1:size(song1,1)
+    for j = 1:3
+        if(~isempty(song1(:,j)))
+            count
+        end
+    end
+end
